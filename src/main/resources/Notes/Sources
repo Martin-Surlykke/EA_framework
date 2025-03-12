@@ -1,0 +1,5 @@
+Creating tsp file handler
+
+https://stackoverflow.com/questions/71239864/bufferedreader-skip-equivalent-for-lines-not-characters
+- used for creating buffered reader which ignores certain values line by line
+

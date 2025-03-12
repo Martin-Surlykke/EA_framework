@@ -1,0 +1,30 @@
+com.Algorithms to be implemented:
+
+Ant Colony optimization (ACO)
+Ant Colony MIN/MAX (ACOMM)
+
+Simulated annealing  (SA)
+
+(1+1)EA
+## Fitness functions:
+ - Randomized local search (RLS)
+ - OneMax
+ - Leading Ones
+
+
+Framework for visualization:
+javaFX
+
+Menu for choosing algorithm
+
+Window for visualising algorithm
+
+data for showing efficacy of algorithm
+
+Onion graph for (1+1) EA
+
+TSP graph for ACO and SA
+
+
+
+
