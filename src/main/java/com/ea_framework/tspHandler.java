@@ -11,7 +11,7 @@ public class tspHandler {
     static String Name;
     static String Comment;
     static String type;
-    static int factor;
+    static int [] dimensions = new int[2];
 
     static String edge_weight_type;
 
@@ -23,7 +23,7 @@ public class tspHandler {
 
     public static void handleTSP () {
         try {
-            File tsp = new File("src/main/resources/tspFiles/st70.tsp");
+            File tsp = new File("src/main/resources/tspFiles/a280.tsp");
             Scanner sc = new Scanner(tsp);
 
             String word = sc.nextLine();
@@ -72,16 +72,17 @@ public class tspHandler {
         createEdgeList(permutation);
     }
 
-    public static int getLargestVal (ArrayList<Integer []>  list) {
-        int largest = 0;
+    public static int [] getLargestVal (ArrayList<Integer []>  list) {
+        int [] max = new int [2];
+
         for (Integer[] integers : list) {
             for (int j = 1; j <= 2; j++) {
-                if (integers[j] > largest) {
-                    largest = integers[j];
+                if (integers[j] > max[j-1]) {
+                    max[j-1] = integers[j];
                 }
             }
-        }
-        return largest;
+            }
+        return max;
     }
 
     public static void createDistanceMatrix() {

@@ -1,11 +1,25 @@
 package com.ea_framework.Algorithms;
 
+import java.nio.file.LinkPermission;
 import java.util.Arrays;
 import java.util.Random;
 
 public class simulatedAnnealing {
 
-    static int T = 1;
+    static double T = 1.0;
+
+    public static int [][] heatTreat(int [][] input, double alpha, double [][] distanceMatrix, int iterations) {
+
+        for (int i = 0; i < iterations; i++) {
+
+            input = anneal(input, distanceMatrix);
+
+            T = (1 - alpha) * T;
+        }
+
+        return input;
+
+    }
 
 
     public static int [][] anneal(int [][] input, double [][] distanceMatrix) {

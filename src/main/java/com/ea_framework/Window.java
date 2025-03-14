@@ -17,6 +17,9 @@ import static com.ea_framework.tspHandler.*;
 
 public class Window extends Application {
 
+    static double xFactor;
+    static double yFactor;
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -29,7 +32,7 @@ public class Window extends Application {
         drawGraph(root);
 
         // Create a Scene with the root pane
-        Scene scene = new Scene(root, 1020, 1020); // width 300, height 250
+        Scene scene = new Scene(root, 850, 850);
 
         // Set up the stage
         stage.setTitle("Simple Circle Drawer");
@@ -40,28 +43,34 @@ public class Window extends Application {
     public static void main(String[] args) {
         handleTSP();
 
-        factor = 1000 / getLargestVal(nodeList);
-        System.out.println(Arrays.deepToString(edgeList));
-        for (int i = 0; i < 50000; i++) {
-            tspHandler.setEdgelist(simulatedAnnealing.anneal(edgeList, distanceMatrix));
-        }
+         dimensions = getLargestVal(nodeList);
+         xFactor = (double) 800 /dimensions[0];
+         yFactor = (double) 800 /dimensions[1];
+
+
+
+        double alpha = 0.005;
+
+        tspHandler.setEdgelist(simulatedAnnealing.heatTreat(
+                tspHandler.getEdgeList(),alpha,getDistanceMatrix(),
+                5));
 
         launch();
 
     }
 
     public static void drawNode(Pane root, int index, int x, int y) {
-            Circle circle = new Circle(x * factor, y * factor, 5, Color.BLUE); // Radius 10 and blue color
+            Circle circle = new Circle(x * xFactor, y * yFactor, 5, Color.BLUE); // Radius 10 and blue color
             root.getChildren().add(circle); // Add the circle to the root pane
 
-            Text text = new Text(x * factor + 12, y * factor - 12, String.valueOf(index));
+            Text text = new Text(x * xFactor + 12, y * yFactor  - 12, String.valueOf(index));
             text.setFill(Color.BLACK); // Set text color
             root.getChildren().add(text); // Add the text to the root pane
         }
 
 
     public static void drawLine(Pane root, int x1, int y1, int x2, int y2) {
-        Line line = new Line(x1 * factor, y1 * factor, x2 * factor, y2 * factor);
+        Line line = new Line(x1 * xFactor , y1 * yFactor , x2 * xFactor , y2 * yFactor );
         root.getChildren().add(line);
 
     }
