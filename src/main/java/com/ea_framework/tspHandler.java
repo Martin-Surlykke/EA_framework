@@ -23,7 +23,7 @@ public class tspHandler {
 
     public static void handleTSP () {
         try {
-            File tsp = new File("src/main/resources/tspFiles/a280.tsp");
+            File tsp = new File("src/main/resources/tspFiles/st70.tsp");
             Scanner sc = new Scanner(tsp);
 
             String word = sc.nextLine();

@@ -1,5 +1,6 @@
 package com.ea_framework;
 
+import com.ea_framework.Algorithms.AntColonyOptimization;
 import com.ea_framework.Algorithms.simulatedAnnealing;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -49,11 +50,13 @@ public class Window extends Application {
 
 
 
-        double alpha = 0.005;
+        double alpha = 0.05;
 
-        tspHandler.setEdgelist(simulatedAnnealing.heatTreat(
-                tspHandler.getEdgeList(),alpha,getDistanceMatrix(),
-                5));
+
+       tspHandler.setEdgelist(AntColonyOptimization.ACO(tspHandler.getDistanceMatrix(), 5, 50000));
+
+
+
 
         launch();
 
