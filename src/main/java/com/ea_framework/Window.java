@@ -33,7 +33,7 @@ public class Window extends Application {
         drawGraph(root);
 
         // Create a Scene with the root pane
-        Scene scene = new Scene(root, 850, 850);
+        Scene scene = new Scene(root, 750, 750);
 
         // Set up the stage
         stage.setTitle("Simple Circle Drawer");
@@ -45,15 +45,14 @@ public class Window extends Application {
         handleTSP();
 
          dimensions = getLargestVal(nodeList);
-         xFactor = (double) 800 /dimensions[0];
-         yFactor = (double) 800 /dimensions[1];
+         xFactor = (double) 700 /dimensions[0];
+         yFactor = (double) 700 /dimensions[1];
 
 
-
-        double alpha = 0.05;
-
-
-       tspHandler.setEdgelist(AntColonyOptimization.ACO(tspHandler.getDistanceMatrix(), 5, 50000));
+       tspHandler.setEdgelist(
+               AntColonyOptimization.ACO(
+                       tspHandler.getDistanceMatrix(),
+                       tspHandler.getNodeIndex(), 10000));
 
 
 

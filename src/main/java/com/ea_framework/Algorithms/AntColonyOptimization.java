@@ -1,206 +1,218 @@
 package com.ea_framework.Algorithms;
 
-import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class AntColonyOptimization {
 
-    static int n; // number of nodes
-    int m; // number of ants
+    static double[][] tau;
 
-    int iterations; // number of iterations
+    static double rho = 0.1;// evaporation rate
 
-    static double [][] pheromoneMatrix = new double[n][n];
+    static double tauMax;
 
-    static double rho = 0.1; // evaporation rate
+    static double tauMin;
+    static double[][] eta; // heuristic information matrix
 
-    static double [][] h = new double[n][n]; // heuristic information matrix
+    public static int [][] ACO (double [][] distanceMatrix, int [] nodes, int iterations) {
+        tau = new double[nodes.length][nodes.length];
+        eta = new double[nodes.length][nodes.length];
 
-    static double Lnn;
+        tauMax = 1-(1.0/nodes.length);
+        tauMin = 1/Math.pow(nodes.length,2);
 
-    public static int [][]  ACO(double [][] distanceMatrix, int m, int iterations) {
+        double alpha = 1.5;
+        double beta = 2.5;
+
+        int [] tour = MMAS(distanceMatrix, alpha, beta, nodes, iterations);
+
+        return transFormEdgeList(tour);
+    }
+
+    public static int [] MMAS(double[][] distanceMatrix, double alpha, double beta, int[] V, int iterations) {
+
+        initTau(V.length);
+        initEta(distanceMatrix, V.length);
+
+
+
+        int [] tour = construct(V, tau, eta, alpha, beta) ;
+        int [] potential;
+        update(tour);
+
+        int x = 0;
+        while (x < iterations) {
+            potential = construct(V, tau, eta, alpha, beta) ;
+            if (isBetter(tour,potential, distanceMatrix)) {
+                tour = potential;
+            }
+            update(tour);
+            x++;
+
+        }
+
+
+        return tour;
+
+
+    }
+
+    private static boolean isBetter(int[] tour, int[] potential, double[][] distanceMatrix) {
+        double d_tour = 0.0;
+        double d_potential = 0.0;
+        for (int i = 1; i < tour.length; i++) {
+            d_tour += distanceMatrix[tour[i-1]][tour[i]];
+            d_potential += distanceMatrix[potential[i-1]][potential[i]];
+        }
+
+        d_tour += distanceMatrix[tour[tour.length-1]][tour[0]];
+        d_potential += distanceMatrix[potential[potential.length-1]][potential[0]];
+
+        return d_potential < d_tour;
+    }
+
+    public static int[] construct(int[] nodes, double[][] pheromones, double[][] heuristic, double alpha, double beta) {
+
+        int [] construct = new int[nodes.length];
 
         Random rand = new Random();
+        int x = rand.nextInt(nodes.length);
 
-        n = distanceMatrix.length;
+        int currentNode = nodes[x];
 
-        Lnn = getLnn(distanceMatrix, rand.nextInt(n));
+        construct[0] = currentNode;
 
-        h = initHeuristicMatrix(distanceMatrix);
+        List<Integer> unvisited = new ArrayList<Integer>();
+        for (int node : nodes) {
+            unvisited.add(node);
+        }
+        unvisited.remove(nodes[x]);
 
-        pheromoneMatrix = initPheromoneMatrix(n, Lnn);
+        for (int i = 1; i < nodes.length; i++) {
+            double R = calculateR(currentNode, pheromones, heuristic, alpha, beta, unvisited);
+            currentNode = getNextNode(currentNode, R, tau, eta, unvisited, alpha, beta);
+            unvisited.remove(Integer.valueOf(currentNode));
+            construct[i] = currentNode;
+        }
 
-        ArrayList<Integer> bestTour = runAnts(distanceMatrix, m, iterations);
-
-        int [][] edges = transFormEdgeList(bestTour);
-
-        return edges;
+        return construct;
     }
 
-    private static int[][] transFormEdgeList(ArrayList<Integer> bestTour) {
+    public static void update(int [] tour) {
 
-        int [][] edges = new int[bestTour.size()][2];
+        for (int i = 0; i < tour.length - 1; i++) {
+            int currentNode = tour[i];
+            int nextNode = tour[i+1];
 
-        for (int i = 0; i < bestTour.size(); i++) {
-            int node1 = bestTour.get(i);
-            int node2;
-            if (i == bestTour.size()-1) {
-                node2 = bestTour.get(0);
-            } else {
-                node2 = bestTour.get(i+1);
-            }
-
-            edges[i][0] = node1+1;
-            edges[i][1] = node2+1;
+            tau[currentNode][nextNode] +=
+                    Math.min((1-rho)*tau[currentNode][nextNode] + rho, tauMax);
+            tau[nextNode][currentNode] = tau[currentNode][nextNode];
 
         }
 
-        return edges;
-    }
+        int lastNode = tour[tour.length-1];
+        int firstNode = tour[0];
 
+        tau[lastNode][firstNode] = Math.min((1-rho)*tau[lastNode][firstNode] + rho,
+                      tauMax);
+        tau[firstNode][lastNode] = tau[lastNode][firstNode];
 
-    public static ArrayList<Integer> runAnts(double [][] distanceMatrix, int m, int iterations) {
-
-        Random rand = new Random();
-
-        double minimumLength = Double.MAX_VALUE;
-        ArrayList<Integer> bestTour = null;
-
-        for (int i = 0; i < iterations; i++) {
-            for (int j = 0; j < m; j++) {
-
-                int startNode = rand.nextInt(n);
-
-                ArrayList<Integer> visitedNotes = new ArrayList<>();
-                visitedNotes.add(startNode);
-
-                int currentNode = startNode;
-
-                double currentLength = 0;
-
-                for (int k = 1; k < n; k++) {
-                    int nextNode = getNextNode(currentNode, visitedNotes);
-
-                    currentLength += distanceMatrix[currentNode][nextNode];
-
-                    visitedNotes.add(nextNode);
-                    currentNode = nextNode;
-
-                }
-
-                currentLength += distanceMatrix[currentNode][startNode];
-
-                if (currentLength < minimumLength) {
-                    minimumLength = currentLength;
-                    bestTour = new ArrayList<>(visitedNotes);
-                }
-
-            }
-
-            updatePheromoneMatrix(bestTour, minimumLength);
-
-
-
-        }
-        return bestTour;
-
-    }
-
-    private static int getNextNode(int currentNode, ArrayList<Integer> visitedNotes) {
-
-        int bestNode = -1;
-
-        double bestValue = Double.MIN_VALUE;
-
-        for (int i = 0; i < n; i++) {
-            if (!visitedNotes.contains(i)) {
-                double value = Math.pow(pheromoneMatrix[currentNode][i], 1) * Math.pow(h[currentNode][i], 1);
-                if (value > bestValue) {
-                    bestValue = value;
-                    bestNode = i;
+        for (int i = 0; i < tau.length; i++) {
+            for (int j = 0; j < tau.length; j++) {
+                if (!inTour(i,j,tour)) {
+                    tau[i][j] = Math.max((1-rho) * tau[i][j], tauMin);
                 }
             }
         }
-
-        if (bestNode == -1) {
-            System.out.println("Error");
-        }
-
-        return bestNode;
     }
 
-
-    private static double[][] initPheromoneMatrix(int n, double lnn) {
-        double [][] p = new double[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                p[i][j] = 1/(n*lnn);
+    private static boolean inTour(int i, int j, int[] tour) {
+        for (int k = 0; k < tour.length-1; k++) {
+            if ((tour[k] == i && tour[k+1] == j) || (tour[k] == j && tour[k+1] == i)) {
+                return true;
             }
         }
-        return p;
+        return tour[tour.length - 1] == i && tour[0] == j || (tour[tour.length - 1] == j && tour[0] == i);
     }
 
-    public static void updatePheromoneMatrix(ArrayList<Integer> tour, double tourLength) {
+    public static int getNextNode(int currentNode, double R, double [][] pheromones, double [][] heuristic, List<Integer> unvisited, double alpha, double beta) {
+        double P = 0.0;
+
+        double [] cumulativeProbs = new double[unvisited.size()];
+
+        for (int i = 0; i < unvisited.size(); i++) {
+            int node = unvisited.get(i);
+            double a = Math.pow(pheromones[currentNode][node],alpha);
+            double b = Math.pow(heuristic[currentNode][node],beta);
+
+            P += (a*b)/R;
+            cumulativeProbs[i] = P;
+        }
+
+        double rand = Math.random();
+
+        for (int i = 0; i < cumulativeProbs.length; i++) {
+            if (rand <= cumulativeProbs[i]) {
+                return unvisited.get(i);
+            }
+        }
+        return -1;
+    }
+
+
+    public static double calculateR(int currentNode, double[][] pheromones, double[][] heuristic, double alpha, double beta, List<Integer> unvisitedNotes) {
+        double R = 0.0;
+
+        for (int node : unvisitedNotes) {
+            double x = Math.pow(pheromones[currentNode][node], alpha);
+            double y = Math.pow(heuristic[currentNode][node], beta);
+
+            R += x * y;
+        }
+
+        return R;
+    }
+
+
+    private static int[][] transFormEdgeList(int [] tour) {
+        int [][] edgeList = new int[tour.length][2];
+
+        for (int i = 0; i < tour.length-1; i++) {
+            edgeList[i][0] = tour[i]+1;
+            edgeList[i][1] = tour[i+1]+1;
+        }
+        edgeList[tour.length-1][0] = tour[tour.length-1]+1;
+        edgeList[tour.length-1][1] = tour[0]+1;
+
+        return edgeList;
+    }
+
+
+    private static void initTau(int n) {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                pheromoneMatrix[i][j] *= (1 - rho);
+                tau[i][j] = 1 / ((double) n);
             }
         }
-
     }
 
-    private static double[][] initHeuristicMatrix(double[][] distanceMatrix) {
-        double [][] heuristic_matrix = new double[n][n];
+
+    private static void initEta(double[][] distanceMatrix, int n) {
+
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                heuristic_matrix[i][j] = 1 / distanceMatrix[i][j];
-            }
-        }
-
-        return heuristic_matrix;
-    }
-
-
-    public static double getLnn(double [][] distanceMatrix, int startNode) {
-
-        ArrayList<Integer> unvisitedNodes = new ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            unvisitedNodes.add(i);
-        }
-        unvisitedNodes.remove(startNode);
-
-
-        int currentNode = startNode;
-
-        double currentDistance = 0;
-
-        while (!unvisitedNodes.isEmpty()) {
-
-            int closestNode = -1;
-            double closestDistance = Double.MAX_VALUE;
-
-            for (int node : unvisitedNodes) {
-                if (distanceMatrix[currentNode][node] < closestDistance) {
-                    closestNode = node;
-                    closestDistance = distanceMatrix[currentNode][node];
+                if (distanceMatrix[i][j] == 0.0) {
+                    eta[i][j] = 0.0;
                 }
-            }
-
-            currentDistance += closestDistance;
-
-            currentNode = closestNode;
-
-            unvisitedNodes.remove((Integer) closestNode);
-
+                else {
+                    eta[i][j] = 1.0 / distanceMatrix[i][j];
+                }
+                }
         }
-
-        currentDistance += distanceMatrix[currentNode][startNode];
-
-        return currentDistance;
 
 
     }

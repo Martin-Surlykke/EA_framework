@@ -113,6 +113,14 @@ public class tspHandler {
         fisherYatesShuffle(permutation);
     }
 
+    public static int [] getNodeIndex () {
+        int [] nodeIndex = new int[nodeList.size()];
+        for (int i = 0; i < nodeList.size(); i++) {
+            nodeIndex[i] = nodeList.get(i)[0]-1;
+        }
+        return nodeIndex;
+    }
+
     public static int [] getPermutation(){
         return permutation;
     }
