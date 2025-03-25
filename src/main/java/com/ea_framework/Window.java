@@ -1,6 +1,8 @@
 package com.ea_framework;
 
 import com.ea_framework.Algorithms.AntColonyOptimization;
+import com.ea_framework.Algorithms.RLS_bit;
+import com.ea_framework.Algorithms.RLS_tsp;
 import com.ea_framework.Algorithms.simulatedAnnealing;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -48,11 +50,17 @@ public class Window extends Application {
          xFactor = (double) 700 /dimensions[0];
          yFactor = (double) 700 /dimensions[1];
 
+   /*      double [][] DM = tspHandler.getDistanceMatrix();
+         int [][] input = tspHandler.getEdgeList();
 
-       tspHandler.setEdgelist(
-               AntColonyOptimization.ACO(
-                       tspHandler.getDistanceMatrix(),
-                       tspHandler.getNodeIndex(), 10000));
+         int [][] output = RLS_tsp.run_RLS(input, DM, 5000000);
+        tspHandler.setEdgelist(output);
+
+    */
+
+
+        int [] bitString = RLS_bit.RLS_bitString(64,10000,"leadingOnes");
+        System.out.println(Arrays.toString(bitString));
 
 
 
