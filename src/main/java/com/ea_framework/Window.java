@@ -1,9 +1,5 @@
 package com.ea_framework;
 
-import com.ea_framework.Algorithms.AntColonyOptimization;
-import com.ea_framework.Algorithms.RLS_bit;
-import com.ea_framework.Algorithms.RLS_tsp;
-import com.ea_framework.Algorithms.simulatedAnnealing;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -59,8 +55,7 @@ public class Window extends Application {
     */
 
 
-        int [] bitString = RLS_bit.RLS_bitString(64,10000,"leadingOnes");
-        System.out.println(Arrays.toString(bitString));
+
 
 
 
