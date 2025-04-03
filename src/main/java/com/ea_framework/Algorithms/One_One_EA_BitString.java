@@ -3,7 +3,7 @@ import com.ea_framework.Mutation.BitStringMutationOperator;
 
 import java.util.Random;
 
-public class one_one_EA_bitString extends BitStringMutationOperator {
+public class One_One_EA_BitString extends BitStringMutationOperator {
     @Override
     public void mutate(boolean[] currentSolution) {
         int n = currentSolution.length;

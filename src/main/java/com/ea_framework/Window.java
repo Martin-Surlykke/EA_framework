@@ -1,5 +1,7 @@
 package com.ea_framework;
 
+import com.ea_framework.Algorithms.RLS_tsp;
+import com.ea_framework.Algorithms.simulatedAnnealing;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -46,13 +48,13 @@ public class Window extends Application {
          xFactor = (double) 700 /dimensions[0];
          yFactor = (double) 700 /dimensions[1];
 
-   /*      double [][] DM = tspHandler.getDistanceMatrix();
+         double [][] DM = tspHandler.getDistanceMatrix();
          int [][] input = tspHandler.getEdgeList();
 
-         int [][] output = RLS_tsp.run_RLS(input, DM, 5000000);
+         int [][] output = simulatedAnnealing.anneal(input, 0.08, DM, 1000000);
         tspHandler.setEdgelist(output);
 
-    */
+
 
 
 

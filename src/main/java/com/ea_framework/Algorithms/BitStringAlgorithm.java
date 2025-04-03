@@ -5,6 +5,8 @@ import com.ea_framework.ChoiceFunctions.BitStringChoiceFunction;
 import com.ea_framework.FitnessFunctions.BitStringFitness;
 import com.ea_framework.Mutation.BitStringMutationOperator;
 
+import java.util.Arrays;
+
 public class BitStringAlgorithm extends Algorithms {
     protected boolean [] currentSolution;
     private final BitStringChoiceFunction choiceFunction;
