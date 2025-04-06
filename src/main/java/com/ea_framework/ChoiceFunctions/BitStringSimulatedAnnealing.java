@@ -4,8 +4,8 @@ import java.util.Random;
 
 public class BitStringSimulatedAnnealing extends BitStringChoiceFunction {
 
-    private static double alpha;
-    private static double T_0;
+    private double alpha;
+    private double T_0;
 
     private static final Random rand = new Random();
     @Override
@@ -20,10 +20,11 @@ public class BitStringSimulatedAnnealing extends BitStringChoiceFunction {
         }
 
         double T_i = T_0*Math.pow(alpha, iteration);
-
-        System.out.println("Checking Temperature: " + T_i);
         double probability = rand.nextDouble();
         double acceptance = Math.exp((candidateFitness - currentFitness) / T_i);
+
+        System.out.println("Current fitness: " + currentFitness + ", candidate fitness: " + candidateFitness);
+        System.out.println("Probability: " + probability + ", acceptance: " + acceptance);
 
         return probability < acceptance;
     }

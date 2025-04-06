@@ -6,6 +6,8 @@ import com.ea_framework.ChoiceFunctions.BitStringGreedyChoice;
 import com.ea_framework.ChoiceFunctions.BitStringSimulatedAnnealing;
 import com.ea_framework.FitnessFunctions.BitStringLeadingOnes;
 import com.ea_framework.Candidates.bitStringCandidate;
+import com.ea_framework.FitnessFunctions.BitStringOneMax;
+import com.ea_framework.Mutation.RLS_bitString;
 
 import java.io.IOException;
 
@@ -16,12 +18,13 @@ public class main {
         boolean [] start = b.getBitString();
         System.out.println(b.stringify());
 
-        One_One_EA_BitString ea = new One_One_EA_BitString();
-        BitStringLeadingOnes leadingOnes = new BitStringLeadingOnes();
-        BitStringSimulatedAnnealing annealing = new BitStringSimulatedAnnealing();
-        annealing.setAlpha(0.05);
-        annealing.setT0(20);
-        BitStringAlgorithm bitAlgo = new BitStringAlgorithm(200, leadingOnes, ea, annealing);
+        RLS_bitString rls = new RLS_bitString();
+        BitStringOneMax oneMax = new BitStringOneMax();
+
+        BitStringGreedyChoice greedy = new BitStringGreedyChoice();
+       // annealing.setAlpha(0.95);
+      //  annealing.setT0(10);
+        BitStringAlgorithm bitAlgo = new BitStringAlgorithm(100, oneMax, rls, greedy);
         bitAlgo.setCurrentSolution(start);
         bitAlgo.run();
         start = bitAlgo.getCurrentSolution();
