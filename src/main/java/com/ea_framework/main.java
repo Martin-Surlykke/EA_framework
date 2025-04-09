@@ -30,6 +30,7 @@ public class main {
         start = bitAlgo.getCurrentSolution();
         b.setBitString(start);
         System.out.println(b.stringify());
+        System.out.println("IS this working?");
         
     }
 }
