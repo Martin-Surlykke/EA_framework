@@ -1,3 +1,7 @@
 package com.ea_framework.StartAlgorithms;
 
-public class StartAlgorithm {}
+public abstract class StartAlgorithm {
+    public abstract int[] firstPermutation(int[][] edgeList, double [][] DM);
+
+
+}

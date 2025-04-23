@@ -8,7 +8,7 @@ import com.ea_framework.Mutation.BitStringMutationOperator;
 import java.util.Arrays;
 
 public class BitStringAlgorithm extends Algorithms {
-    protected boolean [] currentSolution;
+    protected boolean[] currentSolution;
     private final BitStringChoiceFunction choiceFunction;
 
     private final BitStringFitness fitnessFunction;
@@ -17,10 +17,8 @@ public class BitStringAlgorithm extends Algorithms {
 
     int currentFitness;
 
-    public BitStringAlgorithm(int maxIterations,
-                              BitStringFitness fitnessFunction,
-                              BitStringMutationOperator mutationOperator,
-                              BitStringChoiceFunction choiceFunction) {
+    public BitStringAlgorithm(int maxIterations, BitStringFitness fitnessFunction,
+                              BitStringMutationOperator mutationOperator, BitStringChoiceFunction choiceFunction) {
         super(maxIterations);
         this.choiceFunction = choiceFunction;
         this.fitnessFunction = fitnessFunction;
@@ -31,7 +29,7 @@ public class BitStringAlgorithm extends Algorithms {
     @Override
     public void run() {
         for (int i = 0; i < maxIterations; i++) {
-            boolean [] copy = deepCopy(currentSolution);
+            boolean[] copy = deepCopy(currentSolution);
             mutationOperator.mutate(copy);
 
             currentSolution = choiceFunction(currentSolution, copy, i);
@@ -44,14 +42,15 @@ public class BitStringAlgorithm extends Algorithms {
     }
 
     public boolean[] choiceFunction(boolean[] currentSolution, boolean[] copy, int iteration) {
-        return choiceFunction.chooseCandidate(currentSolution,copy,evalFitness(currentSolution),evalFitness(copy),iteration);
+        return choiceFunction.chooseCandidate(currentSolution, copy, evalFitness(currentSolution),
+                evalFitness(copy), iteration);
     }
 
     public int evalFitness(boolean[] permutation) {
         return fitnessFunction.evaluate(permutation);
     }
 
-    public boolean [] getCurrentSolution() {
+    public boolean[] getCurrentSolution() {
         return currentSolution;
     }
 
@@ -61,7 +60,7 @@ public class BitStringAlgorithm extends Algorithms {
     }
 
     private static boolean[] deepCopy(boolean[] bitString) {
-        boolean [] copy = new boolean[bitString.length];
+        boolean[] copy = new boolean[bitString.length];
         System.arraycopy(bitString, 0, copy, 0, bitString.length);
         return copy;
     }

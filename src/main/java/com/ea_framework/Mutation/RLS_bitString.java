@@ -2,7 +2,7 @@ package com.ea_framework.Mutation;
 
 import java.util.Random;
 
-public class RLS_bitString extends BitStringMutationOperator {
+public class  RLS_bitString extends BitStringMutationOperator {
 
     @Override
     public void mutate(boolean [] bitString) {

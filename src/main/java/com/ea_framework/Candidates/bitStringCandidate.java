@@ -15,11 +15,8 @@ public class bitStringCandidate extends Candidate{
     }
 
     @Override
-    public void setStartCandidate(String filePath, Optional<StartAlgorithm> startAlgorithm) throws IOException {
+    public void setStartCandidate(String filePath) throws IOException {
         bitString = BitStringFileHandler.readFile(filePath);
-        startAlgorithm.ifPresent(algorithm -> {
-            // Add possibility for adding a Algorithm to start permutation
-        });
     }
 
     @Override
@@ -32,7 +29,7 @@ public class bitStringCandidate extends Candidate{
     }
 
     public bitStringCandidate(String filePath) throws IOException {
-        setStartCandidate(filePath, Optional.empty());
+        setStartCandidate(filePath);
     }
 
     public boolean[] getBitString() {

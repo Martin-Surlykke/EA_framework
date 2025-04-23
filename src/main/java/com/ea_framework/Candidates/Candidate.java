@@ -7,7 +7,7 @@ import java.util.Optional;
 public abstract class Candidate {
 
     public abstract Candidate clone();
-    public abstract void setStartCandidate(String filePath, Optional<StartAlgorithm> startAlgorithm) throws IOException;
+    public abstract void setStartCandidate(String filePath) throws IOException;
 
 
     public abstract String stringify();

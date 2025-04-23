@@ -42,7 +42,7 @@ public class Window extends Application {
     }
 
     public static void main(String[] args) {
-        handleTSP();
+         handleTSP();
 
          dimensions = getLargestVal(nodeList);
          xFactor = (double) 700 /dimensions[0];
