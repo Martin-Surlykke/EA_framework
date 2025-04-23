@@ -1,18 +1,14 @@
 package com.ea_framework.Candidates;
 import com.ea_framework.Filehandlers.BitStringFileHandler;
+import com.ea_framework.StartAlgorithms.LoadPermutationBitString;
 import com.ea_framework.StartAlgorithms.StartAlgorithm;
 
 import java.io.IOException;
 import java.util.Optional;
 
 
-public class bitStringCandidate extends Candidate{
+public class bitStringCandidate implements Candidate{
     private boolean [] bitString;
-
-    @Override
-    public Candidate clone() {
-        return null;
-    }
 
     @Override
     public void setStartCandidate(String filePath) throws IOException {

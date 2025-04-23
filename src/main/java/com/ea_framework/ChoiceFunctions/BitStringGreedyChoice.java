@@ -1,10 +1,11 @@
 package com.ea_framework.ChoiceFunctions;
 
-public class BitStringGreedyChoice extends BitStringChoiceFunction{
+import java.awt.*;
+
+public class BitStringGreedyChoice implements ChoiceFunction <boolean [], Integer> {
 
     @Override
-    public boolean accept(boolean[] currentSolution, boolean[] candidateSolution, Integer currentFitness, Integer candidateFitness, int iteration) {
-        return candidateFitness > currentFitness;
+    public boolean[] choose(boolean[] current, boolean[] candidate, Integer fitnessCurrent, Integer fitnessCandidate, int iteration) {
+        return fitnessCandidate > fitnessCurrent ? candidate : current;
     }
-
 }

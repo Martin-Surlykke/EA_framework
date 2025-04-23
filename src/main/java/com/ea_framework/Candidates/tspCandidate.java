@@ -2,10 +2,11 @@ package com.ea_framework.Candidates;
 
 import com.ea_framework.Filehandlers.tspFileHandler;
 import com.ea_framework.StartAlgorithms.StartAlgorithm;
+import com.ea_framework.StartAlgorithms.TspFromStartToEnd;
 
 import java.io.IOException;
 
-public class tspCandidate extends Candidate{
+public class tspCandidate implements Candidate{
 
     private  String Name;
 
@@ -15,18 +16,11 @@ public class tspCandidate extends Candidate{
 
     private  String edge_weight_type;
 
-     int [][] edgeList;
+     int [] edgeList;
 
     double [][] distanceMatrix;
 
      int [] permutation;
-
-    private int [] start;
-
-    @Override
-    public Candidate clone() {
-        return null;
-    }
 
     @Override
     public void setStartCandidate(String filePath) throws IOException {
@@ -55,15 +49,15 @@ public class tspCandidate extends Candidate{
         return sb.toString();
     }
 
-    public tspCandidate(String filePath, StartAlgorithm startAlgorithm) throws IOException {
+    public tspCandidate(String filePath) throws IOException {
         setStartCandidate(filePath);
-        this.start = startAlgorithm.firstPermutation(edgeList, distanceMatrix);
 
     }
 
     public  String getName() {
         return Name;
     }
+
 
     public  String getComment() {
         return Comment;
@@ -75,9 +69,5 @@ public class tspCandidate extends Candidate{
 
     public  String getEdgeWeightType() {
         return edge_weight_type;
-    }
-
-    public  void setFirstPermutation(StartAlgorithm startAlgorithm) {
-        start = startAlgorithm.firstPermutation(edgeList, distanceMatrix);
     }
 }

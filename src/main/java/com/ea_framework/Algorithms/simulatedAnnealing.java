@@ -1,4 +1,6 @@
 package com.ea_framework.Algorithms;
+import com.ea_framework.Mutation.TwoOptTsp;
+
 import java.util.Random;
 
 public class simulatedAnnealing {
@@ -11,9 +13,9 @@ public class simulatedAnnealing {
 
         while (i < iterations) {
 
-            int [][] neighbor = twoOpt_tsp.twoOpt(current, distanceMatrix);
+ /*           int [][] neighbor = TwoOptTsp.twoOpt(current, distanceMatrix);
 
-            double delta = twoOpt_tsp.getDelta(current, neighbor, distanceMatrix);
+            double delta = TwoOptTsp.getDelta(current, neighbor, distanceMatrix);
 
             if (delta < 0) {
                 current = neighbor;
@@ -29,6 +31,7 @@ public class simulatedAnnealing {
 
             T = (1-alpha)*T;
             i++;
+            */
         }
 
 

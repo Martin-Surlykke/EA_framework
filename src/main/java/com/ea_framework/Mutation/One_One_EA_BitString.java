@@ -1,11 +1,10 @@
-package com.ea_framework.Algorithms;
-import com.ea_framework.Mutation.BitStringMutationOperator;
+package com.ea_framework.Mutation;
 
 import java.util.Random;
 
-public class One_One_EA_BitString extends BitStringMutationOperator {
+public class One_One_EA_BitString implements MutationOperator<boolean[]> {
     @Override
-    public void mutate(boolean[] currentSolution) {
+    public boolean [] mutate(boolean[] currentSolution) {
         int n = currentSolution.length;
         double probability = 1.0/n;
 
@@ -17,6 +16,7 @@ public class One_One_EA_BitString extends BitStringMutationOperator {
             }
 
         }
+        return currentSolution;
     }
 
 }

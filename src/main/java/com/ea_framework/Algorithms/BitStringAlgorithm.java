@@ -1,25 +1,31 @@
 package com.ea_framework.Algorithms;
 
-import com.ea_framework.Candidates.Candidate;
-import com.ea_framework.ChoiceFunctions.BitStringChoiceFunction;
-import com.ea_framework.FitnessFunctions.BitStringFitness;
-import com.ea_framework.Mutation.BitStringMutationOperator;
+import com.ea_framework.ChoiceFunctions.BitStringGreedyChoice;
+import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.FitnessFunctions.BitStringLeadingOnes;
+import com.ea_framework.FitnessFunctions.Fitness;
+import com.ea_framework.Mutation.MutationOperator;
+import com.ea_framework.Mutation.RLSBitString;
+import com.ea_framework.StartAlgorithms.LoadPermutationBitString;
+import com.ea_framework.StartAlgorithms.StartAlgorithm;
+import com.ea_framework.StartAlgorithms.TspFromStartToEnd;
 
-import java.util.Arrays;
+public class BitStringAlgorithm implements Algorithms<boolean[]> {
+    private static int MAX_ITERATIONS;
 
-public class BitStringAlgorithm extends Algorithms {
+    private static int iterations = 0;
+
     protected boolean[] currentSolution;
-    private final BitStringChoiceFunction choiceFunction;
+    private final ChoiceFunction<boolean[], Integer> choiceFunction;
 
-    private final BitStringFitness fitnessFunction;
+    private final Fitness<boolean[], Integer> fitnessFunction;
 
-    private final BitStringMutationOperator mutationOperator;
+    private final MutationOperator<boolean[]> mutationOperator;
 
     int currentFitness;
 
-    public BitStringAlgorithm(int maxIterations, BitStringFitness fitnessFunction,
-                              BitStringMutationOperator mutationOperator, BitStringChoiceFunction choiceFunction) {
-        super(maxIterations);
+    public BitStringAlgorithm(BitStringLeadingOnes fitnessFunction,
+                              RLSBitString mutationOperator, BitStringGreedyChoice choiceFunction) {
         this.choiceFunction = choiceFunction;
         this.fitnessFunction = fitnessFunction;
         this.mutationOperator = mutationOperator;
@@ -28,23 +34,40 @@ public class BitStringAlgorithm extends Algorithms {
 
     @Override
     public void run() {
-        for (int i = 0; i < maxIterations; i++) {
-            boolean[] copy = deepCopy(currentSolution);
-            mutationOperator.mutate(copy);
+        for (int i = 0; i < MAX_ITERATIONS; i++) {
+            boolean[] copy = mutationOperator.mutate(deepCopy(currentSolution));
 
-            currentSolution = choiceFunction(currentSolution, copy, i);
+            currentSolution = choiceFunction.choose(currentSolution, copy, evalFitness(currentSolution), evalFitness(copy), i);
             currentFitness = evalFitness(currentSolution);
 
-            System.out.println("Fitness: " + currentFitness + " Iteration: " + i);
+            System.out.println("Fitness: " + currentFitness + " Iteration: " + iterations);
+            iterations++;
 
         }
 
     }
 
-    public boolean[] choiceFunction(boolean[] currentSolution, boolean[] copy, int iteration) {
-        return choiceFunction.chooseCandidate(currentSolution, copy, evalFitness(currentSolution),
-                evalFitness(copy), iteration);
+    @Override
+    public boolean[] getResult() {
+        return currentSolution;
     }
+
+    @Override
+    public void setFirst(boolean[] start) {
+        currentSolution = start;
+    }
+
+    @Override
+    public int getIterations() {
+        return iterations;
+    }
+
+    @Override
+    public void setMaxIterations(int maxIterations) {
+        MAX_ITERATIONS = maxIterations;
+
+    }
+
 
     public int evalFitness(boolean[] permutation) {
         return fitnessFunction.evaluate(permutation);

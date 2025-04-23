@@ -1,5 +1,5 @@
 package com.ea_framework.Mutation;
 
-public interface MutationOperator<T> {
-    void mutate(T solution);
+public interface MutationOperator<Var> {
+    Var mutate(Var solution);
 }

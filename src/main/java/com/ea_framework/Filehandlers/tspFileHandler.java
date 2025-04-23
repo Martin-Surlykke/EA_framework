@@ -15,9 +15,11 @@ public class tspFileHandler {
     static String edge_weight_type;
 
     static ArrayList<Integer []> nodeList = new ArrayList<>();
-    static int [][] edgeList;
+    static int [] edgeList;
     static double [][] distanceMatrix;
     static int [] permutation;
+
+    static int [][] coordinateList;
 
 
     public static void handleTSP (String filePath) throws IOException {
@@ -67,8 +69,7 @@ public class tspFileHandler {
         }
 
         createDistanceMatrix();
-        createFirstPermutation(nodeList);
-        createEdgeList(permutation);
+        permutation = createFirstPermutation(nodeList);
     }
 
     public static int [] getLargestVal (ArrayList<Integer []>  list) {
@@ -95,6 +96,22 @@ public class tspFileHandler {
         }
     }
 
+    public static void createCoordinateList(ArrayList<Integer []>  list) {
+        coordinateList = new int[3][list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < 3; j++) {
+                coordinateList[i][j] = list.get(i)[j];
+            }
+        }
+
+
+    }
+
+    public static int [][] getCoordinateList () {
+        return coordinateList;
+    }
+
     public static double [][] getDistanceMatrix(){
         return distanceMatrix;
     }
@@ -103,13 +120,12 @@ public class tspFileHandler {
         return Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1),2));
     }
 
-    public static void createFirstPermutation(ArrayList<Integer []> arr){
+    public static int[] createFirstPermutation(ArrayList<Integer []> arr){
         permutation = new int[arr.size()];
         for (int i = 0; i < arr.size(); i++){
             permutation[i] = arr.get(i)[0];
         }
-
-        fisherYatesShuffle(permutation);
+        return permutation;
     }
 
     public static int [] getNodeIndex () {
@@ -125,40 +141,8 @@ public class tspFileHandler {
     }
 
 
-    public static void createEdgeList (int [] list) {
-        edgeList = new int[list.length][2];
-
-        for (int i = 0; i < list.length; i++){
-            int node1 = list[i];
-            int node2;
-            if (i == list.length-1){
-                node2 = list[0];
-            } else {
-                node2 = list[i+1];
-            }
-
-            edgeList[i][0] = node1;
-            edgeList[i][1] = node2;
-        }
-
-    }
-
-    public static int [][] getEdgeList(){
+    public static int [] getEdgeList(){
         return edgeList;
-    }
-
-
-    public static void fisherYatesShuffle(int [] arr){
-
-        Random rand = new Random();
-
-        for (int i = arr.length-1; i > 0; i--){
-            int j = rand.nextInt(i);
-            int temp = arr[j];
-            arr[j] = arr[i];
-            arr[i] = temp;
-
-        }
     }
 
 
@@ -166,8 +150,8 @@ public class tspFileHandler {
         System.out.print(Arrays.toString(arr));
     }
 
-    public static void setEdgelist(int[][] anneal) {
-        edgeList = anneal;
+    public static void setEdgelist(int[] input) {
+        edgeList = input.clone();
     }
 
     public static String getName() {
