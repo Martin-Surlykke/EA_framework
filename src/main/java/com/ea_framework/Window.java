@@ -1,7 +1,5 @@
 package com.ea_framework;
 
-import com.ea_framework.Algorithms.RLS_tsp;
-import com.ea_framework.Algorithms.simulatedAnnealing;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -12,7 +10,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static com.ea_framework.tspHandler.*;
 

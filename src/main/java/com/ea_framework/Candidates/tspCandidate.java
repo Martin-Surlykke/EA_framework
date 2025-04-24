@@ -7,7 +7,6 @@ import com.ea_framework.StartAlgorithms.TspFromStartToEnd;
 import java.io.IOException;
 
 public class tspCandidate implements Candidate{
-
     private  String Name;
 
     private  String Comment;
@@ -58,6 +57,9 @@ public class tspCandidate implements Candidate{
         return Name;
     }
 
+    public double[][] getDistanceMatrix() {
+        return distanceMatrix;
+    }
 
     public  String getComment() {
         return Comment;
@@ -69,5 +71,13 @@ public class tspCandidate implements Candidate{
 
     public  String getEdgeWeightType() {
         return edge_weight_type;
+    }
+
+    public  int[] getPermutation() {
+        return permutation;
+    }
+
+    public void setPermutation(int [] permutation) {
+        this.permutation = permutation;
     }
 }

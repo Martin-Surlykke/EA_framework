@@ -1,20 +1,10 @@
 package com.ea_framework.Algorithms;
 
-import com.ea_framework.ChoiceFunctions.BitStringGreedyChoice;
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
-import com.ea_framework.FitnessFunctions.BitStringLeadingOnes;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.Mutation.MutationOperator;
-import com.ea_framework.Mutation.RLSBitString;
-import com.ea_framework.StartAlgorithms.LoadPermutationBitString;
-import com.ea_framework.StartAlgorithms.StartAlgorithm;
-import com.ea_framework.StartAlgorithms.TspFromStartToEnd;
 
 public class BitStringAlgorithm implements Algorithms<boolean[]> {
-    private static int MAX_ITERATIONS;
-
-    private static int iterations = 0;
-
     protected boolean[] currentSolution;
     private final ChoiceFunction<boolean[], Integer> choiceFunction;
 
@@ -24,26 +14,23 @@ public class BitStringAlgorithm implements Algorithms<boolean[]> {
 
     int currentFitness;
 
-    public BitStringAlgorithm(BitStringLeadingOnes fitnessFunction,
-                              RLSBitString mutationOperator, BitStringGreedyChoice choiceFunction) {
-        this.choiceFunction = choiceFunction;
-        this.fitnessFunction = fitnessFunction;
-        this.mutationOperator = mutationOperator;
+    public BitStringAlgorithm(Fitness<boolean[], Integer> fitness,
+                              MutationOperator<boolean[]> mutation,
+                              ChoiceFunction <boolean[], Integer> choice) {
+        this.choiceFunction = choice;
+        this.fitnessFunction = fitness;
+        this.mutationOperator = mutation;
         currentFitness = 0;
     }
 
     @Override
-    public void run() {
-        for (int i = 0; i < MAX_ITERATIONS; i++) {
+    public void run(int i) {
             boolean[] copy = mutationOperator.mutate(deepCopy(currentSolution));
 
             currentSolution = choiceFunction.choose(currentSolution, copy, evalFitness(currentSolution), evalFitness(copy), i);
             currentFitness = evalFitness(currentSolution);
 
-            System.out.println("Fitness: " + currentFitness + " Iteration: " + iterations);
-            iterations++;
-
-        }
+            System.out.println("Fitness: " + currentFitness + " Iteration: " + i);
 
     }
 
@@ -57,16 +44,6 @@ public class BitStringAlgorithm implements Algorithms<boolean[]> {
         currentSolution = start;
     }
 
-    @Override
-    public int getIterations() {
-        return iterations;
-    }
-
-    @Override
-    public void setMaxIterations(int maxIterations) {
-        MAX_ITERATIONS = maxIterations;
-
-    }
 
 
     public int evalFitness(boolean[] permutation) {
