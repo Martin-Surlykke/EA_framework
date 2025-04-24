@@ -48,8 +48,8 @@ public class Window extends Application {
          double [][] DM = tspHandler.getDistanceMatrix();
          int [][] input = tspHandler.getEdgeList();
 
-         int [][] output = simulatedAnnealing.anneal(input, 0.08, DM, 1000000);
-        tspHandler.setEdgelist(output);
+     //    int [][] output = simulatedAnnealing.anneal(input, 0.08, DM, 1000000);
+    //    tspHandler.setEdgelist(output);
 
 
 

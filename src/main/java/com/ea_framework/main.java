@@ -23,7 +23,7 @@ public class main {
     public static void main(String[] args) throws IOException {
         bitStringCandidate b = new bitStringCandidate("src/main/resources/bitStringFiles/bitString30.txt");
         BitStringLeadingOnes leadingOnes = new BitStringLeadingOnes();
-        GreedyChoice<boolean[], int> greedyChoice = new GreedyChoice<boolean[], int>()
+        GreedyChoice<boolean[], Integer> greedyChoice = new GreedyChoice<boolean[], Integer>(Comparator.naturalOrder());
         RLSBitString rls = new RLSBitString();
         BitStringAlgorithm bitAlgo = new BitStringAlgorithm(leadingOnes, rls, greedyChoice);
 
