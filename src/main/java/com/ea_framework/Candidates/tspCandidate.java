@@ -1,8 +1,6 @@
 package com.ea_framework.Candidates;
 
 import com.ea_framework.Filehandlers.tspFileHandler;
-import com.ea_framework.StartAlgorithms.StartAlgorithm;
-import com.ea_framework.StartAlgorithms.TspFromStartToEnd;
 
 import java.io.IOException;
 
@@ -15,11 +13,14 @@ public class tspCandidate implements Candidate{
 
     private  String edge_weight_type;
 
-     int [] edgeList;
+    private int [][] coordinateList;
 
     double [][] distanceMatrix;
 
      int [] permutation;
+
+     int maxX;
+     int maxY;
 
     @Override
     public void setStartCandidate(String filePath) throws IOException {
@@ -28,9 +29,11 @@ public class tspCandidate implements Candidate{
         Comment = tspFileHandler.getComment();
         type = tspFileHandler.getType();
         edge_weight_type = tspFileHandler.getEdgeWeightType();
-        edgeList = tspFileHandler.getEdgeList();
+        coordinateList = tspFileHandler.getCoordinateList();
         distanceMatrix = tspFileHandler.getDistanceMatrix();
         permutation = tspFileHandler.getPermutation();
+        maxX = tspFileHandler.getMaxX();
+        maxY = tspFileHandler.getMaxY();
 
 
         System.out.println("Name: " + Name);
@@ -52,6 +55,7 @@ public class tspCandidate implements Candidate{
         setStartCandidate(filePath);
 
     }
+
 
     public  String getName() {
         return Name;
@@ -79,5 +83,17 @@ public class tspCandidate implements Candidate{
 
     public void setPermutation(int [] permutation) {
         this.permutation = permutation;
+    }
+
+    public int [][] getCoordinateList () {
+        return coordinateList;
+    }
+
+    public int getMaxX() {
+        return maxX;
+    }
+
+    public int getMaxY() {
+        return maxY;
     }
 }

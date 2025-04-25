@@ -49,6 +49,10 @@ public class TSPAlgorithm implements Algorithms<int []> {
 
     }
 
+    public double getCurrentFitness() {
+        return currentFitness;
+    }
+
     private static int[] deepCopy(int[] input) {
         int[] copy = new int[input.length];
         System.arraycopy(input, 0, copy, 0, input.length);

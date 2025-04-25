@@ -15,12 +15,14 @@ public class tspFileHandler {
     static String edge_weight_type;
 
     static ArrayList<Integer []> nodeList = new ArrayList<>();
-    static int [] edgeList;
+    static int [][] edgeList;
     static double [][] distanceMatrix;
     static int [] permutation;
 
     static int [][] coordinateList;
 
+    static int maxX;
+    static int maxY;
 
     public static void handleTSP (String filePath) throws IOException {
         try {
@@ -69,20 +71,22 @@ public class tspFileHandler {
         }
 
         createDistanceMatrix();
-        permutation = createFirstPermutation(nodeList);
+        createFirstPermutation(nodeList);
+        createCoordinateList(nodeList);
+        setMaxVals(nodeList);
     }
 
-    public static int [] getLargestVal (ArrayList<Integer []>  list) {
-        int [] max = new int [2];
-
-        for (Integer[] integers : list) {
-            for (int j = 1; j <= 2; j++) {
-                if (integers[j] > max[j-1]) {
-                    max[j-1] = integers[j];
+    public static void setMaxVals (ArrayList<Integer []>  list) {
+        for (Integer[] node : list) {
+            {
+                if (node[1] > maxX) {
+                    maxX = node[1];
+                }
+                if (node[2] > maxY) {
+                    maxY = node[2];
                 }
             }
         }
-        return max;
     }
 
     public static void createDistanceMatrix() {
@@ -97,14 +101,13 @@ public class tspFileHandler {
     }
 
     public static void createCoordinateList(ArrayList<Integer []>  list) {
-        coordinateList = new int[3][list.size()];
+        coordinateList = new int[list.size()][3];
 
         for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < 3; j++) {
-                coordinateList[i][j] = list.get(i)[j];
-            }
+            coordinateList[i][0] = list.get(i)[0];
+            coordinateList[i][1] = list.get(i)[1];
+            coordinateList[i][2] = list.get(i)[2];
         }
-
 
     }
 
@@ -120,12 +123,11 @@ public class tspFileHandler {
         return Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1),2));
     }
 
-    public static int[] createFirstPermutation(ArrayList<Integer []> arr){
+    public static void createFirstPermutation(ArrayList<Integer []> arr){
         permutation = new int[arr.size()];
         for (int i = 0; i < arr.size(); i++){
             permutation[i] = arr.get(i)[0];
         }
-        return permutation;
     }
 
     public static int [] getNodeIndex () {
@@ -141,17 +143,8 @@ public class tspFileHandler {
     }
 
 
-    public static int [] getEdgeList(){
+    public static int [][] getEdgeList(){
         return edgeList;
-    }
-
-
-    public static void printPermutation(int [] arr){
-        System.out.print(Arrays.toString(arr));
-    }
-
-    public static void setEdgelist(int[] input) {
-        edgeList = input.clone();
     }
 
     public static String getName() {
@@ -161,12 +154,21 @@ public class tspFileHandler {
     public static String getComment() {
         return Comment;
     }
+
     public static String getType() {
         return type;
     }
+
     public static String getEdgeWeightType() {
         return edge_weight_type;
     }
 
 
+    public static int getMaxX() {
+        return maxX;
+    }
+
+    public static int getMaxY() {
+        return maxY;
+    }
 }
