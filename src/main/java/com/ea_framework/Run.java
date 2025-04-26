@@ -15,20 +15,18 @@ import com.ea_framework.View.FitnessView.GraphFitnessView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.layout.HBox;
 
 import java.util.Comparator;
 
 public class Run extends Application {
-    private static final int MAX_ITERATIONS = 10000;
+    private static final int MAX_ITERATIONS = 1000;
 
     @Override
     public void start(Stage stage) throws Exception {
         // Initialize the TSP components
-        tspCandidate t = new tspCandidate("src/main/resources/tspFiles/st70.tsp");
+        tspCandidate t = new tspCandidate("src/main/resources/tspFiles/test25.tsp");
         Fitness<DistanceMatrixContext<int[]>, Double> distance = new TspEuclidianDistance();
         ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
         MutationOperator<int[]> twoOpt = new TwoOptTsp();
@@ -44,7 +42,7 @@ public class Run extends Application {
                  fitnessView.getView()
         );
 
-        Scene scene = new Scene(layout, 850, 900);
+        Scene scene = new Scene(layout, 800, 1000);
         stage.setScene(scene);
         stage.setTitle("TSP Visualizer");
         stage.show();
@@ -63,7 +61,7 @@ public class Run extends Application {
                         fitnessView.update(fitness, MAX_ITERATIONS);
             });
                 try {
-                    Thread.sleep(4);
+                    Thread.sleep(25);
                 } catch (InterruptedException ignored) {}
             }
         }).start();

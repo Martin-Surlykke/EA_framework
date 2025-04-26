@@ -21,7 +21,7 @@ public class GraphFitnessView implements FitnessView {
         lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle("Fitness over Iterations");
         lineChart.setAnimated(false);
-        lineChart.setPrefSize(400, 300);
+        lineChart.setPrefSize(800, 300);
 
         fitnessSeries = new XYChart.Series<>();
         lineChart.getData().add(fitnessSeries);

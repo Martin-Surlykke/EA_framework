@@ -21,7 +21,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
 
 
     public TspCandidateView(tspCandidate tspCandidate) {
-        graphPane.setPrefSize(850, 600);
+        graphPane.setPrefSize(700, 700);
         graphPane.getChildren().addAll(historyLayer, edgeLayer, nodeLayer);
         int maxX = tspCandidate.getMaxX();
         int maxY = tspCandidate.getMaxY();
