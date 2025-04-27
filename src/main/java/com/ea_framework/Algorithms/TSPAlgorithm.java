@@ -18,6 +18,10 @@ public class TSPAlgorithm implements Algorithms<int []> {
 
     double currentFitness;
 
+    double bestFitness;
+
+    int bestIteration;
+
     public TSPAlgorithm(Fitness<DistanceMatrixContext<int[]>, Double> fitness,
                         MutationOperator<int[]> mutation,
                         ChoiceFunction<int[], Double> choice,
@@ -26,16 +30,20 @@ public class TSPAlgorithm implements Algorithms<int []> {
         this.fitnessFunction = fitness;
         this.mutationOperator = mutation;
         this.DistanceMatrix = DM;
-        currentFitness = 0.0;
+        currentFitness = Double.MAX_VALUE;
+        bestFitness = Double.MAX_VALUE;
+        bestIteration = 0;
     }
     @Override
     public void run(int iterations) {
         int[] copy = mutationOperator.mutate(deepCopy(currentSolution));
 
         currentSolution = choiceFunction.choose(currentSolution, copy, evalFitness(currentSolution), evalFitness(copy), iterations);
+        if (currentFitness < bestFitness) {
+            bestFitness = currentFitness;
+            bestIteration = iterations;
+        }
         currentFitness = evalFitness(currentSolution);
-
-        System.out.println("Fitness: " + currentFitness + " Iteration: " + iterations);
 
     }
 
@@ -51,6 +59,14 @@ public class TSPAlgorithm implements Algorithms<int []> {
 
     public double getCurrentFitness() {
         return currentFitness;
+    }
+
+    public double getBestFitness() {
+        return bestFitness;
+    }
+
+    public int getBestIteration() {
+        return bestIteration;
     }
 
     private static int[] deepCopy(int[] input) {

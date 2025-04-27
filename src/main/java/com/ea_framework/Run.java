@@ -12,21 +12,26 @@ import com.ea_framework.Mutation.TwoOptTsp;
 import com.ea_framework.View.CandidateView.TspCandidateView;
 import com.ea_framework.View.FitnessView.FitnessView;
 import com.ea_framework.View.FitnessView.GraphFitnessView;
+import com.ea_framework.View.InfoViews.ConfigView;
+import com.ea_framework.View.InfoViews.ConfigRecord;
+import com.ea_framework.View.InfoViews.StatRecord;
+import com.ea_framework.View.InfoViews.StatView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Comparator;
 
 public class Run extends Application {
-    private static final int MAX_ITERATIONS = 1000;
+    private static final int MAX_ITERATIONS = 50000;
 
     @Override
     public void start(Stage stage) throws Exception {
         // Initialize the TSP components
-        tspCandidate t = new tspCandidate("src/main/resources/tspFiles/test25.tsp");
+        tspCandidate t = new tspCandidate("src/main/resources/tspFiles/st70.tsp");
         Fitness<DistanceMatrixContext<int[]>, Double> distance = new TspEuclidianDistance();
         ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
         MutationOperator<int[]> twoOpt = new TwoOptTsp();
@@ -35,14 +40,44 @@ public class Run extends Application {
         TspCandidateView view = new TspCandidateView(t);
         FitnessView fitnessView = new GraphFitnessView(MAX_ITERATIONS);
 
-        VBox layout = new VBox();
+        ConfigRecord configRecord = new ConfigRecord(
+                "TSP",
+                "st70",
+                "Generic Algorithm",
+                "Simulated Annealing",
+                "EU2D",
+                "Two-Opt",
+                "Random"
+        );
 
-        layout.getChildren().addAll(
+        ConfigView configView = new ConfigView();
+        configView.update(configRecord);
+
+        StatView statView = new StatView();
+
+        VBox vBox1 = new VBox();
+
+        vBox1.getChildren().addAll(
                  view.getView(),
                  fitnessView.getView()
         );
 
-        Scene scene = new Scene(layout, 800, 1000);
+        VBox vBox2 = new VBox();
+        vBox2.getChildren().addAll(
+                configView.getView(),
+                statView.getView()
+        );
+
+        HBox layout = new HBox();
+
+        layout.getChildren().addAll(
+
+                vBox2,
+                vBox1
+        );
+
+
+        Scene scene = new Scene(layout, 1200, 900);
         stage.setScene(scene);
         stage.setTitle("TSP Visualizer");
         stage.show();
@@ -50,18 +85,38 @@ public class Run extends Application {
         tspAlgo.setCurrentSolution(t.getPermutation());
 
         new Thread(() -> {
+            long lastUpdate = System.nanoTime();
+            long updateInterval = 20_000_000; // 20ms in nanoseconds
+
             for (int i = 0; i < MAX_ITERATIONS; i++) {
+                int n = i;
                 tspAlgo.run(i);
                 t.setPermutation(tspAlgo.getCurrentSolution());
 
                 double fitness = tspAlgo.getCurrentFitness();
 
-                Platform.runLater(() -> {
+                StatRecord statRecord = new StatRecord(
+                        i,
+                        i*2,
+                        tspAlgo.getCurrentFitness(),
+                        tspAlgo.getBestIteration(),
+                        tspAlgo.getBestIteration()*2,
+                        tspAlgo.getBestFitness()
+                );
+
+                long now = System.nanoTime();
+                if (now - lastUpdate >= updateInterval) {
+                    lastUpdate = now;
+                    int finalI = i;
+                    Platform.runLater(() -> {
                         view.update(t);
-                        fitnessView.update(fitness, MAX_ITERATIONS);
-            });
+                        fitnessView.update(fitness, n);
+                        statView.update(statRecord);
+                    });
+                }
+
                 try {
-                    Thread.sleep(25);
+                    Thread.sleep(1);
                 } catch (InterruptedException ignored) {}
             }
         }).start();

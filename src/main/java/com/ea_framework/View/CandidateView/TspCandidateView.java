@@ -1,34 +1,40 @@
 package com.ea_framework.View.CandidateView;
+
 import com.ea_framework.Candidates.tspCandidate;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
 public class TspCandidateView implements CandidateView<tspCandidate> {
 
     private final Pane graphPane = new Pane();
-    private final Pane edgeLayer = new Pane();
-    private final Pane historyLayer = new Pane();
+    private final Canvas historyCanvas = new Canvas(700, 700);
+    private final Canvas edgeCanvas = new Canvas(700, 700);
     private final Pane nodeLayer = new Pane();
 
-    private final int [][] coordinateList;
+    private final int[][] coordinateList;
+
+    private boolean [][] drawnLines;
 
     double xFactor;
     double yFactor;
 
-
     public TspCandidateView(tspCandidate tspCandidate) {
-        graphPane.setPrefSize(700, 700);
-        graphPane.getChildren().addAll(historyLayer, edgeLayer, nodeLayer);
+        int n = tspCandidate.getNodeCount();
+        graphPane.setPrefSize(600, 600);
+        graphPane.getChildren().addAll(historyCanvas, edgeCanvas, nodeLayer);
+        drawnLines = new boolean[n][n];
+
         int maxX = tspCandidate.getMaxX();
         int maxY = tspCandidate.getMaxY();
-        xFactor = (double) 750 / maxX;
+        xFactor = (double) 550 / maxX;
         yFactor = (double) 550 / maxY;
         this.coordinateList = tspCandidate.getCoordinateList();
-        drawNodes(graphPane, coordinateList, xFactor, yFactor);
+        drawNodes(nodeLayer, coordinateList, xFactor, yFactor);
     }
 
     @Override
@@ -38,57 +44,56 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
 
     @Override
     public void update(tspCandidate candidate) {
+        GraphicsContext edgeGC = edgeCanvas.getGraphicsContext2D();
+        edgeGC.clearRect(0, 0, edgeCanvas.getWidth(), edgeCanvas.getHeight()); // Only clear edgeCanvas!
 
-        edgeLayer.getChildren().clear();
-
-        int [] permutation = candidate.getPermutation();
+        int[] permutation = candidate.getPermutation();
         drawOldPath(permutation);
         drawCurrentPath(permutation);
     }
 
     private void drawCurrentPath(int[] permutation) {
-        edgeLayer.getChildren().clear(); // ✅ remove old "current"
+        GraphicsContext gc = edgeCanvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(3.0);
 
         for (int i = 0; i < permutation.length; i++) {
             int from = permutation[i];
             int to = permutation[(i + 1) % permutation.length];
 
-            int x1 = coordinateList[from][1];
-            int y1 = coordinateList[from][2];
-            int x2 = coordinateList[to][1];
-            int y2 = coordinateList[to][2];
+            double x1 = coordinateList[from][1] * xFactor;
+            double y1 = coordinateList[from][2] * yFactor;
+            double x2 = coordinateList[to][1] * xFactor;
+            double y2 = coordinateList[to][2] * yFactor;
 
-            Line line = new Line(x1 * xFactor, y1 * yFactor, x2 * xFactor, y2 * yFactor);
-            line.setFill(Color.BLACK);
-            line.setStroke(Color.BLACK);
-            line.setStrokeWidth(3.0);
-            edgeLayer.getChildren().add(line);
+            gc.strokeLine(x1, y1, x2, y2);
         }
     }
 
     private void drawOldPath(int[] permutation) {
+        GraphicsContext gc = historyCanvas.getGraphicsContext2D();
+        gc.setStroke(Color.LIGHTGRAY);
+        gc.setLineWidth(1.0);
+
+
+
         for (int i = 0; i < permutation.length; i++) {
             int from = permutation[i];
             int to = permutation[(i + 1) % permutation.length];
 
-            int x1 = coordinateList[from][1];
-            int y1 = coordinateList[from][2];
-            int x2 = coordinateList[to][1];
-            int y2 = coordinateList[to][2];
-
-            Line line = new Line(x1 * xFactor, y1 * yFactor, x2 * xFactor, y2 * yFactor);
-            line.setStroke(Color.LIGHTGRAY);
-            line.setStrokeWidth(1.0);
-            historyLayer.getChildren().add(line);
+            if (!drawnLines[from][to]) {
+                drawnLines[from][to] = true;
+                drawnLines[to][from] = true;  // symmetry
+                double x1 = coordinateList[from][1] * xFactor;
+                double y1 = coordinateList[from][2] * yFactor;
+                double x2 = coordinateList[to][1] * xFactor;
+                double y2 = coordinateList[to][2] * yFactor;
+                gc.strokeLine(x1, y1, x2, y2);
+            }
         }
     }
 
-
-    public static void drawNodes(Pane nodeLayer,
-                                 int [][] coordinateList,
-                                 double xFactor,
-                                 double yFactor) {
-
+    public static void drawNodes(Pane nodeLayer, int[][] coordinateList, double xFactor, double yFactor) {
         for (int[] node : coordinateList) {
             int index = node[0];
             int x = node[1];
@@ -105,10 +110,9 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             label.setY(yScaled);
             label.setStyle("-fx-font-size: 10px; -fx-font-weight: bold;");
 
-            // Center the text using bounds
             label.layoutBoundsProperty().addListener((obs, old, bounds) -> {
                 label.setTranslateX(-bounds.getWidth() / 2.0);
-                label.setTranslateY(+bounds.getHeight() / 4.0); // visually centers better
+                label.setTranslateY(+bounds.getHeight() / 4.0);
             });
 
             nodeLayer.getChildren().addAll(circle, label);

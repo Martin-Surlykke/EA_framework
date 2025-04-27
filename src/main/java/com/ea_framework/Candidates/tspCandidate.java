@@ -19,6 +19,8 @@ public class tspCandidate implements Candidate{
 
      int [] permutation;
 
+     int nodeCount;
+
      int maxX;
      int maxY;
 
@@ -32,6 +34,7 @@ public class tspCandidate implements Candidate{
         coordinateList = tspFileHandler.getCoordinateList();
         distanceMatrix = tspFileHandler.getDistanceMatrix();
         permutation = tspFileHandler.getPermutation();
+        nodeCount = permutation.length;
         maxX = tspFileHandler.getMaxX();
         maxY = tspFileHandler.getMaxY();
 
@@ -59,6 +62,10 @@ public class tspCandidate implements Candidate{
 
     public  String getName() {
         return Name;
+    }
+
+    public int getNodeCount() {
+        return nodeCount;
     }
 
     public double[][] getDistanceMatrix() {

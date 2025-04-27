@@ -33,7 +33,7 @@ public class GraphFitnessView implements FitnessView {
 
     @Override
     public void update(Number fitness, int iterations) {
-        fitnessSeries.getData().add(new XYChart.Data<>(iteration++, fitness));
+        fitnessSeries.getData().add(new XYChart.Data<>(iterations, fitness));
     }
 
     public void reset() {
