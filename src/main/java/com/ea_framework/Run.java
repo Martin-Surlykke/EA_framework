@@ -55,32 +55,6 @@ public class Run extends Application {
 
         StatView statView = new StatView();
 
-        VBox vBox1 = new VBox();
-
-        vBox1.getChildren().addAll(
-                 view.getView(),
-                 fitnessView.getView()
-        );
-
-        VBox vBox2 = new VBox();
-        vBox2.getChildren().addAll(
-                configView.getView(),
-                statView.getView()
-        );
-
-        HBox layout = new HBox();
-
-        layout.getChildren().addAll(
-
-                vBox2,
-                vBox1
-        );
-
-
-        Scene scene = new Scene(layout, 1200, 900);
-        stage.setScene(scene);
-        stage.setTitle("TSP Visualizer");
-        stage.show();
 
         tspAlgo.setCurrentSolution(t.getPermutation());
 
@@ -107,7 +81,6 @@ public class Run extends Application {
                 long now = System.nanoTime();
                 if (now - lastUpdate >= updateInterval) {
                     lastUpdate = now;
-                    int finalI = i;
                     Platform.runLater(() -> {
                         view.update(t);
                         fitnessView.update(fitness, n);

@@ -8,5 +8,6 @@ module com.ea_framework {
     exports com.ea_framework;
     exports com.ea_framework.Candidates;
     exports com.ea_framework.StartAlgorithms;
+    exports com.ea_framework.Controller;
     opens com.ea_framework.Candidates to javafx.fxml;
 }

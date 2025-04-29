@@ -23,16 +23,27 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
     double xFactor;
     double yFactor;
 
+    private static final double NODE_RADIUS = 10.0;
+    private static final double PADDING = NODE_RADIUS * 3;
+
+
     public TspCandidateView(tspCandidate tspCandidate) {
         int n = tspCandidate.getNodeCount();
         graphPane.setPrefSize(600, 600);
-        graphPane.getChildren().addAll(historyCanvas, edgeCanvas, nodeLayer);
+        graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
         drawnLines = new boolean[n][n];
 
         int maxX = tspCandidate.getMaxX();
         int maxY = tspCandidate.getMaxY();
-        xFactor = (double) 550 / maxX;
-        yFactor = (double) 550 / maxY;
+
+        graphPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+            xFactor = (newWidth.doubleValue()- PADDING) / maxX;
+            redrawNodes();
+        });
+        graphPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+            yFactor = (newHeight.doubleValue()- PADDING) / maxY;
+            redrawNodes();
+        });
         this.coordinateList = tspCandidate.getCoordinateList();
         drawNodes(nodeLayer, coordinateList, xFactor, yFactor);
     }
@@ -61,10 +72,10 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             int from = permutation[i];
             int to = permutation[(i + 1) % permutation.length];
 
-            double x1 = coordinateList[from][1] * xFactor;
-            double y1 = coordinateList[from][2] * yFactor;
-            double x2 = coordinateList[to][1] * xFactor;
-            double y2 = coordinateList[to][2] * yFactor;
+            double x1 = coordinateList[from][1] * xFactor + NODE_RADIUS;
+            double y1 = coordinateList[from][2] * yFactor + NODE_RADIUS;
+            double x2 = coordinateList[to][1] * xFactor + NODE_RADIUS;
+            double y2 = coordinateList[to][2] * yFactor + NODE_RADIUS;
 
             gc.strokeLine(x1, y1, x2, y2);
         }
@@ -84,10 +95,10 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             if (!drawnLines[from][to]) {
                 drawnLines[from][to] = true;
                 drawnLines[to][from] = true;  // symmetry
-                double x1 = coordinateList[from][1] * xFactor;
-                double y1 = coordinateList[from][2] * yFactor;
-                double x2 = coordinateList[to][1] * xFactor;
-                double y2 = coordinateList[to][2] * yFactor;
+                double x1 = coordinateList[from][1] * xFactor + NODE_RADIUS;
+                double y1 = coordinateList[from][2] * yFactor + NODE_RADIUS;
+                double x2 = coordinateList[to][1] * xFactor + NODE_RADIUS;
+                double y2 = coordinateList[to][2] * yFactor + NODE_RADIUS;
                 gc.strokeLine(x1, y1, x2, y2);
             }
         }
@@ -99,8 +110,8 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             int x = node[1];
             int y = node[2];
 
-            double xScaled = x * xFactor;
-            double yScaled = y * yFactor;
+            double xScaled = x * xFactor+ NODE_RADIUS;
+            double yScaled = y * yFactor + NODE_RADIUS;
 
             Circle circle = new Circle(xScaled, yScaled, 10);
             circle.setFill(Color.LIGHTBLUE);
@@ -118,4 +129,9 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             nodeLayer.getChildren().addAll(circle, label);
         }
     }
+    private void redrawNodes() {
+        nodeLayer.getChildren().clear();
+        drawNodes(nodeLayer, coordinateList, xFactor, yFactor);
+    }
+
 }
