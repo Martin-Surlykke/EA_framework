@@ -5,11 +5,14 @@ import com.ea_framework.Candidates.tspCandidate;
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.ChoiceFunctions.GreedyChoice;
 import com.ea_framework.Controller.RunController;
+import com.ea_framework.Filehandlers.tspFileParser;
 import com.ea_framework.FitnessFunctions.DistanceMatrixContext;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
+import com.ea_framework.Model.tspInstance;
 import com.ea_framework.Mutation.MutationOperator;
 import com.ea_framework.Mutation.TwoOptTsp;
+import com.ea_framework.StartAlgorithms.TSPRandomStart;
 import com.ea_framework.View.CandidateView.TspCandidateView;
 import com.ea_framework.View.FitnessView.FitnessView;
 import com.ea_framework.View.FitnessView.GraphFitnessView;
@@ -37,10 +40,18 @@ public class RunFramework extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        int MAX_ITERATIONS = 50000;
+        int MAX_ITERATIONS = 25000;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
+
         Scene scene = new Scene(fxmlLoader.load());
-        tspCandidate t = new tspCandidate("src/main/resources/tspFiles/st70.tsp");
+
+        tspInstance instance = tspFileParser.parse("src/main/resources/tspFiles/ch130.tsp");
+
+        tspCandidate t = new tspCandidate(instance);
+
+        TSPRandomStart randomStart = new TSPRandomStart();
+        randomStart.generateStart(t);
+
         Fitness<DistanceMatrixContext<int[]>, Double> distance = new TspEuclidianDistance();
         ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
         MutationOperator<int[]> twoOpt = new TwoOptTsp();
@@ -52,16 +63,17 @@ public class RunFramework extends Application {
         ConfigRecord configRecord = new ConfigRecord("TSP", "st70", "Generic Algorithm", "Simulated Annealing", "EU2D", "Two-Opt", "Random");
 
         ConfigView configView = new ConfigView();
+
         configView.update(configRecord);
 
         StatView statView = new StatView();
 
         RunController runController = fxmlLoader.getController();
 
-        runController.initialize(view, fitnessView, configView, statView);
+        runController.initialize(view, fitnessView, configView, statView, stage);
 
 
-        tspAlgo.setCurrentSolution(t.getPermutation());
+        tspAlgo.setCurrentSolution(t.getStartPermutation());
 
         stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
         stage.setScene(scene);
@@ -70,7 +82,7 @@ public class RunFramework extends Application {
 
         Thread solverThread = new Thread(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -82,10 +94,9 @@ public class RunFramework extends Application {
                 latestIteration.set(i);
                 latestStatRecord.set(new StatRecord(i, i * 2, tspAlgo.getCurrentFitness(), tspAlgo.getBestIteration(), tspAlgo.getBestIteration() * 2, tspAlgo.getBestFitness()));
                 try {
-                    Thread.sleep(5);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    break;
                 }
             }
         });

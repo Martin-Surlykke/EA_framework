@@ -10,51 +10,6 @@ public class TwoOptTsp implements MutationOperator<int[]> {
 
     }
 
-    public static int[] getNeighbours(int[] list, int index) {
-        int left, right;
-
-        if (index == list.length - 1) {
-            right = 0;
-            left = index - 1;
-        } else if (index == 0) {
-            left = list.length - 1;
-            right = index + 1;
-        } else {
-            left = index - 1;
-            right = index + 1;
-        }
-
-        return new int[]{left, right};
-    }
-
-    private static boolean edgesHaveCommonVertex(int[] list, int index1, int index2) {
-        int[] neighbors1 = getNeighbours(list, index1);
-        int[] neighbors2 = getNeighbours(list, index2);
-
-        int[] nodes1 = {
-                list[neighbors1[0]], // left
-                list[index1],
-                list[neighbors1[1]]  // right
-        };
-
-        int[] nodes2 = {
-                list[neighbors2[0]],
-                list[index2],
-                list[neighbors2[1]]
-        };
-
-        for (int a : nodes1) {
-            for (int b : nodes2) {
-                if (a == b) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-
         public static int[] createNeighbour (int[] input){
 
             int[] output = deepCopyList(input);
@@ -64,8 +19,7 @@ public class TwoOptTsp implements MutationOperator<int[]> {
             int i = rand.nextInt(input.length);
             int j = rand.nextInt(input.length);
 
-            // Ensure i and j are distinct and do not refer to the same edge
-            while (i == j || edgesHaveCommonVertex(input, i, j)) {
+            while (i == j || areAdjacent(i, j, input.length)) {
                 j = rand.nextInt(input.length);
             }
 
@@ -87,6 +41,10 @@ public class TwoOptTsp implements MutationOperator<int[]> {
                 y--;
             }
         }
+
+    public static boolean areAdjacent(int i, int j, int n) {
+        return Math.abs(i - j) == 1 || (i == 0 && j == n - 1) || (j == 0 && i == n - 1);
+    }
 
         public static int[] deepCopyList ( int[] list){
             int[] copy = new int[list.length];

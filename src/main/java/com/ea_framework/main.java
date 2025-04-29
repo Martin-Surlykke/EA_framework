@@ -38,20 +38,6 @@ public class main {
 
         System.out.println();
 
-        tspCandidate t = new tspCandidate("src/main/resources/tspFiles/st70.tsp");
-        Fitness<DistanceMatrixContext<int[]>, Double> distance = new TspEuclidianDistance();
-        ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
-        MutationOperator<int[]> twoOpt = new TwoOptTsp();
-        TSPAlgorithm tspAlgo = new TSPAlgorithm(distance, twoOpt, greedyMin, t.getDistanceMatrix());
-
-        tspAlgo.setCurrentSolution(t.getPermutation());
-
-        for (int i = 0; i < MAX_ITERATIONS; i++) {
-            tspAlgo.run(i);
-            t.setPermutation(tspAlgo.getCurrentSolution());
-        }
-        System.out.println(t.stringify());
-
 
         
     }

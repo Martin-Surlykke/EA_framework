@@ -30,7 +30,7 @@ public class Run extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        // Initialize the TSP components
+  /*      // Initialize the TSP components
         tspCandidate t = new tspCandidate("src/main/resources/tspFiles/st70.tsp");
         Fitness<DistanceMatrixContext<int[]>, Double> distance = new TspEuclidianDistance();
         ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
@@ -97,5 +97,6 @@ public class Run extends Application {
 
     public static void main(String[] args) {
         launch(); // JavaFX launch
+     */
     }
 }

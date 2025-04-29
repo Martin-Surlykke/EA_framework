@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 
 public class RunController {
 
@@ -26,12 +27,16 @@ public class RunController {
     @FXML
     public Pane closePane;
 
+    @FXML
+    public Pane minimizePane;
+
 
     @FXML
     public void initialize(TspCandidateView tspCandidateView,
                            FitnessView fitnessView,
                            ConfigView configView,
-                           StatView statView) {
+                           StatView statView,
+                           Stage stage) {
 
         fitToPane(tspCandidateView.getView(), visualizePane);
         fitToPane(fitnessView.getView(), fitnessPane);
@@ -39,8 +44,11 @@ public class RunController {
         fitToPane(statView.getView(), statPane);
 
         closePane.setOnMouseClicked(event -> {
-            Platform.exit(); // Closes the application
-            // Or use: ((Stage) close.getScene().getWindow()).close(); to just close the window
+            Platform.exit();
+        });
+
+        minimizePane.setOnMouseClicked(event -> {
+            stage.setIconified(true);
         });
     }
 

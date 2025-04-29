@@ -1,9 +1,12 @@
 package com.ea_framework.StartAlgorithms;
 
-public class LoadPermutationBitString implements StartAlgorithm<boolean[], boolean[]> {
+import com.ea_framework.Candidates.bitStringCandidate;
+
+public class LoadPermutationBitString implements StartAlgorithm<bitStringCandidate> {
 
     @Override
-    public boolean[] firstPermutation(boolean[] input) {
-        return input;
+    public void generateStart(bitStringCandidate bitStringCandidate) {
+        boolean [] bitString = bitStringCandidate.getBitString();
+        bitStringCandidate.setStartBitstring(bitString);
     }
 }

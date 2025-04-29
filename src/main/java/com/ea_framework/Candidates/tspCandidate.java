@@ -1,48 +1,29 @@
 package com.ea_framework.Candidates;
 
-import com.ea_framework.Filehandlers.tspFileHandler;
+import com.ea_framework.Coordinate;
+import com.ea_framework.Model.tspInstance;
 
 import java.io.IOException;
+import java.util.List;
 
 public class tspCandidate implements Candidate{
-    private  String Name;
 
-    private  String Comment;
+    private final tspInstance instance;
 
-    private  String type;
+    private int[] permutation;
 
-    private  String edge_weight_type;
+    private int[] startPermutation;
 
-    private int [][] coordinateList;
+    public tspCandidate(tspInstance instance) {
+        this.instance = instance;
+        this.permutation = instance.getPermutation();
 
-    double [][] distanceMatrix;
+    }
 
-     int [] permutation;
-
-     int nodeCount;
-
-     int maxX;
-     int maxY;
 
     @Override
     public void setStartCandidate(String filePath) throws IOException {
-        tspFileHandler.handleTSP(filePath);
-        Name = tspFileHandler.getName();
-        Comment = tspFileHandler.getComment();
-        type = tspFileHandler.getType();
-        edge_weight_type = tspFileHandler.getEdgeWeightType();
-        coordinateList = tspFileHandler.getCoordinateList();
-        distanceMatrix = tspFileHandler.getDistanceMatrix();
-        permutation = tspFileHandler.getPermutation();
-        nodeCount = permutation.length;
-        maxX = tspFileHandler.getMaxX();
-        maxY = tspFileHandler.getMaxY();
 
-
-        System.out.println("Name: " + Name);
-        System.out.println("Comment: " + Comment);
-        System.out.println("Type: " + type);
-        System.out.println("EdgeWeightType: " + edge_weight_type);
     }
 
     @Override
@@ -54,53 +35,65 @@ public class tspCandidate implements Candidate{
         return sb.toString();
     }
 
-    public tspCandidate(String filePath) throws IOException {
-        setStartCandidate(filePath);
 
+
+    public String getName() {
+        return instance.name;
     }
 
+    public String getComment() {
+        return instance.comment;
+    }
 
-    public  String getName() {
-        return Name;
+    public String getType() {
+        return instance.type;
+    }
+
+    public String getEdgeWeightType() {
+        return instance.edgeWeightType;
     }
 
     public int getNodeCount() {
-        return nodeCount;
+        return instance.coordinates.size();
     }
 
     public double[][] getDistanceMatrix() {
-        return distanceMatrix;
+        return instance.distanceMatrix;
     }
 
-    public  String getComment() {
-        return Comment;
+    public List<Coordinate> getCoordinateList() {
+        return instance.coordinates;
     }
 
-    public  String getType() {
-        return type;
+    public double getMaxX() {
+        return instance.maxX;
     }
 
-    public  String getEdgeWeightType() {
-        return edge_weight_type;
+    public double getMaxY() {
+        return instance.maxY;
     }
 
-    public  int[] getPermutation() {
+    public int[] getPermutation() {
         return permutation;
     }
 
-    public void setPermutation(int [] permutation) {
+    public int[] getStartPermutation() {
+        return startPermutation;
+    }
+
+    public void setStartPermutation(int[] startPermutation) {
+        this.startPermutation = startPermutation;
+    }
+
+    public void setPermutation(int[] permutation) {
         this.permutation = permutation;
     }
 
-    public int [][] getCoordinateList () {
-        return coordinateList;
+    public double getMinX() {
+        return instance.minX;
     }
 
-    public int getMaxX() {
-        return maxX;
-    }
-
-    public int getMaxY() {
-        return maxY;
+    public double getMinY() {
+        return instance.minY;
     }
 }

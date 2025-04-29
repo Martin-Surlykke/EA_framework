@@ -1,10 +1,7 @@
 package com.ea_framework.Candidates;
 import com.ea_framework.Filehandlers.BitStringFileHandler;
-import com.ea_framework.StartAlgorithms.LoadPermutationBitString;
-import com.ea_framework.StartAlgorithms.StartAlgorithm;
 
 import java.io.IOException;
-import java.util.Optional;
 
 
 public class bitStringCandidate implements Candidate{
@@ -34,5 +31,9 @@ public class bitStringCandidate implements Candidate{
 
     public void setBitString(boolean[] input) {
         this.bitString = input;
+    }
+
+    public void setStartBitstring(boolean[] bitString) {
+        this.bitString = bitString;
     }
 }

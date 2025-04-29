@@ -11,6 +11,5 @@ public class RunConfiguration {
     public Fitness<?, ?> fitness;
     public MutationOperator<?> mutationOperator;
     public ChoiceFunction<?, ?> choiceFunction;
-    public StartAlgorithm <?, ?> startAlgorithm;
 
 }
