@@ -21,7 +21,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
 
     private final List<Coordinate> coordinateList;
 
-    private boolean [][] drawnLines;
+    private final int [][] drawnLines;
 
     double xFactor;
     double yFactor;
@@ -36,7 +36,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
         int n = tspCandidate.getNodeCount();
         graphPane.setPrefSize(600, 600);
         graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
-        drawnLines = new boolean[n][n];
+        drawnLines = new int [n][n];
 
         double maxX = tspCandidate.getMaxX();
         double maxY = tspCandidate.getMaxY();
@@ -73,8 +73,9 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
 
     private void drawCurrentPath(int[] permutation) {
         GraphicsContext gc = edgeCanvas.getGraphicsContext2D();
-        gc.setStroke(Color.gray(0.3));
-        gc.setLineWidth(2.0);
+        gc.setStroke(Color.RED);
+        gc.setGlobalAlpha(0.5);
+        gc.setLineWidth(3.0);
 
         for (int i = 0; i < permutation.length; i++) {
             int from = permutation[i];
@@ -92,7 +93,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
 
     private void drawOldPath(int[] permutation) {
         GraphicsContext gc = historyCanvas.getGraphicsContext2D();
-        gc.setStroke(Color.LIGHTGRAY);
+        gc.setStroke(Color.gray(0.4));
         gc.setLineWidth(1.0);
 
 
@@ -100,16 +101,19 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
         for (int i = 0; i < permutation.length; i++) {
             int from = permutation[i];
             int to = permutation[(i + 1) % permutation.length];
-
-            if (!drawnLines[from][to]) {
-                drawnLines[from][to] = true;
-                drawnLines[to][from] = true;  // symmetry
+             
+                drawnLines[from][to]++;
+                drawnLines[to][from]++;  // symmetry
                 double x1 = (coordinateList.get(from).x() - minX) * xFactor + NODE_RADIUS;
                 double y1 = (coordinateList.get(from).y() - minY) * yFactor + NODE_RADIUS;
                 double x2 = (coordinateList.get(to).x() - minX) * xFactor + NODE_RADIUS;
                 double y2 = (coordinateList.get(to).y() - minY) * yFactor + NODE_RADIUS;
-                gc.strokeLine(x1, y1, x2, y2);
-            }
+
+            int count = drawnLines[from][to];
+            double alpha = Math.min(0.15, count * 0.01);
+            gc.setGlobalAlpha(alpha);
+
+            gc.strokeLine(x1, y1, x2, y2);
         }
     }
 
@@ -138,6 +142,8 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             nodeLayer.getChildren().addAll(circle, label);
         }
     }
+
+
     private void redrawNodes() {
         nodeLayer.getChildren().clear();
         drawNodes(nodeLayer, coordinateList, xFactor, yFactor, minX, minY);
