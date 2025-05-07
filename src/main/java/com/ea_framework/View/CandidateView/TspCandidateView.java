@@ -93,7 +93,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
 
     private void drawOldPath(int[] permutation) {
         GraphicsContext gc = historyCanvas.getGraphicsContext2D();
-        gc.setStroke(Color.gray(0.4));
+        gc.setStroke(Color.gray(0.6));
         gc.setLineWidth(1.0);
 
 
@@ -110,7 +110,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
                 double y2 = (coordinateList.get(to).y() - minY) * yFactor + NODE_RADIUS;
 
             int count = drawnLines[from][to];
-            double alpha = Math.min(0.15, count * 0.01);
+            double alpha = Math.min(0.05, count * 0.01);
             gc.setGlobalAlpha(alpha);
 
             gc.strokeLine(x1, y1, x2, y2);
