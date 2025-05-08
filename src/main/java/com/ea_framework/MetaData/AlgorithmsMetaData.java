@@ -2,10 +2,12 @@ package com.ea_framework.MetaData;
 
 import java.util.List;
 
-public interface ProblemMetadata {
+public interface AlgorithmsMetaData {
     String getName();
 
-    List<String> getCompatibleAlgorithms();
+    List<String> getCompatibleProblem();
 
     String getSearchSpace();
+
+
 }
