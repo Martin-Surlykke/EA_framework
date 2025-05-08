@@ -1,15 +1,15 @@
 package com.ea_framework.Filehandlers;
 
 import com.ea_framework.Coordinate;
-import com.ea_framework.Model.tspInstance;
+import com.ea_framework.Problems.TSP2DProblem;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class tspFileParser {
+public class TSPFileHandler {
 
-    public static tspInstance parse(String path) throws FileNotFoundException {
+    public static TSP2DProblem parse(String path) throws FileNotFoundException {
         Scanner sc = new Scanner(new File(path));
         sc.useLocale(Locale.US);
         String name = readValue(sc.nextLine());
@@ -49,7 +49,7 @@ public class tspFileParser {
         double [][] coordsArray = getCoordArray(coords);
         double[][] distMatrix = computeDistanceMatrix(coordsArray);
 
-        return new tspInstance(name, comment, type, edgeType, coords, distMatrix, permutation, maxX, maxY, minX, minY);
+        return new TSP2DProblem(name, comment, type, edgeType, coords, distMatrix, permutation, maxX, maxY, minX, minY);
     }
 
     private static double[][] getCoordArray(List<Coordinate> coords) {

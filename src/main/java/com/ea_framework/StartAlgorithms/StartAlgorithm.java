@@ -1,5 +1,5 @@
 package com.ea_framework.StartAlgorithms;
 
-public interface StartAlgorithm <Candidate> {
-    void generateStart(Candidate candidate);
+public interface StartAlgorithm <P, S> {
+    S generateFirstSolution(P problem);
 }

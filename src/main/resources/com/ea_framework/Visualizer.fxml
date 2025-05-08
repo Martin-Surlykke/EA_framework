@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controller.VisualizeController">
    <children>
       <Pane prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: DARKGRAY;">
          <children>
@@ -20,7 +20,7 @@
                   <Font name="Segoe UI Bold" size="22.0" />
                </font>
             </Text>
-            <Rectangle fx:id="underscore" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="29.0" layoutX="1113.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: DARKGRAY;" width="30.0" />
+            <Rectangle fx:id="minimizeWindow" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="29.0" layoutX="1113.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: DARKGRAY;" width="30.0" />
             <Text fx:id="underscoreText" layoutX="1117.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="_">
                <font>
                   <Font name="Segoe UI" size="55.0" />
@@ -33,7 +33,7 @@
             </Label>
             <Pane fx:id="closePane" layoutX="1154.0" layoutY="13.0" prefHeight="29.0" prefWidth="22.0">
                <children>
-                  <Text fx:id="closeText" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" textAlignment="CENTER" wrappingWidth="22.13671875">
+                  <Text fx:id="closeWindow" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" textAlignment="CENTER" wrappingWidth="22.13671875">
                      <font>
                         <Font name="Segoe UI Bold" size="35.0" />
                      </font>

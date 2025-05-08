@@ -1,17 +1,18 @@
-package com.ea_framework.View.CandidateView;
+package com.ea_framework.View.VisualizeView;
 
-import com.ea_framework.Candidates.bitStringCandidate;
+import com.ea_framework.Problems.BitStringProblem;
+import com.ea_framework.View.Viewables.BitStringViewable;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
-public class BitStringView implements CandidateView<bitStringCandidate> {
+public class BitStringView implements VisualizeView<BitStringViewable> {
     private final Pane coordinatePane = new Pane();
 
     private final Pane templatePane = new Pane();
     private final Pane historyLayer = new Pane();
     private final Pane nodeLayer = new Pane();
 
-    public BitStringView(bitStringCandidate bitStringCandidate) {
+    public BitStringView(BitStringProblem problem) {
         coordinatePane.setPrefSize(700, 700);
         coordinatePane.getChildren().addAll(templatePane, historyLayer, nodeLayer);
         drawTemplate();
@@ -23,7 +24,7 @@ public class BitStringView implements CandidateView<bitStringCandidate> {
     }
 
     @Override
-    public void update(bitStringCandidate candidate) {
+    public void update(BitStringViewable problem) {
 
     }
 

@@ -2,7 +2,7 @@ package com.ea_framework.ChoiceFunctions;
 
 import java.util.Random;
 
-public class TspSimulatedAnnealing implements ChoiceFunction<int[], Double> {
+public class TSP2DSimulatedAnnealing implements ChoiceFunction<int[], Double> {
     private double alpha;
     private double T_0;
 

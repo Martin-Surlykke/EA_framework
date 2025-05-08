@@ -1,7 +1,5 @@
 package com.ea_framework.MetaData;
 
-import com.ea_framework.Candidates.CandidateCreator;
-
 import java.util.HashMap;
 import java.util.Map;
 

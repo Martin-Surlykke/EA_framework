@@ -1,5 +1,5 @@
 package com.ea_framework.Controller;
-import com.ea_framework.View.CandidateView.TspCandidateView;
+import com.ea_framework.View.VisualizeView.TspVisualizeView;
 import com.ea_framework.View.FitnessView.FitnessView;
 import com.ea_framework.View.InfoViews.ConfigView;
 import com.ea_framework.View.InfoViews.StatView;
@@ -8,9 +8,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class RunController {
+public class VisualizeController {
 
     @FXML
     public Pane visualizePane;
@@ -25,14 +27,14 @@ public class RunController {
     public Pane configPane;
 
     @FXML
-    public Pane closePane;
+    public Text closeWindow;
 
     @FXML
-    public Pane minimizePane;
+    public Rectangle minimizeWindow;
 
 
     @FXML
-    public void initialize(TspCandidateView tspCandidateView,
+    public void initialize(TspVisualizeView tspCandidateView,
                            FitnessView fitnessView,
                            ConfigView configView,
                            StatView statView,
@@ -43,11 +45,11 @@ public class RunController {
         fitToPane(configView.getView(), configPane);
         fitToPane(statView.getView(), statPane);
 
-        closePane.setOnMouseClicked(event -> {
+        closeWindow.setOnMouseClicked(event -> {
             Platform.exit();
         });
 
-        minimizePane.setOnMouseClicked(event -> {
+        minimizeWindow.setOnMouseClicked(event -> {
             stage.setIconified(true);
         });
     }

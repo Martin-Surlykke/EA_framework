@@ -4,8 +4,10 @@ import com.ea_framework.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.FitnessFunctions.DistanceMatrixContext;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.Mutation.MutationOperator;
+import com.ea_framework.Mutation.TwoOptTsp;
+import com.ea_framework.View.Viewables.TSPViewable;
 
-public class TSPAlgorithm implements Algorithms<int []> {
+public class TSPAlgorithm implements Algorithms<int []>, TSPViewable {
 
     protected int [] currentSolution;
     private final ChoiceFunction <int[], Double> choiceFunction;
@@ -48,8 +50,8 @@ public class TSPAlgorithm implements Algorithms<int []> {
     }
 
     @Override
-    public int [] getResult() {
-        return null;
+    public int [] getCurrentSolution() {
+        return currentSolution;
     }
 
     @Override
@@ -70,9 +72,7 @@ public class TSPAlgorithm implements Algorithms<int []> {
     }
 
     private static int[] deepCopy(int[] input) {
-        int[] copy = new int[input.length];
-        System.arraycopy(input, 0, copy, 0, input.length);
-        return copy;
+        return TwoOptTsp.deepCopyList(input);
     }
 
     public double evalFitness(int[] permutation) {
@@ -83,7 +83,4 @@ public class TSPAlgorithm implements Algorithms<int []> {
         currentSolution = permutation;
     }
 
-    public int[] getCurrentSolution() {
-        return currentSolution;
-    }
 }

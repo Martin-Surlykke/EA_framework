@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.BatchController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controller.BatchController">
    <children>
       <Pane prefHeight="79.0" prefWidth="800.0" style="-fx-background-color: DARKGRAY;">
          <children>
@@ -19,6 +19,8 @@
                </children>
             </Pane>
             <Text layoutX="146.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create schedule" />
+            <Pane fx:id="minimizePane" layoutX="673.0" layoutY="22.0" prefHeight="17.0" prefWidth="76.0" style="-fx-background-color: BLACK;" />
+            <Pane fx:id="closePane" layoutX="754.0" layoutY="1.0" prefHeight="37.0" prefWidth="38.0" style="-fx-background-color: BLACK;" />
          </children>
       </Pane>
       <Pane prefHeight="591.0" prefWidth="800.0" style="-fx-background-color: whitesmoke;">

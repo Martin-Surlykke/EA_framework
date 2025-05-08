@@ -2,6 +2,7 @@ package com.ea_framework.Algorithms;
 
 public interface Algorithms <SolutionType> {
     void run(int iteration);
-    SolutionType getResult();
+    SolutionType getCurrentSolution();
     void setFirst(SolutionType first);
+
 }

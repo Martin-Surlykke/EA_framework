@@ -1,8 +1,7 @@
-package com.ea_framework;
+package com.ea_framework.Controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -23,7 +22,7 @@ public class BatchController {
         addBatch.setOnMouseClicked(event -> {
             System.out.println("Clicked!");
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("Batch_setup.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Batch_setup.fxml"));
                 Region batchNode = loader.load();
                 VBox.setVgrow(batchNode, Priority.NEVER);
                 batchNode.prefWidthProperty().bind(scrollVBox.widthProperty());

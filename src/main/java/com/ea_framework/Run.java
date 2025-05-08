@@ -1,29 +1,7 @@
 package com.ea_framework;
 
-import com.ea_framework.Algorithms.TSPAlgorithm;
-import com.ea_framework.Candidates.tspCandidate;
-import com.ea_framework.ChoiceFunctions.ChoiceFunction;
-import com.ea_framework.ChoiceFunctions.GreedyChoice;
-import com.ea_framework.FitnessFunctions.DistanceMatrixContext;
-import com.ea_framework.FitnessFunctions.Fitness;
-import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
-import com.ea_framework.Mutation.MutationOperator;
-import com.ea_framework.Mutation.TwoOptTsp;
-import com.ea_framework.View.CandidateView.TspCandidateView;
-import com.ea_framework.View.FitnessView.FitnessView;
-import com.ea_framework.View.FitnessView.GraphFitnessView;
-import com.ea_framework.View.InfoViews.ConfigView;
-import com.ea_framework.View.InfoViews.ConfigRecord;
-import com.ea_framework.View.InfoViews.StatRecord;
-import com.ea_framework.View.InfoViews.StatView;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.Comparator;
 
 public class Run extends Application {
     private static final int MAX_ITERATIONS = 50000;

@@ -35,7 +35,7 @@ public class BitStringAlgorithm implements Algorithms<boolean[]> {
     }
 
     @Override
-    public boolean[] getResult() {
+    public boolean[] getCurrentSolution() {
         return currentSolution;
     }
 
@@ -50,9 +50,6 @@ public class BitStringAlgorithm implements Algorithms<boolean[]> {
         return fitnessFunction.evaluate(permutation);
     }
 
-    public boolean[] getCurrentSolution() {
-        return currentSolution;
-    }
 
     public void setCurrentSolution(boolean[] currentSolution) {
         this.currentSolution = currentSolution;

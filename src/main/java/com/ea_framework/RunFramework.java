@@ -1,19 +1,18 @@
 package com.ea_framework;
 
 import com.ea_framework.Algorithms.TSPAlgorithm;
-import com.ea_framework.Candidates.tspCandidate;
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.ChoiceFunctions.GreedyChoice;
-import com.ea_framework.Controller.RunController;
-import com.ea_framework.Filehandlers.tspFileParser;
+import com.ea_framework.Controller.VisualizeController;
+import com.ea_framework.Filehandlers.TSPFileHandler;
 import com.ea_framework.FitnessFunctions.DistanceMatrixContext;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
-import com.ea_framework.Model.tspInstance;
 import com.ea_framework.Mutation.MutationOperator;
 import com.ea_framework.Mutation.TwoOptTsp;
-import com.ea_framework.StartAlgorithms.TSPRandomStart;
-import com.ea_framework.View.CandidateView.TspCandidateView;
+import com.ea_framework.Problems.TSP2DProblem;
+import com.ea_framework.StartAlgorithms.TSP2DRandomStart;
+import com.ea_framework.View.VisualizeView.TspVisualizeView;
 import com.ea_framework.View.FitnessView.FitnessView;
 import com.ea_framework.View.FitnessView.GraphFitnessView;
 import com.ea_framework.View.InfoViews.ConfigRecord;
@@ -45,19 +44,18 @@ public class RunFramework extends Application {
 
         Scene scene = new Scene(fxmlLoader.load());
 
-        tspInstance instance = tspFileParser.parse("src/main/resources/tspFiles/ch130.tsp");
+        TSP2DProblem tsp = TSPFileHandler.parse("src/main/resources/tspFiles/ch130.tsp");
 
-        tspCandidate t = new tspCandidate(instance);
 
-        TSPRandomStart randomStart = new TSPRandomStart();
-        randomStart.generateStart(t);
+        TSP2DRandomStart randomStart = new TSP2DRandomStart();
+        tsp.setDefaultPermutation(randomStart.generateFirstSolution(tsp));
 
         Fitness<DistanceMatrixContext<int[]>, Double> distance = new TspEuclidianDistance();
         ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
         MutationOperator<int[]> twoOpt = new TwoOptTsp();
-        TSPAlgorithm tspAlgo = new TSPAlgorithm(distance, twoOpt, greedyMin, t.getDistanceMatrix());
+        TSPAlgorithm tspAlgo = new TSPAlgorithm(distance, twoOpt, greedyMin, tsp.getDistanceMatrix());
 
-        TspCandidateView view = new TspCandidateView(t);
+        TspVisualizeView view = new TspVisualizeView(tsp);
         FitnessView fitnessView = new GraphFitnessView(MAX_ITERATIONS);
 
         ConfigRecord configRecord = new ConfigRecord("TSP", "st70", "Generic Algorithm", "Simulated Annealing", "EU2D", "Two-Opt", "Random");
@@ -68,12 +66,12 @@ public class RunFramework extends Application {
 
         StatView statView = new StatView();
 
-        RunController runController = fxmlLoader.getController();
+        VisualizeController visualizeController = fxmlLoader.getController();
 
-        runController.initialize(view, fitnessView, configView, statView, stage);
+        visualizeController.initialize(view, fitnessView, configView, statView, stage);
 
 
-        tspAlgo.setCurrentSolution(t.getStartPermutation());
+        tspAlgo.setCurrentSolution(tsp.getDefaultPermutation());
 
         stage.initStyle(javafx.stage.StageStyle.UNDECORATED);
         stage.setScene(scene);
@@ -88,7 +86,6 @@ public class RunFramework extends Application {
             }
             for (int i = 0; i < MAX_ITERATIONS; i++) {
                 tspAlgo.run(i);
-                t.setPermutation(tspAlgo.getCurrentSolution());
 
                 latestFitness.set(tspAlgo.getCurrentFitness());
                 latestIteration.set(i);
@@ -117,7 +114,7 @@ public class RunFramework extends Application {
                 double fitness = latestFitness.get();
                 StatRecord stat = latestStatRecord.get();
 
-                view.update(t);
+                view.update(tspAlgo);
                 fitnessView.update(fitness, i);
                 statView.update(stat);
                 if (latestIteration.get() >= MAX_ITERATIONS) {

@@ -1,7 +1,9 @@
-package com.ea_framework.View.CandidateView;
+package com.ea_framework.View.VisualizeView;
 
-import com.ea_framework.Candidates.tspCandidate;
+import com.ea_framework.Algorithms.TSPAlgorithm;
 import com.ea_framework.Coordinate;
+import com.ea_framework.Problems.TSP2DProblem;
+import com.ea_framework.View.Viewables.TSPViewable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,7 +14,7 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-public class TspCandidateView implements CandidateView<tspCandidate> {
+public class TspVisualizeView implements VisualizeView<TSPViewable> {
 
     private final Pane graphPane = new Pane();
     private final Canvas historyCanvas = new Canvas(700, 700);
@@ -32,17 +34,17 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
     double minX;
     double minY;
 
-    public TspCandidateView(tspCandidate tspCandidate) {
-        int n = tspCandidate.getNodeCount();
+    public TspVisualizeView(TSP2DProblem problem) {
+        int n = problem.getNodeCount();
         graphPane.setPrefSize(600, 600);
         graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
         drawnLines = new int [n][n];
 
-        double maxX = tspCandidate.getMaxX();
-        double maxY = tspCandidate.getMaxY();
+        double maxX = problem.getMaxX();
+        double maxY = problem.getMaxY();
 
-        minX = tspCandidate.getMinX();
-        minY = tspCandidate.getMinY();
+        minX = problem.getMinX();
+        minY = problem.getMinY();
 
         graphPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
             xFactor = (newWidth.doubleValue()- PADDING) / maxX;
@@ -52,7 +54,7 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
             yFactor = (newHeight.doubleValue()- PADDING) / maxY;
             redrawNodes();
         });
-        this.coordinateList = tspCandidate.getCoordinateList();
+        this.coordinateList = problem.getCoordinates();
         drawNodes(nodeLayer, coordinateList, xFactor, yFactor, minX, minY);
     }
 
@@ -62,11 +64,11 @@ public class TspCandidateView implements CandidateView<tspCandidate> {
     }
 
     @Override
-    public void update(tspCandidate candidate) {
+    public void update(TSPViewable tspViewable) {
         GraphicsContext edgeGC = edgeCanvas.getGraphicsContext2D();
         edgeGC.clearRect(0, 0, edgeCanvas.getWidth(), edgeCanvas.getHeight()); // Only clear edgeCanvas!
 
-        int[] permutation = candidate.getPermutation();
+        int[] permutation = tspViewable.getCurrentSolution();
         drawOldPath(permutation);
         drawCurrentPath(permutation);
     }
