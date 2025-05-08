@@ -19,7 +19,7 @@ public class BitStringFileHandler {
             bitArray[i] = bitString.charAt(i) == '1';
         }
         int length = bitString.length();
-        return new BitStringProblem(bitArray, length);
+        return new BitStringProblem(bitArray, filePath, length);
     }
 
 

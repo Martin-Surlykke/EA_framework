@@ -3,17 +3,14 @@ package com.ea_framework.SearchSpaces;
 import java.util.Random;
 
 public class BitStringSearchSpace implements SearchSpace<boolean[]> {
-
-    private final int length;
     private final Random rand = new Random();
 
-    public BitStringSearchSpace(int length) {
-        this.length = length;
+    public BitStringSearchSpace() {
     }
 
     @Override
     public boolean isValidSolution(boolean[] solution) {
-        return solution.length == length;
+        return true;
     }
 
     @Override

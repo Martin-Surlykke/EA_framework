@@ -4,7 +4,7 @@ import com.ea_framework.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.Mutation.MutationOperator;
 
-public class BitStringAlgorithm implements Algorithms<boolean[]> {
+public class BitStringAlgorithm implements Algorithm<boolean[]> {
     protected boolean[] currentSolution;
     private final ChoiceFunction<boolean[], Integer> choiceFunction;
 

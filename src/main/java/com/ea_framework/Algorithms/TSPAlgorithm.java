@@ -7,7 +7,7 @@ import com.ea_framework.Mutation.MutationOperator;
 import com.ea_framework.Mutation.TwoOptTsp;
 import com.ea_framework.View.Viewables.TSPViewable;
 
-public class TSPAlgorithm implements Algorithms<int []>, TSPViewable {
+public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
 
     protected int [] currentSolution;
     private final ChoiceFunction <int[], Double> choiceFunction;

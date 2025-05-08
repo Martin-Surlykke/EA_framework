@@ -4,7 +4,7 @@ import com.ea_framework.Coordinate;
 
 import java.util.List;
 
-public class TSP2DProblem {
+public class TSP2DProblem implements Problem {
     private final String name;
     private final String comment;
     private final String type;
@@ -44,6 +44,7 @@ public class TSP2DProblem {
         this.nodeCount = coordinates.size();
     }
 
+    @Override
     public String getName() {
         return name;
     }

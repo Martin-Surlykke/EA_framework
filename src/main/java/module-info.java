@@ -11,6 +11,8 @@ module com.ea_framework {
     exports com.ea_framework.Controller;
     exports com.ea_framework.Configs;
     exports com.ea_framework.SearchSpaces;
+    exports com.ea_framework.Algorithms;
+    exports com.ea_framework.Descriptors;
     opens com.ea_framework.Controller to javafx.fxml;
     exports com.ea_framework.Registries;
     opens com.ea_framework.Registries to javafx.fxml;
