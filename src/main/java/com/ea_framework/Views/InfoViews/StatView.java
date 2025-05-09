@@ -1,6 +1,6 @@
-package com.ea_framework.View.InfoViews;
+package com.ea_framework.Views.InfoViews;
 
-import com.ea_framework.View.InfoViews.boxes.StatBox;
+import com.ea_framework.Views.InfoViews.boxes.StatBox;
 import javafx.scene.Node;
 
 public class StatView implements infoView<StatRecord>{

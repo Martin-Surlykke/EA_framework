@@ -23,7 +23,7 @@ public class SearchSpaceRegistry {
         }
     }
 
-    public Set<String> getRegisteredSearchSpaces() {
+    public static Set<String> getRegisteredSearchSpaces() {
         return searchSpaces.keySet();
     }
 

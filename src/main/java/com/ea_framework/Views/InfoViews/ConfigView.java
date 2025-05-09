@@ -1,6 +1,6 @@
-package com.ea_framework.View.InfoViews;
+package com.ea_framework.Views.InfoViews;
 
-import com.ea_framework.View.InfoViews.boxes.ConfigBox;
+import com.ea_framework.Views.InfoViews.boxes.ConfigBox;
 import javafx.scene.Node;
 
 public class ConfigView implements infoView<ConfigRecord> {

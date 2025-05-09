@@ -1,4 +1,4 @@
-package com.ea_framework.View.FitnessView;
+package com.ea_framework.Views.FitnessView;
 
 import javafx.scene.Node;
 

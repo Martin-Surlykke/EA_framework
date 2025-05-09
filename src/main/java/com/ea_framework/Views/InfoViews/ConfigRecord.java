@@ -1,4 +1,4 @@
-package com.ea_framework.View.InfoViews;
+package com.ea_framework.Views.InfoViews;
 
 public record ConfigRecord(
     String problem,

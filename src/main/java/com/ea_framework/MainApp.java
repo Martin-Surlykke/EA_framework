@@ -1,5 +1,7 @@
 package com.ea_framework;
 
+import com.ea_framework.Controller.BatchController;
+import com.ea_framework.Controller.ScheduleController;
 import com.ea_framework.MetaData.Registry;
 import com.ea_framework.MetaData.*;
 import javafx.application.Application;
@@ -28,5 +30,7 @@ public class MainApp extends Application {
         Registry.registerSearchSpace("GRAPH2D", new Graph2D());
         Registry.registerProblem("TSP", new TSP2DMetaData());
         Registry.registerAlgorithm("TSPGenericAlgorithm", new TSPGenericAlgorithm());
+
+        RegistryInitializer.initialize();
     }
 }

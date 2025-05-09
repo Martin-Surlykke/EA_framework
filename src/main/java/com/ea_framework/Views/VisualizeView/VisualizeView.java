@@ -1,4 +1,4 @@
-package com.ea_framework.View.VisualizeView;
+package com.ea_framework.Views.VisualizeView;
 
 import javafx.scene.Node;
 

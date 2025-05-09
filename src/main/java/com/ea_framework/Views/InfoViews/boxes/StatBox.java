@@ -1,4 +1,4 @@
-package com.ea_framework.View.InfoViews.boxes;
+package com.ea_framework.Views.InfoViews.boxes;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;

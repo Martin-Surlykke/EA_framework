@@ -1,9 +1,8 @@
-package com.ea_framework.View.VisualizeView;
+package com.ea_framework.Views.VisualizeView;
 
-import com.ea_framework.Algorithms.TSPAlgorithm;
 import com.ea_framework.Coordinate;
 import com.ea_framework.Problems.TSP2DProblem;
-import com.ea_framework.View.Viewables.TSPViewable;
+import com.ea_framework.Views.Viewables.TSPViewable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;

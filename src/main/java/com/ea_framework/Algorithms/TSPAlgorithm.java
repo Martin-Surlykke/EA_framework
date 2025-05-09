@@ -1,37 +1,32 @@
 package com.ea_framework.Algorithms;
 
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.FitnessFunctions.DistanceMatrixContext;
 import com.ea_framework.FitnessFunctions.Fitness;
-import com.ea_framework.Mutation.MutationOperator;
-import com.ea_framework.Mutation.TwoOptTsp;
-import com.ea_framework.View.Viewables.TSPViewable;
+import com.ea_framework.MutationFunctions.MutationOperator;
+import com.ea_framework.MutationFunctions.TwoOptTsp;
+import com.ea_framework.Problems.TSP2DProblem;
+import com.ea_framework.Views.Viewables.TSPViewable;
 
 public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
 
     protected int [] currentSolution;
     private final ChoiceFunction <int[], Double> choiceFunction;
 
-    private final Fitness<DistanceMatrixContext<int[]>, Double> fitnessFunction;
+    private final Fitness<int[], Double> fitnessFunction;
 
     private final MutationOperator<int[]> mutationOperator;
-
-    private final double [][] DistanceMatrix;
-
     double currentFitness;
 
     double bestFitness;
 
     int bestIteration;
 
-    public TSPAlgorithm(Fitness<DistanceMatrixContext<int[]>, Double> fitness,
-                        MutationOperator<int[]> mutation,
-                        ChoiceFunction<int[], Double> choice,
-                        double [][] DM) {
-        this.choiceFunction = choice;
-        this.fitnessFunction = fitness;
-        this.mutationOperator = mutation;
-        this.DistanceMatrix = DM;
+    public TSPAlgorithm(TSP2DConfig config) {
+        this.choiceFunction = config.choice();
+        this.fitnessFunction = config.fitness();
+        this.mutationOperator = config.mutation();
         currentFitness = Double.MAX_VALUE;
         bestFitness = Double.MAX_VALUE;
         bestIteration = 0;
@@ -76,7 +71,7 @@ public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
     }
 
     public double evalFitness(int[] permutation) {
-        return fitnessFunction.evaluate(new DistanceMatrixContext<>(permutation, DistanceMatrix));
+        return fitnessFunction.evaluate(permutation);
     }
 
     public void setCurrentSolution(int[] permutation) {

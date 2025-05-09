@@ -1,8 +1,8 @@
 package com.ea_framework.Controller;
-import com.ea_framework.View.VisualizeView.TspVisualizeView;
-import com.ea_framework.View.FitnessView.FitnessView;
-import com.ea_framework.View.InfoViews.ConfigView;
-import com.ea_framework.View.InfoViews.StatView;
+import com.ea_framework.Views.VisualizeView.TspVisualizeView;
+import com.ea_framework.Views.FitnessView.FitnessView;
+import com.ea_framework.Views.InfoViews.ConfigView;
+import com.ea_framework.Views.InfoViews.StatView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

@@ -13,6 +13,10 @@ module com.ea_framework {
     exports com.ea_framework.SearchSpaces;
     exports com.ea_framework.Algorithms;
     exports com.ea_framework.Descriptors;
+    exports com.ea_framework.FitnessFunctions;
+    exports com.ea_framework.ChoiceFunctions;
+    exports com.ea_framework.MutationFunctions;
+    exports com.ea_framework.Views.ConfigViews;
     opens com.ea_framework.Controller to javafx.fxml;
     exports com.ea_framework.Registries;
     opens com.ea_framework.Registries to javafx.fxml;

@@ -1,4 +1,4 @@
-package com.ea_framework.Mutation;
+package com.ea_framework.MutationFunctions;
 
 import java.util.Random;
 

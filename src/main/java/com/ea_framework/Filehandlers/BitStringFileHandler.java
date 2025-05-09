@@ -9,7 +9,7 @@ import java.io.IOException;
 public class BitStringFileHandler {
 
 
-    public static BitStringProblem Parse(String filePath) throws IOException {
+    public static BitStringProblem parse(String filePath) throws IOException {
         FileReader fr = new FileReader(filePath);
         BufferedReader br = new BufferedReader(fr);
 

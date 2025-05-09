@@ -2,10 +2,12 @@ package com.ea_framework.Registries;
 
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Problems.Problem;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 
 public class ProblemRegistry {
 
@@ -15,13 +17,18 @@ public class ProblemRegistry {
         problems.put(descriptor.name(), descriptor);
     }
 
-    public static Problem create(String name) {
+    public static ProblemDescriptor getDescriptor (String name) {
+        return problems.get(name);
+    }
+
+    public static Problem create(String name, File file) throws IOException {
         ProblemDescriptor descriptor = problems.get(name);
-        if (descriptor != null) {
-            return descriptor.creator().get();
-        } else {
+        if (descriptor == null) {
             throw new IllegalArgumentException("Problem not found: " + name);
+        } else {
+            return descriptor.loader().load(file);
         }
+
     }
 
     public static Set<String> getAvailableProblems() {
