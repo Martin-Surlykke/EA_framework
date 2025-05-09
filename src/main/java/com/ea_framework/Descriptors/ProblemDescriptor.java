@@ -1,13 +1,26 @@
 package com.ea_framework.Descriptors;
-
 import com.ea_framework.Loaders.ProblemLoader;
-import com.ea_framework.Problems.Problem;
 
-import java.util.function.Supplier;
+public class ProblemDescriptor implements Descriptor {
+    private final String name;
+    private final String searchSpaceType;
+    private final ProblemLoader loader;
 
-public record ProblemDescriptor (
-        String name,
-        String problemType,
+    public ProblemDescriptor(String name, String searchSpaceType, ProblemLoader loader) {
+        this.name = name;
+        this.searchSpaceType = searchSpaceType;
+        this.loader = loader;
+    }
 
-        ProblemLoader loader
-) {}
+    public ProblemLoader getLoader() {
+        return loader;
+    }
+
+    @Override public String getName() {
+        return name;
+    }
+
+    @Override public String getCompatibleKey() {
+        return searchSpaceType;
+    }
+    }

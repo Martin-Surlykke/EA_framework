@@ -1,4 +1,4 @@
-package com.ea_framework.Controller;
+package com.ea_framework.Controllers;
 import com.ea_framework.Views.VisualizeView.TspVisualizeView;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.InfoViews.ConfigView;

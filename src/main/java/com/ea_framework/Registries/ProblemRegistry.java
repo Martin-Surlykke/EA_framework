@@ -14,7 +14,7 @@ public class ProblemRegistry {
     private static final Map<String, ProblemDescriptor> problems = new HashMap<>();
 
     public static void register(ProblemDescriptor descriptor) {
-        problems.put(descriptor.name(), descriptor);
+        problems.put(descriptor.getName(), descriptor);
     }
 
     public static ProblemDescriptor getDescriptor (String name) {
@@ -26,7 +26,7 @@ public class ProblemRegistry {
         if (descriptor == null) {
             throw new IllegalArgumentException("Problem not found: " + name);
         } else {
-            return descriptor.loader().load(file);
+            return descriptor.getLoader().load(file);
         }
 
     }

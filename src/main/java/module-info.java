@@ -8,7 +8,7 @@ module com.ea_framework {
     opens com.ea_framework to javafx.fxml;
     exports com.ea_framework;
     exports com.ea_framework.StartAlgorithms;
-    exports com.ea_framework.Controller;
+    exports com.ea_framework.Controllers;
     exports com.ea_framework.Configs;
     exports com.ea_framework.SearchSpaces;
     exports com.ea_framework.Algorithms;
@@ -18,7 +18,8 @@ module com.ea_framework {
     exports com.ea_framework.MutationFunctions;
     exports com.ea_framework.Views.ConfigViews;
     exports com.ea_framework.Model;
-    opens com.ea_framework.Controller to javafx.fxml;
+    opens com.ea_framework.Loaders;
+    opens com.ea_framework.Controllers to javafx.fxml;
     exports com.ea_framework.Registries;
     opens com.ea_framework.Registries to javafx.fxml;
     exports com.ea_framework.Problems;

@@ -54,7 +54,7 @@ public class RegistryInitializer {
         ProblemRegistry.register(
                 new ProblemDescriptor(
                         "TSP2D",
-                        "TSP2D",
+                        "Graph2D",
                         new ProblemLoader() {
                             @Override
                             public boolean isValid(File file) {

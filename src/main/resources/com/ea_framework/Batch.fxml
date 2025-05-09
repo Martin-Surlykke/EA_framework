@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="568.0" prefWidth="913.0" style="-fx-background-color: Whitesmoke;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controller.BatchController">
+<Pane prefHeight="568.0" prefWidth="913.0" style="-fx-background-color: Whitesmoke;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controllers.BatchController">
 
     <children>
         <TabPane fx:id="tabPane" layoutX="14.0" layoutY="77.0" prefHeight="478.0" prefWidth="574.0" style="-fx-border-color: darkgray; -fx-background-color: whitesmoke;" tabClosingPolicy="UNAVAILABLE">

@@ -1,4 +1,4 @@
-package com.ea_framework.Controller;
+package com.ea_framework.Controllers;
 
 import com.ea_framework.Configs.BatchConfig;
 import javafx.fxml.FXML;

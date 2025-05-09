@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.ea_framework.Controller.BatchCardController"
+      fx:controller="com.ea_framework.Controllers.BatchCardController"
       spacing="10" style="-fx-padding: 8; -fx-border-color: gray; -fx-background-color: white;">
 
     <VBox spacing="4">

@@ -5,7 +5,7 @@
 
 <ScrollPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.ea_framework.Controller.ScheduleController"
+            fx:controller="com.ea_framework.Controllers.ScheduleController"
             fitToWidth="true" prefWidth="306.0" prefHeight="429.0"
             layoutX="602.0" layoutY="77.0">
 

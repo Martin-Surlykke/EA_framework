@@ -7,7 +7,7 @@ import com.ea_framework.Views.ConfigViews.ConfigView;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class AlgorithmDescriptor<T, C extends AlgorithmConfig> {
+public class AlgorithmDescriptor<T, C extends AlgorithmConfig> implements Descriptor {
     private final String name;
     private final String problemType;
     private final Function<C, T> constructor;
@@ -34,7 +34,8 @@ public class AlgorithmDescriptor<T, C extends AlgorithmConfig> {
         return name;
     }
 
-    public String getProblemType() {
+    @Override
+    public String getCompatibleKey() {
         return problemType;
     }
 }

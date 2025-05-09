@@ -1,9 +1,8 @@
-package com.ea_framework.Controller;
+package com.ea_framework.Controllers;
 
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Registries.Registry;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -224,7 +223,12 @@ public class BatchController {
         String selected = searchSpaceDropDown.getValue();
         if (selected != null) {
             onSearchSpaceSelected(selected);
-            problemDropDown.getItems().setAll(Registry.getAllProblems());
+            List<String> filteredProblems = Registry.getProblemsForSearchSpace(selected);
+            problemDropDown.getItems().setAll(filteredProblems);
+            problemDropDown.getSelectionModel().clearSelection();
+            algorithmDropDown.getItems().clear();
+
+
         }
     }
 
@@ -233,7 +237,9 @@ public class BatchController {
         String selected = problemDropDown.getValue();
         if (selected != null) {
             onProblemSelected(selected);
-            algorithmDropDown.getItems().setAll(Registry.getAllAlgorithms());
+            List<String> filteredAlgorithms = Registry.getAlgorithmsForProblem(selected);
+            algorithmDropDown.getItems().setAll(filteredAlgorithms);
+            algorithmDropDown.getSelectionModel().clearSelection();
         }
     }
 
