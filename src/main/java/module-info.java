@@ -17,6 +17,7 @@ module com.ea_framework {
     exports com.ea_framework.ChoiceFunctions;
     exports com.ea_framework.MutationFunctions;
     exports com.ea_framework.Views.ConfigViews;
+    exports com.ea_framework.Model;
     opens com.ea_framework.Controller to javafx.fxml;
     exports com.ea_framework.Registries;
     opens com.ea_framework.Registries to javafx.fxml;
