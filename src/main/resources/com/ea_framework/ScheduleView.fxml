@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ea_framework.Controller.ScheduleController"
+            fitToWidth="true" prefWidth="306.0" prefHeight="429.0"
+            layoutX="602.0" layoutY="77.0">
+
+    <content>
+        <VBox fx:id="scheduleVBox"/>
+    </content>
+</ScrollPane>

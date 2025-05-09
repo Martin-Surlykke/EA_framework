@@ -13,6 +13,11 @@ public class BatchConfig {
     private final Map<String, Object> AlgorithmConfig = new HashMap<>();
     private final Map<String, Object> metaConfig = new HashMap<>();
 
+    private final Map<String, Object> algorithmConfig = new HashMap<>();
+    private final Map<String, Object> terminationSettings = new HashMap<>();
+    private final Map<String, Object> metaSettings = new HashMap<>();
+
+
     public BatchConfig() {}
 
     public String getSearchSpace() {
@@ -58,5 +63,14 @@ public class BatchConfig {
     public String toSummaryString() {
         return "%s + %s [%s], repeats=%d"
                 .formatted(algorithm, problem, searchSpace, repeats);
+    }
+
+
+    public Map<String, Object> getTerminationConfigs() {
+        return terminationSettings;
+    }
+
+    public Map<String, Object> getMetaConfigs() {
+        return metaSettings;
     }
 }

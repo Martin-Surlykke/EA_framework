@@ -1,76 +1,63 @@
 package com.ea_framework.Controller;
 
-import com.ea_framework.Descriptors.AlgorithmDescriptor;
-import com.ea_framework.Descriptors.ProblemDescriptor;
-import com.ea_framework.Model.BatchRequest;
-import com.ea_framework.Registries.AlgorithmRegistry;
-import com.ea_framework.Registries.ProblemRegistry;
-import com.ea_framework.Registries.SearchSpaceRegistry;
+import com.ea_framework.Configs.BatchConfig;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
+import java.util.function.Consumer;
 
 public class ScheduleController {
 
     @FXML
-    ComboBox<String> searchSpaceDropDown;
+    private VBox scheduleVBox;
 
-    @FXML
-    ComboBox<String> problemDropDown;
+    private final List<BatchConfig> savedBatches = new ArrayList<>();
 
-    @FXML
-    ComboBox<String> algorithmDropDown;
+    private Consumer<BatchConfig> onEditRequested;
 
-    @FXML
-    Label configLabel;
+    public void addBatch(BatchConfig config) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BatchCard.fxml"));
+            Node card = loader.load();
 
-    @FXML
-    Label batchesLabel;
+            BatchCardController controller = loader.getController();
+            controller.setBatch(config);
+            controller.setOnDelete(this::removeBatch); // callback
+            controller.setOnEdit(this::editBatch);     // callback
 
-
-
-    @FXML
-    public void initialize() {
-        searchSpaceDropDown.getItems().addAll(SearchSpaceRegistry.getRegisteredSearchSpaces());
-        problemDropDown.getItems().addAll((ProblemRegistry.getAvailableProblems()));
-
-        problemDropDown.setOnAction(event -> {
-            String selectedProblem = problemDropDown.getValue();
-            if (selectedProblem == null) {
-                System.out.println("No problem selected");
-                return;
-            }
-            String problemType = ProblemRegistry.getDescriptor(selectedProblem).problemType();
-            List<String> matchingAlgorithms = AlgorithmRegistry.getAll().stream().
-                     filter(a -> a.getProblemType().equals(problemType))
-                    .map(AlgorithmDescriptor::getName)
-                    .toList();
-
-            algorithmDropDown.getItems().setAll(matchingAlgorithms);
-        });
-
+            savedBatches.add(config);
+            scheduleVBox.getChildren().add(card);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Optional<BatchRequest> buildRequest() {
-        if (searchSpaceDropDown.getValue()==null || problemDropDown.getValue()==null
-                || algorithmDropDown.getValue()==null || batchesLabel.getText().isBlank())
-            return Optional.empty();
+    private void editBatch(BatchConfig config) {
+        if (onEditRequested != null) {
+            onEditRequested.accept(config);
+            removeBatch(config); // remove old version before editing
+        }
+    }
 
-        int its     = Integer.parseInt("1000");
-        int repeats = Integer.parseInt(batchesLabel.getText());
+    public List<BatchConfig> getBatches() {
+        return savedBatches;
+    }
 
-        return Optional.of(new BatchRequest(
-                searchSpaceDropDown.getValue(),
-                problemDropDown.getValue(),
-                algorithmDropDown.getValue(),
-                its,
-                repeats
-        ));
+    public void removeBatch(BatchConfig config) {
+        int index = savedBatches.indexOf(config);
+        if (index >= 0) {
+            savedBatches.remove(index);
+            scheduleVBox.getChildren().remove(index);
+        }
+    }
+
+    public void setOnEditRequested(Consumer<BatchConfig> callback) {
+        this.onEditRequested = callback;
     }
 
 

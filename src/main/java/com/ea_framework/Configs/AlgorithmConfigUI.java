@@ -6,6 +6,6 @@ public interface AlgorithmConfigUI {
 
     Map<String, Object> getConfigs();
 
-    default void loadConfigs() {
+    default void loadConfigs(Map<String, Object> algorithmConfig) {
     }
 }

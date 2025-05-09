@@ -1,7 +1,5 @@
 package com.ea_framework;
 
-import com.ea_framework.Controller.BatchController;
-import com.ea_framework.Controller.ScheduleController;
 import com.ea_framework.MetaData.Registry;
 import com.ea_framework.MetaData.*;
 import javafx.application.Application;
@@ -20,6 +18,8 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        System.out.println("FXML test: " + getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
+        System.out.println("FXML exists? " + getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Batch.fxml"));
         Scene scene = new Scene(loader.load());
         primaryStage.setScene(scene);

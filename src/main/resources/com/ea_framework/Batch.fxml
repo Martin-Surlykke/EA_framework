@@ -1,64 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controller.BatchController">
-   <children>
-      <Pane prefHeight="79.0" prefWidth="800.0" style="-fx-background-color: DARKGRAY;">
-         <children>
-            <Pane layoutX="14.0" layoutY="10.0" prefHeight="25.0" prefWidth="98.0" style="-fx-background-color: whitesmoke;">
-               <children>
-                  <Text layoutY="17.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Main Menu" wrappingWidth="98.0" />
-               </children>
-            </Pane>
-            <Text layoutX="146.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create schedule" />
-            <Pane fx:id="minimizePane" layoutX="673.0" layoutY="22.0" prefHeight="17.0" prefWidth="76.0" style="-fx-background-color: BLACK;" />
-            <Pane fx:id="closePane" layoutX="754.0" layoutY="1.0" prefHeight="37.0" prefWidth="38.0" style="-fx-background-color: BLACK;" />
-         </children>
-      </Pane>
-      <Pane prefHeight="591.0" prefWidth="800.0" style="-fx-background-color: whitesmoke;">
-         <children>
-            <VBox layoutX="14.0" layoutY="14.0" prefHeight="480.0" prefWidth="768.0">
-               <children>
-                  <GridPane gridLinesVisible="true" prefHeight="26.0" prefWidth="670.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.199951171875" minWidth="10.0" prefWidth="109.5999755859375" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.4000244140625" minWidth="10.0" prefWidth="146.4000244140625" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+<Pane prefHeight="568.0" prefWidth="913.0" style="-fx-background-color: Whitesmoke;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controller.BatchController">
+
+    <children>
+        <TabPane fx:id="tabPane" layoutX="14.0" layoutY="77.0" prefHeight="478.0" prefWidth="574.0" style="-fx-border-color: darkgray; -fx-background-color: whitesmoke;" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab fx:id="searchSpaceTab" text="SearchSpace">
+                    <content>
+                        <AnchorPane prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Search space" textAlignment="CENTER" wrappingWidth="128.619140625" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Problem" textAlignment="CENTER" wrappingWidth="129.2960205078125" GridPane.columnIndex="1" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Algorithm" textAlignment="CENTER" wrappingWidth="127.41552734375" GridPane.columnIndex="2" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Algorithm settings" textAlignment="CENTER" wrappingWidth="128.8582763671875" GridPane.columnIndex="3" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Batches" textAlignment="CENTER" wrappingWidth="127.951904296875" GridPane.columnIndex="4" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" GridPane.columnIndex="5" />
+                        <ComboBox fx:id="searchSpaceDropDown" layoutX="123.0" layoutY="23.0" onAction="#handleSearchSpaceSelect" prefWidth="150.0" />
+                        <Label layoutX="14.0" layoutY="25.0" text="Search space:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="problemTab" text="Problem">
+                    <content>
+                        <AnchorPane prefHeight="180.0" prefWidth="200.0" style="-fx-border-color: gray;">
+                     <children>
+                        <Label layoutX="14.0" layoutY="22.0" text="Problem:">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ComboBox fx:id="problemDropDown" layoutX="101.0" layoutY="20.0" onAction="#handleProblemSelect" prefWidth="150.0" />
+                        <Separator layoutX="14.0" layoutY="60.0" prefHeight="0.0" prefWidth="518.0" />
+                        <Separator layoutX="271.0" layoutY="115.0" orientation="VERTICAL" prefHeight="318.0" prefWidth="5.0" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="266.0" layoutY="88.0" text="Or" />
+                        <ComboBox fx:id="fileDropDown" layoutX="55.0" layoutY="147.0" prefWidth="150.0" />
+                        <Label layoutX="101.0" layoutY="106.0" text="Choose file" />
+                        <Label layoutX="350.0" layoutY="106.0" text="New random problem of size:" />
+                        <TextField fx:id="problemSize" layoutX="354.0" layoutY="147.0" />
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="algorithmTab" text="Algorithm">
+                    <content>
+                        <AnchorPane prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="algorithmDropDown" onAction="#handleAlgorithmSelect" layoutX="90.0" layoutY="31.0" prefWidth="150.0" />
+                        <Label layoutX="14.0" layoutY="35.0" text="Algorithm:" />
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+                <Tab fx:id="configTab" text="Configuration">
+                    <content>
+                        <AnchorPane prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                </Tab>
+                <Tab fx:id="batchTab" text="Batches">
+                    <content>
+                        <AnchorPane prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="batchSize" layoutX="136.0" layoutY="23.0" />
+                        <Label layoutX="14.0" layoutY="27.0" text="Number of batches:" />
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+            <Tab fx:id="terminationTab" text="Termination">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <ComboBox fx:id="terminationDropDown" layoutX="150.0" layoutY="19.0" prefWidth="150.0" />
+                        <Label layoutX="14.0" layoutY="23.0" text="Teremination condition" />
+                        <TextField fx:id="terminationSize" layoutX="313.0" layoutY="19.0" />
                      </children>
-                  </GridPane>
-                  <ScrollPane hbarPolicy="NEVER" prefHeight="454.0" prefWidth="790.0" vbarPolicy="ALWAYS">
-                     <content>
-                        <VBox fx:id="scrollVBox" prefHeight="442.0" prefWidth="753.0" spacing="5.0" />
-                     </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-            <Pane layoutX="638.0" layoutY="504.0" prefHeight="44.0" prefWidth="144.0" />
-            <Pane layoutX="494.0" layoutY="504.0" prefHeight="44.0" prefWidth="144.0" />
-            <Label fx:id="addBatch" layoutX="311.0" layoutY="504.0" prefHeight="44.0" prefWidth="120.0" style="-fx-background-color: DARKGRAY;" text="Add batch to schedule" />
-         </children>
-      </Pane>
-   </children>
-</VBox>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab fx:id="addTab" text="Add">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="addBatchButton" layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Add batch to schedule" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            </tabs>
+        </TabPane>
+
+        <fx:include fx:id="scheduleView" source="ScheduleView.fxml" />
+
+        <Label alignment="CENTER" layoutX="699.0" layoutY="524.0" prefHeight="30.0" prefWidth="123.0" style="-fx-background-color: DarkGray;" text="Run current schedule" />
+    </children>
+</Pane>
