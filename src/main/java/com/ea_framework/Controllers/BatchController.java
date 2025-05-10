@@ -5,10 +5,12 @@ import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Registries.Registry;
-import com.ea_framework.Views.ConfigView;
+import com.ea_framework.Views.ConfigViews.ConfigView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
@@ -19,56 +21,29 @@ import java.util.List;
 public class BatchController {
 
     public Button addBatchButton;
-    @FXML
-    private TabPane tabPane;
-    @FXML
-    private Tab searchSpaceTab;
+    @FXML private TabPane tabPane;
+    @FXML private Tab searchSpaceTab;
+    @FXML private Tab problemTab;
+    @FXML private Tab algorithmTab;
+    @FXML private Tab configTab;
+    @FXML private Tab batchTab;
+    @FXML private Tab terminationTab;
+    @FXML private Tab addTab;
 
-    @FXML
-    private Tab problemTab;
+    @FXML private ComboBox<String> terminationDropDown;
+    @FXML private ComboBox<String> searchSpaceDropDown;
+    @FXML private ComboBox<String> problemDropDown;
+    @FXML private ComboBox<String> fileDropDown;
+    @FXML private ComboBox<String> algorithmDropDown;
+    @FXML private TextField problemSize;
+    @FXML private TextField batchSize;
+    @FXML private TextField terminationSize;
 
-    @FXML
-    private Tab algorithmTab;
-
-    @FXML
-    private Tab configTab;
-
-    @FXML
-    private Tab batchTab;
-
-    @FXML
-    private Tab terminationTab;
-
-    @FXML
-    private Tab addTab;
-
-    @FXML
-    private VBox scheduleBox;
-
-    @FXML
-    private ComboBox<String>  terminationDropDown;
-
-    @FXML
-    private ComboBox<String> searchSpaceDropDown;
-
-    @FXML
-    private ComboBox<String> problemDropDown;
-
-    @FXML
-    private ComboBox<String> fileDropDown;
-
-    @FXML
-    private ComboBox<String> algorithmDropDown;
-
-    @FXML
-    private TextField problemSize;
-
-    @FXML
-    private TextField batchSize;
-
-    @FXML
-    private TextField terminationSize;
-
+    private final List<BatchConfig> savedBatches = new ArrayList<>();
+    private BatchConfig currentConfig = new BatchConfig();
+    private AlgorithmConfigUI currentAlgoConfigUI;
+    private GenericAlgorithmController genericAlgorithmController;
+    private ScheduleController scheduleController;
 
 
     @FXML
@@ -80,15 +55,12 @@ public class BatchController {
         terminationTab.setDisable(true);
         addTab.setDisable(true);
 
+        addBatchButton.setDisable(true);
+        addBatchButton.setOnAction(e -> onAddToSchedule());
 
-        // if this is just for results
         terminationDropDown.getItems().addAll(
-                "Max iterations",
-                "% fitness change",
-                "Iterations without improvement"
+                "Max iterations"
         );
-
-        terminationDropDown.setValue("Max iterations");
 
         searchSpaceDropDown.setPromptText("Select search space");
         problemDropDown.setPromptText("Select problem");
@@ -98,23 +70,19 @@ public class BatchController {
         problemDropDown.getItems().clear();
         algorithmDropDown.getItems().clear();
 
-        problemDropDown.getItems().clear();
-        algorithmDropDown.getItems().clear();
-
-
         currentConfig = new BatchConfig();
 
+        batchSize.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if (!newFocus) checkBatchForSwitch();
+        });
+        batchSize.setOnAction(e -> checkBatchForSwitch());
+
+        terminationSize.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if (!newFocus) checkBatchReady();
+        });
+        terminationSize.setOnAction(e -> checkTerminationForSwitch());
     }
 
-    private final List<BatchConfig> savedBatches = new ArrayList<>();
-    private BatchConfig currentConfig = new BatchConfig();
-    private AlgorithmConfigUI currentAlgoConfigUI;
-    private GenericAlgorithmController genericAlgorithmController;
-    private ScheduleController scheduleController;
-
-    public void setScheduleController(ScheduleController controller) {
-        this.scheduleController = controller;
-    }
 
     public void onSearchSpaceSelected(String searchSpace) {
         currentConfig.setSearchSpace(searchSpace);
@@ -131,17 +99,22 @@ public class BatchController {
     @FXML
     public void onAlgorithmSelected(String algorithmName) {
         currentConfig.setAlgorithm(algorithmName);
+        configTab.setDisable(false);
 
         AlgorithmDescriptor<?, ?> descriptor = Registry.getAlgorithmDescriptor(algorithmName);
-
         ConfigView view = descriptor.getConfigPage();
         AlgorithmConfigUI controller = view.getController();
 
-        currentAlgoConfigUI = controller;
+        controller.bindTo(null);
 
         if (controller instanceof GenericAlgorithmController gac) {
-            genericAlgorithmController = gac;
+            gac.setOnOperatorsFilled(() -> {
+                System.out.println("All operators filled. Switching to batch tab.");
+                batchTab.setDisable(false);
+                tabPane.getSelectionModel().select(batchTab);
+            });
         }
+        currentAlgoConfigUI = controller;
 
         configTab.setContent(view.getRoot());
         tabPane.getSelectionModel().select(configTab);
@@ -152,12 +125,19 @@ public class BatchController {
         problemTab.setDisable(true);
         algorithmTab.setDisable(true);
         configTab.setDisable(true);
-        batchTab.setDisable(false);
-        terminationTab.setDisable(false);
+        batchTab.setDisable(true);
+        terminationTab.setDisable(true);
+
         if (currentAlgoConfigUI == null) return;
 
         if (scheduleController != null) {
-            scheduleController.addBatch(currentConfig);
+            scheduleController.addBatch(currentConfig); // Handles logic only
+        }
+
+        try {
+            addBatchCard(currentConfig); // Handles UI
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if (currentAlgoConfigUI != null) {
@@ -166,6 +146,7 @@ public class BatchController {
         if (genericAlgorithmController != null) {
             currentConfig.getAlgorithmConfig().putAll(genericAlgorithmController.getConfigs());
         }
+
         savedBatches.add(currentConfig);
 
         try {
@@ -173,9 +154,6 @@ public class BatchController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        currentConfig = new BatchConfig(); // reset for next
-        tabPane.getSelectionModel().select(searchSpaceTab);
 
         String terminationType = terminationDropDown.getValue();
         String terminationParam = terminationSize.getText();
@@ -185,36 +163,47 @@ public class BatchController {
             currentConfig.getTerminationConfigs().put("value", terminationParam);
         }
 
+        currentConfig = new BatchConfig();
+        tabPane.getSelectionModel().select(searchSpaceTab);
+
         String batchCount = batchSize.getText();
         if (batchCount != null && !batchCount.isBlank()) {
             currentConfig.getMetaConfigs().put("batchCount", batchCount);
         }
 
+        batchSize.clear();
+        terminationSize.clear();
+        terminationDropDown.setValue("Max iterations");
+        addBatchButton.setDisable(true);
     }
 
     private void addBatchCard(BatchConfig config) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BatchCard.fxml"));
-        Node card = loader.load();
+        var url = getClass().getResource("/com/ea_framework/BatchCard.fxml");
+        if (url == null) {
+            throw new IllegalStateException("BatchCard.fxml not found at /com/ea_framework/BatchCard.fxml");
+        }
 
+        FXMLLoader loader = new FXMLLoader(url);
+        Node card = loader.load();
         BatchCardController controller = loader.getController();
         controller.setBatch(config);
-        controller.setOnEdit(this::loadConfig);          // reuse edit
-        controller.setOnDelete(scheduleController::removeBatch);
+        controller.setOnEdit(this::loadConfig);
 
-        scheduleBox.getChildren().add(card);
+        controller.setTitle("Hello world");
+        controller.setSummary("This is a summary");
+
+        scheduleController.addBatch(config);
     }
-
     public void loadConfig(BatchConfig config) {
         this.currentConfig = config;
         onAlgorithmSelected(config.getAlgorithm());
 
-        javafx.application.Platform.runLater(() -> {
+        Platform.runLater(() -> {
             if (currentAlgoConfigUI != null) {
                 currentAlgoConfigUI.loadConfigs(config.getAlgorithmConfig());
             }
             tabPane.getSelectionModel().select(configTab);
         });
-
     }
 
     @FXML
@@ -226,8 +215,6 @@ public class BatchController {
             problemDropDown.getItems().setAll(filteredProblems);
             problemDropDown.getSelectionModel().clearSelection();
             algorithmDropDown.getItems().clear();
-
-
         }
     }
 
@@ -250,4 +237,37 @@ public class BatchController {
         }
     }
 
+    private void checkBatchReady() {
+        boolean batchReady = !batchSize.getText().isBlank();
+        boolean terminationReady = !terminationSize.getText().isBlank();
+        addBatchButton.setDisable(!(batchReady && terminationReady));
+    }
+
+    private void checkBatchForSwitch() {
+        String value = batchSize.getText();
+        boolean isValid = value != null && !value.isBlank();
+
+        if (isValid) {
+            terminationTab.setDisable(false);
+            tabPane.getSelectionModel().select(terminationTab);
+            checkBatchReady();
+        }
+    }
+
+    private void checkTerminationForSwitch() {
+        String value = terminationSize.getText();
+        boolean isValid = value != null && !value.isBlank();
+
+        if (isValid) {
+            addTab.setDisable(false);
+            tabPane.getSelectionModel().select(addTab);
+            checkBatchReady();
+        }
+    }
+
+
+    public void setScheduleController(ScheduleController scheduleController) {
+        this.scheduleController = scheduleController;
+        scheduleController.setOnEditRequested(this::loadConfig);
+    }
 }

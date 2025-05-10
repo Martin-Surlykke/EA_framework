@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.TextField?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ea_framework.Controllers.OperatorControllers.SimulatedAnnealingTSPController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox fx:id="vBox" spacing="10.0">
+        <TextField fx:id="alphaValue" promptText="Enter alpha"/>
+        <TextField fx:id="temperatureValue" promptText="Enter temperature"/>
+    </VBox>
+</AnchorPane>

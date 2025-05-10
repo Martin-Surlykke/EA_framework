@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ScheduleController {
@@ -22,18 +23,25 @@ public class ScheduleController {
 
     public void addBatch(BatchConfig config) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ui/BatchCard.fxml"));
-            Node card = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/BatchCard.fxml"));
+            Node card = loader.load();  // Load FXML
+            BatchCardController controller = loader.getController();  // After load()
+            Objects.requireNonNull(controller, "BatchCardController was null");
 
-            BatchCardController controller = loader.getController();
             controller.setBatch(config);
-            controller.setOnDelete(this::removeBatch); // callback
-            controller.setOnEdit(this::editBatch);     // callback
+            controller.setOnEdit(this::handleEdit);
+            controller.setOnDelete(this::removeBatch);
 
-            savedBatches.add(config);
-            scheduleVBox.getChildren().add(card);
+            scheduleVBox.getChildren().add(card);  // Make sure this VBox has fx:id="scheduleVBox"
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void handleEdit(BatchConfig batchConfig) {
+        if (onEditRequested != null) {
+            onEditRequested.accept(batchConfig);
+            removeBatch(batchConfig); // remove old version before editing
         }
     }
 

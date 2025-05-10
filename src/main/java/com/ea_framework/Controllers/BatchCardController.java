@@ -19,7 +19,14 @@ public class BatchCardController {
     private Consumer<BatchConfig> onDelete;
     private Consumer<BatchConfig> onEdit;
 
-    public void setBatchCard(BatchConfig batchConfig) {
+    @FXML
+    public void initialize() {
+        assert titleLabel != null : "titleLabel was not injected!";
+        assert summaryLabel != null : "summaryLabel was not injected!";
+    }
+
+
+    public void setBatch(BatchConfig batchConfig) {
                              this.batchConfig = batchConfig;
         titleLabel.setText(batchConfig.getAlgorithm() + " + " + batchConfig.getProblem());
         summaryLabel.setText("SearchSpace: " + batchConfig.getSearchSpace() + ", Repeats: " + batchConfig.getRepeats());
@@ -48,6 +55,11 @@ public class BatchCardController {
         }
     }
 
-    public void setBatch(BatchConfig config) {
+    public void setTitle(String helloWorld) {
+        titleLabel.setText(helloWorld);
+    }
+
+    public void setSummary(String thisIsASummary) {
+        summaryLabel.setText(thisIsASummary);
     }
 }

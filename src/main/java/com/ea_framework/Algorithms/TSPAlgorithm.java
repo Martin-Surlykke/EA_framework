@@ -2,11 +2,9 @@ package com.ea_framework.Algorithms;
 
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Configs.TSP2DConfig;
-import com.ea_framework.FitnessFunctions.DistanceMatrixContext;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.MutationFunctions.MutationOperator;
-import com.ea_framework.MutationFunctions.TwoOptTsp;
-import com.ea_framework.Problems.TSP2DProblem;
+import com.ea_framework.MutationFunctions.TSP2DTwoOpt;
 import com.ea_framework.Views.Viewables.TSPViewable;
 
 public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
@@ -67,7 +65,7 @@ public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
     }
 
     private static int[] deepCopy(int[] input) {
-        return TwoOptTsp.deepCopyList(input);
+        return TSP2DTwoOpt.deepCopyList(input);
     }
 
     public double evalFitness(int[] permutation) {

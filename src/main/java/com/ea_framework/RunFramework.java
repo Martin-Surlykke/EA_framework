@@ -9,7 +9,7 @@ import com.ea_framework.Filehandlers.TSPFileHandler;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
 import com.ea_framework.MutationFunctions.MutationOperator;
-import com.ea_framework.MutationFunctions.TwoOptTsp;
+import com.ea_framework.MutationFunctions.TSP2DTwoOpt;
 import com.ea_framework.Problems.TSP2DProblem;
 import com.ea_framework.StartAlgorithms.TSP2DRandomStart;
 import com.ea_framework.Views.VisualizeView.TspVisualizeView;
@@ -50,9 +50,9 @@ public class RunFramework extends Application {
         TSP2DRandomStart randomStart = new TSP2DRandomStart();
         tsp.setDefaultPermutation(randomStart.generateFirstSolution(tsp));
 
-        Fitness<int[], Double> distance = new TspEuclidianDistance(tsp.getDistanceMatrix());
+        Fitness<int[], Double> distance = new TspEuclidianDistance();
         ChoiceFunction<int[], Double> greedyMin = new GreedyChoice<int[], Double>(Comparator.reverseOrder());
-        MutationOperator<int[]> twoOpt = new TwoOptTsp();
+        MutationOperator<int[]> twoOpt = new TSP2DTwoOpt();
         TSP2DConfig config = new TSP2DConfig(distance, twoOpt, greedyMin);
         TSPAlgorithm tspAlgo = new TSPAlgorithm(config);
 

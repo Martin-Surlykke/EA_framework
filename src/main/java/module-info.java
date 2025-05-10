@@ -16,7 +16,6 @@ module com.ea_framework {
     exports com.ea_framework.FitnessFunctions;
     exports com.ea_framework.ChoiceFunctions;
     exports com.ea_framework.MutationFunctions;
-    exports com.ea_framework.Views.ConfigViews;
     exports com.ea_framework.Model;
     opens com.ea_framework.Loaders;
     opens com.ea_framework.Controllers to javafx.fxml;
@@ -24,7 +23,9 @@ module com.ea_framework {
     opens com.ea_framework.Registries to javafx.fxml;
     exports com.ea_framework.Problems;
     opens com.ea_framework.Problems to javafx.fxml;
-    exports com.ea_framework.Views;
     exports com.ea_framework.UIs;
     opens com.ea_framework.UIs to javafx.fxml;
+    exports com.ea_framework.Views.ConfigViews;
+    opens com.ea_framework.Controllers.AlgorithmControllers to javafx.fxml;
+    opens com.ea_framework.Controllers.OperatorControllers to javafx.fxml;
 }

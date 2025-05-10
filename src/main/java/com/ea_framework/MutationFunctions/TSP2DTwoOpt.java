@@ -2,7 +2,7 @@ package com.ea_framework.MutationFunctions;
 
 import java.util.Random;
 
-public class TwoOptTsp implements MutationOperator<int[]> {
+public class TSP2DTwoOpt implements MutationOperator<int[]> {
 
     @Override
     public int [] mutate(int[] solution) {

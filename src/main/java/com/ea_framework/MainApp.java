@@ -1,16 +1,19 @@
 package com.ea_framework;
 
+import com.ea_framework.Controllers.BatchController;
+import com.ea_framework.Controllers.ScheduleController;
 import com.ea_framework.MetaData.Registry;
 import com.ea_framework.MetaData.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
     public static void main(String[] args) {
-        // Initialize the registry
+
         launch(args);
 
 
@@ -18,18 +21,24 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("FXML test: " + getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
-        System.out.println("FXML exists? " + getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Batch.fxml"));
-        Scene scene = new Scene(loader.load());
+
+        FXMLLoader scheduleLoader = new FXMLLoader(getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
+        Parent scheduleRoot = scheduleLoader.load();
+        ScheduleController scheduleController = scheduleLoader.getController();
+
+        FXMLLoader batchLoader = new FXMLLoader(getClass().getResource("/com/ea_framework/Batch.fxml"));
+        Parent batchRoot = batchLoader.load();
+        BatchController batchController = batchLoader.getController();
+
+        batchController.setScheduleController(scheduleController);
+
+        Scene scene = new Scene(batchRoot);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("EA Framework");
         primaryStage.show();
     }
 
     public void init() {
-        Registry.registerSearchSpace("GRAPH2D", new Graph2D());
-        Registry.registerProblem("TSP", new TSP2DMetaData());
-        Registry.registerAlgorithm("TSPGenericAlgorithm", new TSPGenericAlgorithm());
 
         RegistryInitializer.initialize();
     }

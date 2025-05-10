@@ -2,11 +2,8 @@ package com.ea_framework.FitnessFunctions;
 
 public class TspEuclidianDistance implements Fitness<int[], Double> {
 
-    private final double[][] distanceMatrix;
+    private double[][] distanceMatrix;
 
-    public TspEuclidianDistance(double[][] distanceMatrix) {
-        this.distanceMatrix = distanceMatrix;
-    }
     @Override
     public Double evaluate(int[] input) {
         int[] tour = input.clone();
@@ -17,5 +14,9 @@ public class TspEuclidianDistance implements Fitness<int[], Double> {
         }
         cost += distanceMatrix[tour[tour.length - 1]][tour[0]];
         return cost;
+    }
+
+    public void setDistanceMatrix(double[][] distanceMatrix) {
+        this.distanceMatrix = distanceMatrix;
     }
 }

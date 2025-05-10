@@ -4,25 +4,32 @@ import com.ea_framework.Descriptors.OperatorDescriptor;
 import com.ea_framework.OperatorType;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class OperatorRegistry {
-    private static final Map<OperatorType, Map<String, OperatorDescriptor>> registry = new EnumMap<>(OperatorType.class);
+    private static final Map<String, OperatorDescriptor> registry = new HashMap<>();
 
-    static {
-        for (OperatorType type : OperatorType.values()) {
-            registry.put(type, new HashMap<>());
+    public static void register(String name, OperatorDescriptor descriptor) {
+        registry.put(name, descriptor);
+    }
+
+    public static OperatorDescriptor get(String name) {
+        return registry.get(name);
+    }
+
+    public static Set<String> getAvailableOperatorsByType(OperatorType type) {
+        Set<String> names = new HashSet<>();
+        for (Map.Entry<String, OperatorDescriptor> entry : registry.entrySet()) {
+            if (entry.getValue().getType() == type) {
+                names.add(entry.getKey());
+            }
         }
-
-        // 👇 Register RLS operator
-        registry.get(OperatorType.MUTATION).put("RLS",
-                new OperatorDescriptor("RLS", "/operator_config/RLS.fxml"));
+        return names;
     }
 
-    public static OperatorDescriptor get(OperatorType type, String name) {
-        return registry.get(type).get(name);
-    }
-
-    public static Set<String> getNames(OperatorType type) {
-        return registry.get(type).keySet();
+    public static Map<String, OperatorDescriptor> getRegistryByType(OperatorType type) {
+        return registry.entrySet().stream()
+                .filter(e -> e.getValue().getType() == type)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
