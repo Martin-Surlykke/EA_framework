@@ -2,14 +2,14 @@ package com.ea_framework.Controllers;
 
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
+import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
+import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Registries.Registry;
+import com.ea_framework.Views.ConfigView;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -18,6 +18,7 @@ import java.util.List;
 
 public class BatchController {
 
+    public Button addBatchButton;
     @FXML
     private TabPane tabPane;
     @FXML
@@ -108,6 +109,7 @@ public class BatchController {
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private BatchConfig currentConfig = new BatchConfig();
     private AlgorithmConfigUI currentAlgoConfigUI;
+    private GenericAlgorithmController genericAlgorithmController;
     private ScheduleController scheduleController;
 
     public void setScheduleController(ScheduleController controller) {
@@ -126,18 +128,23 @@ public class BatchController {
         tabPane.getSelectionModel().select(algorithmTab);
     }
 
-    public void onAlgorithmSelected(String algorithm) throws IOException {
-        currentConfig.setAlgorithm(algorithm);
-        configTab.setDisable(false);
+    @FXML
+    public void onAlgorithmSelected(String algorithmName) {
+        currentConfig.setAlgorithm(algorithmName);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                "/config/" + algorithm + "Config.fxml"));
-        Node configUI = loader.load();
-        currentAlgoConfigUI = loader.getController();
+        AlgorithmDescriptor<?, ?> descriptor = Registry.getAlgorithmDescriptor(algorithmName);
 
-        configTab.setContent(configUI);
+        ConfigView view = descriptor.getConfigPage();
+        AlgorithmConfigUI controller = view.getController();
+
+        currentAlgoConfigUI = controller;
+
+        if (controller instanceof GenericAlgorithmController gac) {
+            genericAlgorithmController = gac;
+        }
+
+        configTab.setContent(view.getRoot());
         tabPane.getSelectionModel().select(configTab);
-
     }
 
     @FXML
@@ -153,7 +160,12 @@ public class BatchController {
             scheduleController.addBatch(currentConfig);
         }
 
-        currentConfig.getAlgorithmConfig().putAll(currentAlgoConfigUI.getConfigs());
+        if (currentAlgoConfigUI != null) {
+            currentConfig.getAlgorithmConfig().putAll(currentAlgoConfigUI.getConfigs());
+        }
+        if (genericAlgorithmController != null) {
+            currentConfig.getAlgorithmConfig().putAll(genericAlgorithmController.getConfigs());
+        }
         savedBatches.add(currentConfig);
 
         try {
@@ -194,28 +206,15 @@ public class BatchController {
 
     public void loadConfig(BatchConfig config) {
         this.currentConfig = config;
+        onAlgorithmSelected(config.getAlgorithm());
 
-        // TODO: set UI dropdowns/inputs here
-        // Example:
-        // searchSpaceDropdown.setValue(config.getSearchSpace());
-        // problemDropdown.setValue(config.getProblem());
-        // algorithmDropdown.setValue(config.getAlgorithm());
+        javafx.application.Platform.runLater(() -> {
+            if (currentAlgoConfigUI != null) {
+                currentAlgoConfigUI.loadConfigs(config.getAlgorithmConfig());
+            }
+            tabPane.getSelectionModel().select(configTab);
+        });
 
-        // Dynamically load config panel for selected algorithm
-        try {
-            onAlgorithmSelected(config.getAlgorithm());
-
-            // Run later to make sure panel is loaded before injecting settings
-            javafx.application.Platform.runLater(() -> {
-                if (currentAlgoConfigUI != null) {
-                    currentAlgoConfigUI.loadConfigs(config.getAlgorithmConfig());
-                }
-                tabPane.getSelectionModel().select(configTab);
-            });
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -247,11 +246,8 @@ public class BatchController {
     private void handleAlgorithmSelect() {
         String selected = algorithmDropDown.getValue();
         if (selected != null) {
-            try {
-                onAlgorithmSelected(selected);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            onAlgorithmSelected(selected);
         }
     }
+
 }

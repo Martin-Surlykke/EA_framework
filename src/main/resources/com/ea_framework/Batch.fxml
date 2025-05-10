@@ -87,7 +87,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button fx:id="addBatchButton" layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Add batch to schedule" />
+                        <Button fx:id="addBatchButton" onMouseClicked="#onAddToSchedule" layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Add batch to schedule" />
                      </children>
                   </AnchorPane>
               </content>

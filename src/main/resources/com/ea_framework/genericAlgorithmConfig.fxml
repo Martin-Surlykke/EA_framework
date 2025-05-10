@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:id="genericAlgorithmConfigPane" fx:controller="com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController"
+      prefHeight="400.0" prefWidth="426.0">
+
+   <children>
+      <ComboBox fx:id="fitnessDropDown" layoutX="14.0" layoutY="47.0" prefHeight="25.0" prefWidth="124.0"/>
+      <ComboBox fx:id="mutationDropDown" layoutX="151.0" layoutY="47.0" prefHeight="25.0" prefWidth="124.0"/>
+      <ComboBox fx:id="choiceDropDown" layoutX="288.0" layoutY="47.0" prefHeight="25.0" prefWidth="124.0"/>
+
+      <Label layoutX="32.0" layoutY="21.0" text="Fitness Function:"/>
+      <Label layoutX="162.0" layoutY="21.0" text="Mutation Operator:"/>
+      <Label layoutX="305.0" layoutY="21.0" text="Choice Function:"/>
+
+      <Separator layoutX="144.0" layoutY="33.0" orientation="VERTICAL" prefHeight="361.0"/>
+      <Separator layoutX="281.0" layoutY="36.0" orientation="VERTICAL" prefHeight="355.0"/>
+
+      <ScrollPane fx:id="fitnessScroll" layoutX="14.0" layoutY="80.0" prefWidth="124.0" prefHeight="280.0"
+                  fitToWidth="true">
+         <VBox fx:id="fitnessConfigPane"/>
+      </ScrollPane>
+
+      <ScrollPane fx:id="mutationScroll" layoutX="151.0" layoutY="80.0" prefWidth="124.0" prefHeight="280.0"
+                  fitToWidth="true">
+         <VBox fx:id="mutationConfigPane"/>
+      </ScrollPane>
+
+      <ScrollPane fx:id="choiceScroll" layoutX="288.0" layoutY="80.0" prefWidth="124.0" prefHeight="280.0"
+                  fitToWidth="true">
+         <VBox fx:id="choiceConfigPane"/>
+      </ScrollPane>
+   </children>
+</Pane>

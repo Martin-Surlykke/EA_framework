@@ -1,7 +1,6 @@
 package com.ea_framework;
 
 import com.ea_framework.Algorithms.TSPAlgorithm;
-import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Filehandlers.BitStringFileHandler;
@@ -13,7 +12,6 @@ import com.ea_framework.Registries.ProblemRegistry;
 import com.ea_framework.Registries.SearchSpaceRegistry;
 import com.ea_framework.SearchSpaces.BitStringSearchSpace;
 import com.ea_framework.SearchSpaces.Graph2DSearchSpace;
-import com.ea_framework.Views.ConfigViews.TSP2DConfigView;
 
 import java.io.File;
 import java.io.IOException;

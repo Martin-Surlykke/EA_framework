@@ -2,7 +2,8 @@ package com.ea_framework.Descriptors;
 
 
 import com.ea_framework.Configs.AlgorithmConfig;
-import com.ea_framework.Views.ConfigViews.ConfigView;
+import com.ea_framework.Configs.AlgorithmConfigUI;
+import com.ea_framework.Views.ConfigView;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -12,14 +13,16 @@ public class AlgorithmDescriptor<T, C extends AlgorithmConfig> implements Descri
     private final String problemType;
     private final Function<C, T> constructor;
     private final Supplier<ConfigView> configPageSupplier;
+    private final Class<? extends AlgorithmConfigUI> controllerClass;
 
     public AlgorithmDescriptor(String name, String problemType,
-                                           Function<C, T> constructor,
-                                           Supplier<ConfigView> configPageSupplier) {
+                               Function<C, T> constructor,
+                               Supplier<ConfigView> configPageSupplier, Class<? extends AlgorithmConfigUI> controllerClass) {
         this.name = name;
         this.problemType = problemType;
         this.constructor = constructor;
         this.configPageSupplier = configPageSupplier;
+        this.controllerClass = controllerClass;
     }
 
     public T create(C config) {
@@ -37,5 +40,9 @@ public class AlgorithmDescriptor<T, C extends AlgorithmConfig> implements Descri
     @Override
     public String getCompatibleKey() {
         return problemType;
+    }
+
+    public Class<? extends AlgorithmConfigUI> getControllerClass() {
+        return controllerClass;
     }
 }

@@ -47,4 +47,8 @@ public class Registry {
                 .map(AlgorithmDescriptor::getName)
                 .toList();
     }
+
+    public static AlgorithmDescriptor<?, ?> getAlgorithmDescriptor(String name) {
+        return AlgorithmRegistry.get(name);
+    }
 }

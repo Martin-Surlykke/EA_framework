@@ -24,4 +24,5 @@ module com.ea_framework {
     opens com.ea_framework.Registries to javafx.fxml;
     exports com.ea_framework.Problems;
     opens com.ea_framework.Problems to javafx.fxml;
+    exports com.ea_framework.Views;
 }
