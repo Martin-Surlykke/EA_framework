@@ -1,6 +1,6 @@
 package com.ea_framework.Descriptors;
 
-import com.ea_framework.GenericOperatorUI;
+import com.ea_framework.UIs.GenericOperatorUI;
 
 public class OperatorDescriptor {
     private final String name;

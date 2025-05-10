@@ -25,4 +25,6 @@ module com.ea_framework {
     exports com.ea_framework.Problems;
     opens com.ea_framework.Problems to javafx.fxml;
     exports com.ea_framework.Views;
+    exports com.ea_framework.UIs;
+    opens com.ea_framework.UIs to javafx.fxml;
 }
