@@ -39,7 +39,7 @@ public class RunFramework extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        int MAX_ITERATIONS = 25000;
+        int MAX_ITERATIONS = 2500000;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
@@ -55,6 +55,7 @@ public class RunFramework extends Application {
         MutationOperator<int[]> twoOpt = new TSP2DTwoOpt();
         TSP2DConfig config = new TSP2DConfig(distance, twoOpt, greedyMin);
         TSPAlgorithm tspAlgo = new TSPAlgorithm(config);
+        tspAlgo.setDistanceMatrix(tsp.getDistanceMatrix());
 
         TspVisualizeView view = new TspVisualizeView(tsp);
         FitnessView fitnessView = new GraphFitnessView(MAX_ITERATIONS);
@@ -91,11 +92,7 @@ public class RunFramework extends Application {
                 latestFitness.set(tspAlgo.getCurrentFitness());
                 latestIteration.set(i);
                 latestStatRecord.set(new StatRecord(i, i * 2, tspAlgo.getCurrentFitness(), tspAlgo.getBestIteration(), tspAlgo.getBestIteration() * 2, tspAlgo.getBestFitness()));
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
+
             }
         });
         solverThread.setDaemon(true);

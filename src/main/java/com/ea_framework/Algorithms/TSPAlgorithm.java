@@ -3,6 +3,7 @@ package com.ea_framework.Algorithms;
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.FitnessFunctions.Fitness;
+import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
 import com.ea_framework.MutationFunctions.MutationOperator;
 import com.ea_framework.MutationFunctions.TSP2DTwoOpt;
 import com.ea_framework.Views.Viewables.TSPViewable;
@@ -76,4 +77,9 @@ public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
         currentSolution = permutation;
     }
 
+    public void setDistanceMatrix(double[][] distanceMatrix) {
+        if (fitnessFunction instanceof TspEuclidianDistance tspEuclidianDistance) {
+            tspEuclidianDistance.setDistanceMatrix(distanceMatrix);
+        }
+    }
 }

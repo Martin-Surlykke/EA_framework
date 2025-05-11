@@ -9,7 +9,5 @@
             fitToWidth="true" prefWidth="306.0" prefHeight="429.0"
             layoutX="602.0" layoutY="77.0">
 
-    <content>
-        <VBox fx:id="scheduleVBox"/>
-    </content>
+    <VBox fx:id="scheduleVBox"/>
 </ScrollPane>

@@ -2,8 +2,6 @@ package com.ea_framework;
 
 import com.ea_framework.Controllers.BatchController;
 import com.ea_framework.Controllers.ScheduleController;
-import com.ea_framework.MetaData.Registry;
-import com.ea_framework.MetaData.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

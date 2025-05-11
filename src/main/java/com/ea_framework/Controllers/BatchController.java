@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class BatchController {
     private GenericAlgorithmController genericAlgorithmController;
     private ScheduleController scheduleController;
 
+    @FXML private AnchorPane schedule;
 
     @FXML
     public void initialize() {
@@ -61,6 +63,15 @@ public class BatchController {
         terminationDropDown.getItems().addAll(
                 "Max iterations"
         );
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
+            Node node = loader.load();
+            scheduleController = loader.getController();
+            schedule.getChildren().add(node);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         searchSpaceDropDown.setPromptText("Select search space");
         problemDropDown.setPromptText("Select problem");
