@@ -5,6 +5,7 @@ import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
+import com.ea_framework.Filehandlers.TSPFileHandler;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Registries.Registry;
 import com.ea_framework.ResourceLister;
@@ -232,7 +233,7 @@ public class BatchController {
             List<String> filteredAlgorithms = Registry.getAlgorithmsForProblem(selected);
             algorithmDropDown.getItems().setAll(filteredAlgorithms);
             algorithmDropDown.getSelectionModel().clearSelection();
-            ProblemDescriptor problemShell = Registry.getProblem(selected); // returns new TSP2DProblem()
+            ProblemDescriptor problemShell = Registry.getProblem(selected);
             currentConfig.setProblemDescriptor(problemShell);
             currentConfig.setProblemName(selected);
         }
@@ -361,7 +362,7 @@ public class BatchController {
     }
 
     @FXML
-    private void handleRunSchedule() {
+    private void handleRunSchedule() throws IOException {
         List<BatchConfig> batches = scheduleController.getBatches();
 
         if (batches.isEmpty()) {
@@ -374,11 +375,23 @@ public class BatchController {
         }
 
         for (BatchConfig config : batches) {
+            if (config.getInputStream() == null) {
+                System.out.println("⚠️ Missing stream. Re-resolving: " + config.getProblemName() + " / " + config.getStreamName());
+                try {
+                    InputStream stream = ResourceLister.resolveProblemStream(config.getProblemName(), config.getStreamName());
+                    config.setInputStream(stream);
+                } catch (Exception e) {
+                    System.err.println("❌ Failed to re-resolve stream: " + e.getMessage());
+                    e.printStackTrace();
+                    continue;
+                }
+            }
+
             runBatch(config);
         }
     }
 
-    private void runBatch(BatchConfig config) {
+    private void runBatch(BatchConfig config) throws IOException {
         RunBatch runBatch = new RunBatch(config);
         runBatch.run();
     }

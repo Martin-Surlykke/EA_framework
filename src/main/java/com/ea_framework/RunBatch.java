@@ -7,6 +7,8 @@ import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.SearchSpaces.SearchSpace;
 
+import java.io.IOException;
+
 public class RunBatch {
 
     private final BatchConfig config;
@@ -19,7 +21,8 @@ public class RunBatch {
         this.termination = config.getTermination();
     }
 
-    public void run() {
+    public void run() throws IOException {
+        System.out.println(config.getResourceStream());
         Problem problem = config.getProblem();
         System.out.println(problem.getName());
     }

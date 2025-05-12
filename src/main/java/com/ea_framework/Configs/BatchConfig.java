@@ -7,15 +7,12 @@ import com.ea_framework.Filehandlers.FileLoader;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.SearchSpaces.SearchSpace;
 
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BatchConfig {
-    private String fileLoaderName;
-    private FileLoader<?> fileLoader;
-
     private String streamName;
     private InputStream inputStream;
 
@@ -40,18 +37,6 @@ public class BatchConfig {
     private Problem problem;
 
     private ProblemDescriptor problemDescriptor;
-
-    public SearchSpace<?> getSearchSpace() {
-        return searchSpace;
-    }
-
-    public String getFileLoaderName() {
-        return fileLoaderName;
-    }
-
-    public void setFileLoaderName(String fileLoaderName) {
-        this.fileLoaderName = fileLoaderName;
-    }
 
     public String getStreamName() {
         return streamName;
@@ -89,14 +74,6 @@ public class BatchConfig {
         this.searchSpace = searchSpace;
     }
 
-    public void setProblem(Problem problem) {
-        this.problem = problem;
-    }
-
-    public AlgorithmDescriptor<?, ?> getAlgorithmDescriptor() {
-        return algorithmDescriptor;
-    }
-
     public void setAlgorithmDescriptor(AlgorithmDescriptor<?, ?> descriptor) {
         this.algorithmDescriptor = descriptor;
     }
@@ -129,26 +106,28 @@ public class BatchConfig {
         this.termination = termination;
     }
 
-    public void setFileLoader(FileLoader<Problem> loader) {
-        this.fileLoader = loader;
-    }
-
     public InputStream getInputStream() {
         return inputStream;
     }
 
-    public Problem getProblem() {
-        return problem;
+    public Problem getProblem() throws IOException {
+        return getProblemFromDescriptor();
     }
 
-    public FileLoader getFileLoader() {
-        return fileLoader;
-    }
 
     public void setProblemDescriptor(ProblemDescriptor problemShell) {
         this.problemDescriptor = problemShell;
     }
 
     public void setInputStream(InputStream stream) {
+        this.inputStream = stream;
+    }
+
+    public Problem getProblemFromDescriptor() throws IOException {
+        return problemDescriptor.getLoader().load(inputStream);
+    }
+
+    public InputStream getResourceStream() {
+        return inputStream;
     }
 }

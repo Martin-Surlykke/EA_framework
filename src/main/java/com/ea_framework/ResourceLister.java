@@ -1,8 +1,6 @@
 package com.ea_framework;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -46,19 +44,10 @@ public class ResourceLister {
         return filenames;
     }
 
-    public static InputStream resolveProblemStream(String problemType, String resourceName) {
-        String folder = getProblemFolder(problemType);
-        String fullPath = folder + "/" + resourceName;
+    public static InputStream resolveProblemStream(String problemType, String resourceName) throws FileNotFoundException {
+        File file = new File("src/main/resources/tspFiles/a280.tsp");
 
-        System.out.println("Trying to load: " + fullPath);
-        URL debugUrl = Thread.currentThread().getContextClassLoader().getResource(fullPath);
-        System.out.println("Found at: " + debugUrl);
-
-        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(fullPath);
-        if (in == null) {
-            throw new IllegalArgumentException("Resource not found: " + fullPath);
-        }
-        return in;
+        return new FileInputStream(file);
     }
 
     private static String getProblemFolder(String problemType) {

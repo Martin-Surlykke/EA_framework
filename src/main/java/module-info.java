@@ -13,6 +13,7 @@ module com.ea_framework {
     exports com.ea_framework.SearchSpaces;
     exports com.ea_framework.Algorithms;
     exports com.ea_framework.Descriptors;
+    exports com.ea_framework.Loaders;
     exports com.ea_framework.FitnessFunctions;
     exports com.ea_framework.ChoiceFunctions;
     exports com.ea_framework.MutationFunctions;
