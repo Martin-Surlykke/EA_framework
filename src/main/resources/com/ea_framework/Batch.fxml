@@ -95,8 +95,8 @@
             </tabs>
         </TabPane>
 
-        <AnchorPane fx:id="schedule" layoutX="606.0" layoutY="77.0" prefHeight="424.0" prefWidth="294.0" style="-fx-border-color: darkgray;" />
+        <AnchorPane fx:id="scheduleContainer" layoutX="606.0" layoutY="77.0" prefHeight="424.0" prefWidth="294.0" style="-fx-border-color: darkgray;" />
 
-        <Label alignment="CENTER" layoutX="699.0" layoutY="524.0" prefHeight="30.0" prefWidth="123.0" style="-fx-background-color: DarkGray;" text="Run current schedule" />
+        <Label fx:id="runSchedule" onMouseClicked="#handleRunSchedule" alignment="CENTER" layoutX="699.0" layoutY="524.0" prefHeight="30.0" prefWidth="123.0" style="-fx-background-color: DarkGray;" text="Run current schedule" />
     </children>
 </Pane>

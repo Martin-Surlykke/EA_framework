@@ -5,5 +5,5 @@ import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.MutationFunctions.MutationOperator;
 
 public record TSP2DConfig(Fitness<int[], Double> fitness, MutationOperator<int[]> mutation,
-                          ChoiceFunction<int[], Double> choice) {
+                          ChoiceFunction<int[], Double> choice) implements AlgorithmConfig{
 }

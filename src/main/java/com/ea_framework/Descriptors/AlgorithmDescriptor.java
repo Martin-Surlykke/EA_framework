@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 public class AlgorithmDescriptor<T, C> implements Descriptor {
     private final String name;
     private final String problemType;
-    private final Function<C, T> constructor;
+    private final Function<C, T> algorithm;
     private final Supplier<ConfigView> configPageSupplier;
     private final Class<? extends AlgorithmConfigUI> controllerClass;
     private final Class<C> configClass;
@@ -20,7 +20,7 @@ public class AlgorithmDescriptor<T, C> implements Descriptor {
     private final OperatorType choiceOperatorType;
 
     public AlgorithmDescriptor(String name, String problemType,
-                               Function<C, T> constructor,
+                               Function<C, T> algorithm,
                                Supplier<ConfigView> configPageSupplier,
                                Class<? extends AlgorithmConfigUI> controllerClass,
                                Class<C> configClass,
@@ -29,7 +29,7 @@ public class AlgorithmDescriptor<T, C> implements Descriptor {
                                OperatorType choiceOperatorType) {
         this.name = name;
         this.problemType = problemType;
-        this.constructor = constructor;
+        this.algorithm = algorithm;
         this.configPageSupplier = configPageSupplier;
         this.controllerClass = controllerClass;
         this.configClass = configClass;
@@ -40,7 +40,7 @@ public class AlgorithmDescriptor<T, C> implements Descriptor {
 
     public T create(C config) {
 
-        return constructor.apply(config);
+        return algorithm.apply(config);
     }
 
     public ConfigView getConfigPage() {
@@ -79,5 +79,13 @@ public class AlgorithmDescriptor<T, C> implements Descriptor {
 
     public OperatorType getChoiceOperatorType() {
         return choiceOperatorType;
+    }
+
+    public Function<C, T> getAlgorithm() {
+        return algorithm;
+    }
+
+    public T createAlgorithm(Object config) {
+        return algorithm.apply((C) config);
     }
 }

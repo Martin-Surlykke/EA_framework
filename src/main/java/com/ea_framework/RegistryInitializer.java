@@ -25,6 +25,7 @@ import javafx.scene.Parent;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class RegistryInitializer {
 
@@ -47,17 +48,7 @@ public class RegistryInitializer {
                 new ProblemDescriptor(
                         "BitStringProblem",
                         "BitString",
-                        new ProblemLoader() {
-                            @Override
-                            public boolean isValid(File file) {
-                                return true;
-                            }
-
-                            @Override
-                            public Problem load(File file) throws IOException {
-                                return BitStringFileHandler.parse(file.getAbsolutePath());
-                            }
-                        }
+                        new BitStringFileHandler()
                 )
         );
 
@@ -65,17 +56,7 @@ public class RegistryInitializer {
                 new ProblemDescriptor(
                         "TSP2D",
                         "Graph2D",
-                        new ProblemLoader() {
-                            @Override
-                            public boolean isValid(File file) {
-                                return true;
-                            }
-
-                            @Override
-                            public Problem load(File file) throws IOException {
-                                return TSPFileHandler.parse(file.getAbsolutePath());
-                            }
-                        }
+                        new TSPFileHandler()
                 )
         );
 

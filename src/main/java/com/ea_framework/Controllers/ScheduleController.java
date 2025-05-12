@@ -32,7 +32,8 @@ public class ScheduleController {
             controller.setOnEdit(this::handleEdit);
             controller.setOnDelete(this::removeBatch);
 
-            scheduleVBox.getChildren().add(card);  // Make sure this VBox has fx:id="scheduleVBox"
+            scheduleVBox.getChildren().add(card);
+            savedBatches.add(config);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,14 +42,7 @@ public class ScheduleController {
     private void handleEdit(BatchConfig batchConfig) {
         if (onEditRequested != null) {
             onEditRequested.accept(batchConfig);
-            removeBatch(batchConfig); // remove old version before editing
-        }
-    }
-
-    private void editBatch(BatchConfig config) {
-        if (onEditRequested != null) {
-            onEditRequested.accept(config);
-            removeBatch(config); // remove old version before editing
+            removeBatch(batchConfig);
         }
     }
 

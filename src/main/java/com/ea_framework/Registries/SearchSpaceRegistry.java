@@ -28,5 +28,12 @@ public class SearchSpaceRegistry {
     }
 
 
-
+    public static SearchSpace<?> getSeachSpace(String selected) {
+        Supplier<SearchSpace<?>> supplier = searchSpaces.get(selected);
+        if (supplier != null) {
+            return supplier.get();
+        } else {
+            throw new IllegalArgumentException("Search space not found: " + selected);
+        }
+    }
 }

@@ -1,17 +1,26 @@
 package com.ea_framework.Filehandlers;
 
 import com.ea_framework.Coordinate;
+import com.ea_framework.Loaders.ProblemLoader;
+import com.ea_framework.Problems.Problem;
 import com.ea_framework.Problems.TSP2DProblem;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
-public class TSPFileHandler {
+public class TSPFileHandler implements ProblemLoader<TSP2DProblem> {
 
-    public static TSP2DProblem parse(String path) throws FileNotFoundException {
-        Scanner sc = new Scanner(new File(path));
+    @Override
+    public boolean isValid(InputStream inputStream) {
+        return false;
+    }
+
+    @Override
+    public TSP2DProblem load(InputStream in) throws IOException {
+        Scanner sc = new Scanner(in);
         sc.useLocale(Locale.US);
+
         String name = readValue(sc.nextLine());
         String comment = readValue(sc.nextLine());
         String type = readValue(sc.nextLine());
@@ -33,23 +42,34 @@ public class TSPFileHandler {
 
             Scanner lineScanner = new Scanner(line);
             lineScanner.useLocale(Locale.US);
-            int index = lineScanner.nextInt()-1;
+            int index = lineScanner.nextInt() - 1;
             double x = lineScanner.nextDouble();
             double y = lineScanner.nextDouble();
             coords.add(new Coordinate(index, x, y));
 
             maxX = Math.max(maxX, x);
             maxY = Math.max(maxY, y);
-
-            minY = Math.min(minY, y);
             minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
         }
 
-        int [] permutation = getIndexList(coords);
-        double [][] coordsArray = getCoordArray(coords);
+        int[] permutation = getIndexList(coords);
+        double[][] coordsArray = getCoordArray(coords);
         double[][] distMatrix = computeDistanceMatrix(coordsArray);
 
         return new TSP2DProblem(name, comment, type, edgeType, coords, distMatrix, permutation, maxX, maxY, minX, minY);
+    }
+
+    private static String readValue(String line) {
+        return line.substring(line.indexOf(":") + 1).trim();
+    }
+
+    private static int[] getIndexList(List<Coordinate> coords) {
+        int[] indexList = new int[coords.size()];
+        for (int i = 0; i < coords.size(); i++) {
+            indexList[i] = coords.get(i).id();
+        }
+        return indexList;
     }
 
     private static double[][] getCoordArray(List<Coordinate> coords) {
@@ -59,18 +79,6 @@ public class TSPFileHandler {
             coordsArray[i][1] = coords.get(i).y();
         }
         return coordsArray;
-    }
-
-    private static String readValue(String line) {
-        return line.substring(line.indexOf(":") + 1).trim();
-    }
-
-    public static int [] getIndexList(List<Coordinate> coords) {
-        int [] indexList = new int[coords.size()];
-        for (int i = 0; i < coords.size(); i++) {
-            indexList[i] = coords.get(i).id();
-        }
-        return indexList;
     }
 
     private static double[][] computeDistanceMatrix(double[][] coords) {

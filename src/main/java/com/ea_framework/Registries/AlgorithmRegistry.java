@@ -26,4 +26,13 @@ public class AlgorithmRegistry {
     public static Set<String> getAvailableAlgorithms() {
         return registry.keySet();
     }
+
+    public static AlgorithmDescriptor<?,?> getAlgorithm(String name) {
+        AlgorithmDescriptor<?,?> descriptor = registry.get(name);
+        if (descriptor != null) {
+            return descriptor;
+        } else {
+            throw new IllegalArgumentException("Algorithm not found: " + name);
+        }
+    }
 }

@@ -39,12 +39,12 @@ public class RunFramework extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        int MAX_ITERATIONS = 2500000;
+ /*       int MAX_ITERATIONS = 2500000;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load());
 
-        TSP2DProblem tsp = TSPFileHandler.parse("src/main/resources/tspFiles/ch130.tsp");
+        TSP2DProblem tsp = TSPFileHandler.load("src/main/resources/tspFiles/ch130.tsp");
 
 
         TSP2DRandomStart randomStart = new TSP2DRandomStart();
@@ -127,5 +127,6 @@ public class RunFramework extends Application {
 
     public static void main(String[] args) {
         launch(args);
+     */
     }
 }

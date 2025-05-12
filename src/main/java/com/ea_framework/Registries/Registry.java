@@ -26,7 +26,7 @@ public class Registry {
     }
 
     public static AlgorithmDescriptor<?, ?> getAlgorithm(String name) {
-        return AlgorithmRegistry.get(name);
+        return AlgorithmRegistry.getAlgorithm(name);
     }
 
     public static SearchSpace<?> createSearchSpace(String name) {
@@ -50,5 +50,9 @@ public class Registry {
 
     public static AlgorithmDescriptor<?, ?> getAlgorithmDescriptor(String name) {
         return AlgorithmRegistry.get(name);
+    }
+
+    public static SearchSpace<?> getSearchSpace(String selected) {
+        return SearchSpaceRegistry.getSeachSpace(selected);
     }
 }

@@ -28,8 +28,8 @@ public class BatchCardController {
 
     public void setBatch(BatchConfig batchConfig) {
                              this.batchConfig = batchConfig;
-        titleLabel.setText(batchConfig.getAlgorithm() + " + " + batchConfig.getProblem());
-        summaryLabel.setText("SearchSpace: " + batchConfig.getSearchSpace() + ", Repeats: " + batchConfig.getRepeats());
+        titleLabel.setText(batchConfig.getAlgorithmName() + " + " + batchConfig.getProblemName());
+        summaryLabel.setText("SearchSpace: " + batchConfig.getSearchSpaceName() + ", Repeats: " + batchConfig.getRepeats() + ", Termination: " + batchConfig.getTermination());
     }
 
 
