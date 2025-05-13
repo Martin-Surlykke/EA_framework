@@ -1,8 +1,10 @@
 package com.ea_framework.Controllers;
-import com.ea_framework.Views.VisualizeView.TspVisualizeView;
+import com.ea_framework.Algorithms.Algorithm;
+import com.ea_framework.Views.InfoViews.StatRecord;
 import com.ea_framework.Views.FitnessView.FitnessView;
-import com.ea_framework.Views.InfoViews.ConfigView;
+import com.ea_framework.Views.InfoViews.ConfigurationView;
 import com.ea_framework.Views.InfoViews.StatView;
+import com.ea_framework.Views.VisualizeView.VisualizeView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -12,8 +14,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class VisualizeController {
+public class VisualizeController<S> {
 
+    private VisualizeView<S> visualizeView;
+    private FitnessView fitnessView;
+    private StatView statView;
     @FXML
     public Pane visualizePane;
 
@@ -34,26 +39,25 @@ public class VisualizeController {
 
 
     @FXML
-    public void initialize(TspVisualizeView tspCandidateView,
+    public void initialize(VisualizeView<S> visualizeView,
                            FitnessView fitnessView,
-                           ConfigView configView,
+                           ConfigurationView configView,
                            StatView statView,
                            Stage stage) {
 
-        fitToPane(tspCandidateView.getView(), visualizePane);
+        // Store views for use in updateAll
+        this.visualizeView = visualizeView;
+        this.fitnessView = fitnessView;
+        this.statView = statView;
+
+        fitToPane(visualizeView.getView(), visualizePane);
         fitToPane(fitnessView.getView(), fitnessPane);
         fitToPane(configView.getView(), configPane);
         fitToPane(statView.getView(), statPane);
 
-        closeWindow.setOnMouseClicked(event -> {
-            Platform.exit();
-        });
-
-        minimizeWindow.setOnMouseClicked(event -> {
-            stage.setIconified(true);
-        });
+        closeWindow.setOnMouseClicked(event -> Platform.exit());
+        minimizeWindow.setOnMouseClicked(event -> stage.setIconified(true));
     }
-
     public void fitToPane(Node node, Pane pane) {
         Region region = (Region) node;
         region.prefWidthProperty().bind(pane.widthProperty());
@@ -61,8 +65,11 @@ public class VisualizeController {
         pane.getChildren().add(region);
     }
 
+    public void updateAll(Algorithm<S> algorithm, int iteration, double fitness, StatRecord stat) {
+            visualizeView.update(algorithm);
 
+            fitnessView.update(fitness, iteration);
 
-
-
+            statView.update(stat);
+    }
 }

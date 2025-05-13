@@ -24,7 +24,7 @@ public class BatchConfig {
     private String algorithmName;
     private AlgorithmDescriptor<?, ?> algorithmDescriptor;
 
-    private Map<String, Object> algorithmConfig = new HashMap<>();
+    private AlgorithmConfig algorithmConfig;
 
     private Map<String, String> terminationConfigs = new HashMap<>();
 
@@ -78,7 +78,7 @@ public class BatchConfig {
         this.algorithmDescriptor = descriptor;
     }
 
-    public Map<String, Object> getAlgorithmConfig() {
+    public AlgorithmConfig getAlgorithmConfig() {
         return algorithmConfig;
     }
 
@@ -114,6 +114,14 @@ public class BatchConfig {
         return getProblemFromDescriptor();
     }
 
+    public SearchSpace<?> getSearchSpace() {
+        return searchSpace;
+    }
+
+    public AlgorithmDescriptor<?, ?> getAlgorithmDescriptor() {
+        return algorithmDescriptor;
+    }
+
 
     public void setProblemDescriptor(ProblemDescriptor problemShell) {
         this.problemDescriptor = problemShell;
@@ -129,5 +137,10 @@ public class BatchConfig {
 
     public InputStream getResourceStream() {
         return inputStream;
+    }
+
+
+    public void setAlgorithmConfig(AlgorithmConfig configInstance) {
+        this.algorithmConfig = configInstance;
     }
 }

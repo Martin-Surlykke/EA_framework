@@ -5,6 +5,6 @@ import com.ea_framework.Problems.BitStringProblem;
     public class BitStringDefaultStart implements StartAlgorithm <BitStringProblem, boolean[]> {
         @Override
         public boolean[] generateFirstSolution(BitStringProblem problem) {
-            return problem.defaultBitString().clone();
+            return problem.getDefaultPermutation().clone();
         }
     }

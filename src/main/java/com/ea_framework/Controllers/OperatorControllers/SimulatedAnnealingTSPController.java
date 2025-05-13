@@ -4,6 +4,8 @@ import com.ea_framework.ChoiceFunctions.TSP2DSimulatedAnnealing;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.util.Comparator;
+
 public class SimulatedAnnealingTSPController implements OperatorConfigController {
     @FXML
     private TextField alphaValue;
@@ -12,7 +14,8 @@ public class SimulatedAnnealingTSPController implements OperatorConfigController
 
     @Override
     public Object getConfig() {
-        return new TSP2DSimulatedAnnealing(
+        return new TSP2DSimulatedAnnealing<int [], Double>(
+                Comparator.reverseOrder(),
                 Double.parseDouble(alphaValue.getText()),
                 Double.parseDouble(temperatureValue.getText())
         );

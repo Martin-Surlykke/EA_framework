@@ -1,6 +1,7 @@
 package com.ea_framework.Algorithms;
 
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.MutationFunctions.MutationOperator;
 
@@ -44,6 +45,11 @@ public class BitStringAlgorithm implements Algorithm<boolean[]> {
         currentSolution = start;
     }
 
+    @Override
+    public Algorithm<?> apply(AlgorithmConfig config) {
+
+        return this;
+    }
 
 
     public int evalFitness(boolean[] permutation) {
@@ -54,6 +60,21 @@ public class BitStringAlgorithm implements Algorithm<boolean[]> {
     public void setCurrentSolution(boolean[] currentSolution) {
         this.currentSolution = currentSolution;
         currentFitness = evalFitness(currentSolution);
+    }
+
+    @Override
+    public Double getCurrentFitness() {
+        return (double) currentFitness;
+    }
+
+    @Override
+    public Double getBestFitness() {
+        return (double) currentFitness;
+    }
+
+    @Override
+    public int getBestIteration() {
+        return 100;
     }
 
     private static boolean[] deepCopy(boolean[] bitString) {

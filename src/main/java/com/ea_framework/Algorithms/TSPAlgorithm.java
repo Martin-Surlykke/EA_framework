@@ -1,85 +1,98 @@
 package com.ea_framework.Algorithms;
 
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.FitnessFunctions.Fitness;
 import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
 import com.ea_framework.MutationFunctions.MutationOperator;
 import com.ea_framework.MutationFunctions.TSP2DTwoOpt;
-import com.ea_framework.Views.Viewables.TSPViewable;
 
-public class TSPAlgorithm implements Algorithm<int []>, TSPViewable {
+public class TSPAlgorithm implements Algorithm<int[]> {
 
-    protected int [] currentSolution;
-    private final ChoiceFunction <int[], Double> choiceFunction;
+    private int[] currentSolution;
+    private ChoiceFunction<int[], Double> choiceFunction;
+    private Fitness<int[], Double> fitnessFunction;
+    private MutationOperator<int[]> mutationOperator;
 
-    private final Fitness<int[], Double> fitnessFunction;
+    private double currentFitness = Double.MAX_VALUE;
+    private double bestFitness = Double.MAX_VALUE;
+    private int bestIteration = 0;
 
-    private final MutationOperator<int[]> mutationOperator;
-    double currentFitness;
-
-    double bestFitness;
-
-    int bestIteration;
-
-    public TSPAlgorithm(TSP2DConfig config) {
-        this.choiceFunction = config.choice();
-        this.fitnessFunction = config.fitness();
-        this.mutationOperator = config.mutation();
-        currentFitness = Double.MAX_VALUE;
-        bestFitness = Double.MAX_VALUE;
-        bestIteration = 0;
+    public TSPAlgorithm() {
     }
-    @Override
-    public void run(int iterations) {
-        int[] copy = mutationOperator.mutate(deepCopy(currentSolution));
 
-        currentSolution = choiceFunction.choose(currentSolution, copy, evalFitness(currentSolution), evalFitness(copy), iterations);
-        if (currentFitness < bestFitness) {
-            bestFitness = currentFitness;
-            bestIteration = iterations;
+    public Algorithm<?> apply(AlgorithmConfig config) {
+        if (config instanceof TSP2DConfig tspConfig) {
+            this.fitnessFunction = tspConfig.fitness();
+            this.mutationOperator = tspConfig.mutation();
+            this.choiceFunction = tspConfig.choice();
+            return this;
+        } else {
+            throw new IllegalArgumentException("Expected TSP2DConfig, got " + config.getClass().getSimpleName());
         }
-        currentFitness = evalFitness(currentSolution);
-
     }
 
     @Override
-    public int [] getCurrentSolution() {
-        return currentSolution;
+    public void setCurrentSolution(int[] defaultPermutation) {
+        this.currentSolution = defaultPermutation;
     }
 
     @Override
-    public void setFirst(int[] first) {
-
-    }
-
-    public double getCurrentFitness() {
+    public Double getCurrentFitness() {
         return currentFitness;
     }
 
-    public double getBestFitness() {
+    @Override
+    public Double getBestFitness() {
         return bestFitness;
     }
 
+    @Override
     public int getBestIteration() {
         return bestIteration;
     }
 
-    private static int[] deepCopy(int[] input) {
-        return TSP2DTwoOpt.deepCopyList(input);
+    @Override
+    public void run(int iteration) {
+        int[] candidate = mutationOperator.mutate(deepCopy(currentSolution));
+
+        double fitnessOriginal = evalFitness(currentSolution);
+        double fitnessCandidate = evalFitness(candidate);
+
+        currentSolution = choiceFunction.choose(currentSolution, candidate, fitnessOriginal, fitnessCandidate, iteration);
+        currentFitness = evalFitness(currentSolution);
+
+        if (currentFitness < bestFitness) {
+            bestFitness = currentFitness;
+            bestIteration = iteration;
+        }
+    }
+
+    @Override
+    public int[] getCurrentSolution() {
+        return currentSolution;
+    }
+
+
+    @Override
+    public void setFirst(int[] first) {
+        this.currentSolution = first;
     }
 
     public double evalFitness(int[] permutation) {
         return fitnessFunction.evaluate(permutation);
     }
 
-    public void setCurrentSolution(int[] permutation) {
-        currentSolution = permutation;
-    }
-
     public void setDistanceMatrix(double[][] distanceMatrix) {
-        if (fitnessFunction instanceof TspEuclidianDistance tspEuclidianDistance) {
-            tspEuclidianDistance.setDistanceMatrix(distanceMatrix);
+        if (fitnessFunction instanceof TspEuclidianDistance tspDist) {
+            tspDist.setDistanceMatrix(distanceMatrix);
         }
     }
+
+    private static int[] deepCopy(int[] input) {
+        return TSP2DTwoOpt.deepCopyList(input);
+    }
+
+
 }

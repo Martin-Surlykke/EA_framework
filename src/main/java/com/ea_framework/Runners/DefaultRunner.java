@@ -1,0 +1,75 @@
+package com.ea_framework.Runners;
+
+import com.ea_framework.Algorithms.Algorithm;
+import com.ea_framework.Controllers.VisualizeController;
+import com.ea_framework.Problems.Problem;
+import com.ea_framework.Views.InfoViews.StatRecord;
+import javafx.animation.AnimationTimer;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class DefaultRunner<S> implements ProblemRunner<Problem<S>> {
+    @Override
+    public void run(Problem<S> problem, Algorithm<S> algorithm, VisualizeController controller, int termination) {
+        S initial = problem.getDefaultPermutation();
+        if (initial == null) {
+            throw new IllegalStateException("Problem did not provide a valid default permutation.");
+        }
+        algorithm.setCurrentSolution(initial);
+
+        AtomicInteger latestIteration = new AtomicInteger();
+        AtomicReference<Double> latestFitness = new AtomicReference<>();
+        AtomicReference<StatRecord> latestStat = new AtomicReference<>();
+
+        Thread solver = new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ignored) {}
+
+            for (int i = 0; i < termination; i++) {
+                algorithm.run(i);
+
+                latestIteration.set(i);
+                latestFitness.set(algorithm.getCurrentFitness());
+                latestStat.set(new StatRecord(
+                        i,
+                        i * 2,
+                        algorithm.getCurrentFitness(),
+                        algorithm.getBestIteration(),
+                        algorithm.getBestIteration() * 2,
+                        algorithm.getBestFitness()
+                ));
+
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+        solver.setDaemon(true);
+        solver.start();
+
+        new AnimationTimer() {
+            private long lastUpdate = 0;
+            private final long interval = 20_000_000;
+
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdate < interval) return;
+                lastUpdate = now;
+
+                if (latestFitness.get() == null || latestStat.get() == null) return;
+
+                int i = latestIteration.get();
+                double fitness = latestFitness.get();
+                StatRecord stat = latestStat.get();
+
+                controller.updateAll(algorithm, i, fitness, stat);
+
+                if (i >= termination) stop();
+            }
+        }.start();
+    }
+}

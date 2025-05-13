@@ -1,8 +1,8 @@
 package com.ea_framework.Views.VisualizeView;
 
+import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Coordinate;
 import com.ea_framework.Problems.TSP2DProblem;
-import com.ea_framework.Views.Viewables.TSPViewable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-public class TspVisualizeView implements VisualizeView<TSPViewable> {
+public class TspVisualizeView implements VisualizeView<int[]> {
 
     private final Pane graphPane = new Pane();
     private final Canvas historyCanvas = new Canvas(700, 700);
@@ -21,39 +21,39 @@ public class TspVisualizeView implements VisualizeView<TSPViewable> {
     private final Pane nodeLayer = new Pane();
 
     private final List<Coordinate> coordinateList;
-
-    private final int [][] drawnLines;
-
-    double xFactor;
-    double yFactor;
+    private final int[][] drawnLines;
 
     private static final double NODE_RADIUS = 10.0;
     private static final double PADDING = NODE_RADIUS * 2;
 
-    double minX;
-    double minY;
+    private double xFactor;
+    private double yFactor;
+    private final double minX;
+    private final double minY;
 
     public TspVisualizeView(TSP2DProblem problem) {
         int n = problem.getNodeCount();
-        graphPane.setPrefSize(600, 600);
-        graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
-        drawnLines = new int [n][n];
+        this.coordinateList = problem.getCoordinates();
+        this.drawnLines = new int[n][n];
 
         double maxX = problem.getMaxX();
         double maxY = problem.getMaxY();
+        this.minX = problem.getMinX();
+        this.minY = problem.getMinY();
 
-        minX = problem.getMinX();
-        minY = problem.getMinY();
+        graphPane.setPrefSize(600, 600);
+        graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
 
         graphPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            xFactor = (newWidth.doubleValue()- PADDING) / maxX;
+            xFactor = (newWidth.doubleValue() - PADDING) / maxX;
             redrawNodes();
         });
+
         graphPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
-            yFactor = (newHeight.doubleValue()- PADDING) / maxY;
+            yFactor = (newHeight.doubleValue() - PADDING) / maxY;
             redrawNodes();
         });
-        this.coordinateList = problem.getCoordinates();
+
         drawNodes(nodeLayer, coordinateList, xFactor, yFactor, minX, minY);
     }
 
@@ -63,11 +63,12 @@ public class TspVisualizeView implements VisualizeView<TSPViewable> {
     }
 
     @Override
-    public void update(TSPViewable tspViewable) {
-        GraphicsContext edgeGC = edgeCanvas.getGraphicsContext2D();
-        edgeGC.clearRect(0, 0, edgeCanvas.getWidth(), edgeCanvas.getHeight()); // Only clear edgeCanvas!
+    public void update(Algorithm<int[]> algorithm) {
+        int[] permutation = algorithm.getCurrentSolution();
 
-        int[] permutation = tspViewable.getCurrentSolution();
+        GraphicsContext edgeGC = edgeCanvas.getGraphicsContext2D();
+        edgeGC.clearRect(0, 0, edgeCanvas.getWidth(), edgeCanvas.getHeight());
+
         drawOldPath(permutation);
         drawCurrentPath(permutation);
     }
@@ -87,7 +88,6 @@ public class TspVisualizeView implements VisualizeView<TSPViewable> {
             double x2 = (coordinateList.get(to).x() - minX) * xFactor + NODE_RADIUS;
             double y2 = (coordinateList.get(to).y() - minY) * yFactor + NODE_RADIUS;
 
-
             gc.strokeLine(x1, y1, x2, y2);
         }
     }
@@ -97,18 +97,17 @@ public class TspVisualizeView implements VisualizeView<TSPViewable> {
         gc.setStroke(Color.gray(0.6));
         gc.setLineWidth(1.0);
 
-
-
         for (int i = 0; i < permutation.length; i++) {
             int from = permutation[i];
             int to = permutation[(i + 1) % permutation.length];
-             
-                drawnLines[from][to]++;
-                drawnLines[to][from]++;  // symmetry
-                double x1 = (coordinateList.get(from).x() - minX) * xFactor + NODE_RADIUS;
-                double y1 = (coordinateList.get(from).y() - minY) * yFactor + NODE_RADIUS;
-                double x2 = (coordinateList.get(to).x() - minX) * xFactor + NODE_RADIUS;
-                double y2 = (coordinateList.get(to).y() - minY) * yFactor + NODE_RADIUS;
+
+            drawnLines[from][to]++;
+            drawnLines[to][from]++;
+
+            double x1 = (coordinateList.get(from).x() - minX) * xFactor + NODE_RADIUS;
+            double y1 = (coordinateList.get(from).y() - minY) * yFactor + NODE_RADIUS;
+            double x2 = (coordinateList.get(to).x() - minX) * xFactor + NODE_RADIUS;
+            double y2 = (coordinateList.get(to).y() - minY) * yFactor + NODE_RADIUS;
 
             int count = drawnLines[from][to];
             double alpha = Math.min(0.05, count * 0.01);
@@ -118,36 +117,32 @@ public class TspVisualizeView implements VisualizeView<TSPViewable> {
         }
     }
 
-    public static void drawNodes(Pane nodeLayer, List<Coordinate> coordinateList, double xFactor, double yFactor, double minX, double minY) {
-        for (Coordinate coordinate : coordinateList) {
-            int index = coordinate.id();
-            double x = coordinate.x();
-            double y = coordinate.y();
+    private void redrawNodes() {
+        nodeLayer.getChildren().clear();
+        drawNodes(nodeLayer, coordinateList, xFactor, yFactor, minX, minY);
+    }
 
-            double xScaled = (x - minX) * xFactor+ NODE_RADIUS;
-            double yScaled = (y - minY) * yFactor + NODE_RADIUS;
+    private static void drawNodes(Pane nodeLayer, List<Coordinate> coordinates,
+                                  double xFactor, double yFactor, double minX, double minY) {
+        for (Coordinate c : coordinates) {
+            double xScaled = (c.x() - minX) * xFactor + NODE_RADIUS;
+            double yScaled = (c.y() - minY) * yFactor + NODE_RADIUS;
 
-            Circle circle = new Circle(xScaled, yScaled, 10);
+            Circle circle = new Circle(xScaled, yScaled, NODE_RADIUS);
             circle.setFill(Color.LIGHTBLUE);
             circle.setStroke(Color.BLUE);
-            Text label = new Text(String.valueOf(index));
+
+            Text label = new Text(String.valueOf(c.id()));
             label.setX(xScaled);
             label.setY(yScaled);
             label.setStyle("-fx-font-size: 10px; -fx-font-weight: bold;");
 
             label.layoutBoundsProperty().addListener((obs, old, bounds) -> {
                 label.setTranslateX(-bounds.getWidth() / 2.0);
-                label.setTranslateY(+bounds.getHeight() / 4.0);
+                label.setTranslateY(bounds.getHeight() / 4.0);
             });
 
             nodeLayer.getChildren().addAll(circle, label);
         }
     }
-
-
-    private void redrawNodes() {
-        nodeLayer.getChildren().clear();
-        drawNodes(nodeLayer, coordinateList, xFactor, yFactor, minX, minY);
-    }
-
 }

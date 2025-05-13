@@ -1,11 +1,12 @@
 package com.ea_framework.Views.VisualizeView;
 
+import com.ea_framework.Algorithms.Algorithm;
+import com.ea_framework.Algorithms.TSPAlgorithm;
 import com.ea_framework.Problems.BitStringProblem;
-import com.ea_framework.Views.Viewables.BitStringViewable;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
-public class BitStringView implements VisualizeView<BitStringViewable> {
+public class BitStringView implements VisualizeView<boolean[]> {
     private final Pane coordinatePane = new Pane();
 
     private final Pane templatePane = new Pane();
@@ -24,7 +25,7 @@ public class BitStringView implements VisualizeView<BitStringViewable> {
     }
 
     @Override
-    public void update(BitStringViewable problem) {
+    public void update(Algorithm<boolean[]> algorithm) {
 
     }
 

@@ -1,72 +1,83 @@
 package com.ea_framework.Descriptors;
 
+import com.ea_framework.Algorithms.Algorithm;
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.OperatorType;
+import com.ea_framework.Runners.ProblemRunner;
 import com.ea_framework.Views.ConfigViews.ConfigView;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class AlgorithmDescriptor<T, C> implements Descriptor {
+public class AlgorithmDescriptor<S, F> implements Descriptor {
+    private final Class<? extends Algorithm<S>> algorithmClass;
     private final String name;
     private final String problemType;
-    private final Function<C, T> algorithm;
     private final Supplier<ConfigView> configPageSupplier;
     private final Class<? extends AlgorithmConfigUI> controllerClass;
-    private final Class<C> configClass;
-
+    private final Class<F> configClass;
+    private final ProblemRunner<?, ?> problemRunner;
     private final OperatorType fitnessOperatorType;
     private final OperatorType mutationOperatorType;
     private final OperatorType choiceOperatorType;
 
-    public AlgorithmDescriptor(String name, String problemType,
-                               Function<C, T> algorithm,
-                               Supplier<ConfigView> configPageSupplier,
-                               Class<? extends AlgorithmConfigUI> controllerClass,
-                               Class<C> configClass,
-                               OperatorType fitnessOperatorType,
-                               OperatorType mutationOperatorType,
-                               OperatorType choiceOperatorType) {
+    public AlgorithmDescriptor(
+            Class<? extends Algorithm<?>> algorithmClass,
+            String name,
+            String problemType,
+            Supplier<ConfigView> configPageSupplier,
+            Class<? extends AlgorithmConfigUI> controllerClass,
+            Class<? extends AlgorithmConfig> configClass,
+            ProblemRunner<?, ?> runner,
+            OperatorType fitness,
+            OperatorType mutation,
+            OperatorType choice
+    ) {
+        this.algorithmClass = (Class<? extends Algorithm<S>>) algorithmClass;
         this.name = name;
         this.problemType = problemType;
-        this.algorithm = algorithm;
         this.configPageSupplier = configPageSupplier;
         this.controllerClass = controllerClass;
-        this.configClass = configClass;
-        this.fitnessOperatorType = fitnessOperatorType;
-        this.mutationOperatorType = mutationOperatorType;
-        this.choiceOperatorType = choiceOperatorType;
+        this.configClass = (Class<F>) configClass;
+        this.problemRunner = runner;
+        this.fitnessOperatorType = fitness;
+        this.mutationOperatorType = mutation;
+        this.choiceOperatorType = choice;
     }
 
-    public T create(C config) {
-
-        return algorithm.apply(config);
+    public Algorithm<S> create(AlgorithmConfig config) {
+        try {
+            Algorithm<S> algorithm = algorithmClass.getDeclaredConstructor().newInstance();
+            algorithm.apply(config);
+            return algorithm;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to instantiate algorithm", e);
+        }
     }
 
     public ConfigView getConfigPage() {
-
         return configPageSupplier.get();
     }
 
-    public String getName() {
+    public ProblemRunner<?, ?> getProblemRunner() {
+        return problemRunner;
+    }
 
+    public Class<? extends AlgorithmConfigUI> getControllerClass() {
+        return controllerClass;
+    }
+
+    public Class<F> getConfigClass() {
+        return configClass;
+    }
+
+    public String getName() {
         return name;
     }
 
     @Override
     public String getCompatibleKey() {
-
         return problemType;
-    }
-
-    public Class<? extends AlgorithmConfigUI> getControllerClass() {
-
-        return controllerClass;
-    }
-
-    public Class<C> getConfigClass() {
-
-        return configClass;
     }
 
     public OperatorType getFitnessOperatorType() {
@@ -79,13 +90,5 @@ public class AlgorithmDescriptor<T, C> implements Descriptor {
 
     public OperatorType getChoiceOperatorType() {
         return choiceOperatorType;
-    }
-
-    public Function<C, T> getAlgorithm() {
-        return algorithm;
-    }
-
-    public T createAlgorithm(Object config) {
-        return algorithm.apply((C) config);
     }
 }

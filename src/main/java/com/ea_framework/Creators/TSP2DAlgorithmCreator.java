@@ -8,6 +8,6 @@ public class TSP2DAlgorithmCreator implements AlgorithmCreator<TSP2DConfig>  {
 
     @Override
     public Algorithm<?> create(TSP2DConfig config) {
-        return new TSPAlgorithm(config);
+        return new TSPAlgorithm();
     }
 }

@@ -1,6 +1,7 @@
 package com.ea_framework.Controllers.AlgorithmControllers;
 
 import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.Descriptors.OperatorDescriptor;
@@ -106,12 +107,20 @@ public class GenericAlgorithmController implements AlgorithmConfigUI {
     public Map<String, Object> getConfigs() {
         Map<String, Object> map = new HashMap<>();
 
+        // Pull from controllers
         Fitness<int[], Double> fitness = (Fitness<int[], Double>) fitnessConfigUI.getController().getConfig();
         MutationOperator<int[]> mutation = (MutationOperator<int[]>) mutationConfigUI.getController().getConfig();
         ChoiceFunction<int[], Double> choice = (ChoiceFunction<int[], Double>) choiceConfigUI.getController().getConfig();
 
-        TSP2DConfig config = new TSP2DConfig(fitness, mutation, choice);
-        map.put("algorithmConfig", config);
+        // Put them into the map with keys that match what TSP2DConfig expects
+        map.put("fitness", fitness);
+        map.put("mutation", mutation);
+        map.put("choice", choice);
+
+        // Only now is the config safe to construct
+        AlgorithmConfig config = new TSP2DConfig() {
+        };
+        config.populate(map);
 
         return map;
     }

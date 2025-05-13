@@ -3,6 +3,7 @@ module com.ea_framework {
     requires javafx.fxml;
     requires java.desktop;
     requires java.naming;
+    requires jdk.jdi;
 
 
     opens com.ea_framework to javafx.fxml;
@@ -14,11 +15,15 @@ module com.ea_framework {
     exports com.ea_framework.Algorithms;
     exports com.ea_framework.Descriptors;
     exports com.ea_framework.Loaders;
+    exports com.ea_framework.Views.ConfigViews;
+    exports com.ea_framework.Views.FitnessView;
+    exports com.ea_framework.Views.InfoViews;
+    exports com.ea_framework.Views.VisualizeView;
     exports com.ea_framework.FitnessFunctions;
     exports com.ea_framework.ChoiceFunctions;
     exports com.ea_framework.MutationFunctions;
     exports com.ea_framework.Filehandlers;
-    exports com.ea_framework.Model;
+    exports com.ea_framework.Controllers.OperatorControllers;
     opens com.ea_framework.Loaders;
     opens com.ea_framework.Controllers to javafx.fxml;
     exports com.ea_framework.Registries;
@@ -27,7 +32,8 @@ module com.ea_framework {
     opens com.ea_framework.Problems to javafx.fxml;
     exports com.ea_framework.UIs;
     opens com.ea_framework.UIs to javafx.fxml;
-    exports com.ea_framework.Views.ConfigViews;
     opens com.ea_framework.Controllers.AlgorithmControllers to javafx.fxml;
     opens com.ea_framework.Controllers.OperatorControllers to javafx.fxml;
+    exports com.ea_framework.Runners;
+    opens com.ea_framework.Runners to javafx.fxml;
 }

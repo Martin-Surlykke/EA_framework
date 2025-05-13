@@ -3,11 +3,11 @@ package com.ea_framework.Views.InfoViews;
 import com.ea_framework.Views.InfoViews.boxes.ConfigBox;
 import javafx.scene.Node;
 
-public class ConfigView implements infoView<ConfigRecord> {
+public class ConfigurationView implements infoView<ConfigRecord> {
 
     private final ConfigBox configBox;
 
-    public ConfigView() {
+    public ConfigurationView() {
         this.configBox = new ConfigBox();
     }
 

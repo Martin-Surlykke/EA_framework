@@ -1,4 +1,4 @@
-package com.ea_framework;
+package com.ea_framework.Registries;
 
 import com.ea_framework.Algorithms.TSPAlgorithm;
 import com.ea_framework.Configs.TSP2DConfig;
@@ -9,12 +9,9 @@ import com.ea_framework.Descriptors.OperatorDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Filehandlers.BitStringFileHandler;
 import com.ea_framework.Filehandlers.TSPFileHandler;
-import com.ea_framework.Loaders.ProblemLoader;
-import com.ea_framework.Problems.Problem;
-import com.ea_framework.Registries.AlgorithmRegistry;
-import com.ea_framework.Registries.OperatorRegistry;
-import com.ea_framework.Registries.ProblemRegistry;
-import com.ea_framework.Registries.SearchSpaceRegistry;
+import com.ea_framework.OperatorType;
+import com.ea_framework.Runners.BitStringRunner;
+import com.ea_framework.Runners.TSP2DRunner;
 import com.ea_framework.SearchSpaces.BitStringSearchSpace;
 import com.ea_framework.SearchSpaces.Graph2DSearchSpace;
 import com.ea_framework.UIs.GenericOperatorUI;
@@ -23,9 +20,7 @@ import com.ea_framework.Configs.GenericConfigPage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class RegistryInitializer {
 
@@ -48,7 +43,8 @@ public class RegistryInitializer {
                 new ProblemDescriptor(
                         "BitStringProblem",
                         "BitString",
-                        new BitStringFileHandler()
+                        new BitStringFileHandler(),
+                        new BitStringRunner()
                 )
         );
 
@@ -63,18 +59,18 @@ public class RegistryInitializer {
         // Register Algorithms
         AlgorithmRegistry.register(
                 new AlgorithmDescriptor<>(
+                        TSPAlgorithm.class,
                         "TSPAlgorithm",
                         "TSP2D",
-                        TSPAlgorithm::new,
                         GenericConfigPage::new,
                         GenericAlgorithmController.class,
                         TSP2DConfig.class,
+                        new TSP2DRunner(),
                         OperatorType.FITNESS_TSP,
                         OperatorType.MUTATION_TSP,
                         OperatorType.CHOICE_TSP
                 )
         );
-
 
         // Register Operators
         OperatorRegistry.register("RLS", new OperatorDescriptor(

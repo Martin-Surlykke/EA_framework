@@ -1,10 +1,16 @@
 package com.ea_framework.Problems;
 
 import com.ea_framework.Coordinate;
+import com.ea_framework.Views.InfoViews.ConfigurationView;
+import com.ea_framework.Views.FitnessView.FitnessView;
+import com.ea_framework.Views.FitnessView.GraphFitnessView;
+import com.ea_framework.Views.InfoViews.StatView;
+import com.ea_framework.Views.VisualizeView.TspVisualizeView;
+import com.ea_framework.Views.VisualizeView.VisualizeView;
 
 import java.util.List;
 
-public class TSP2DProblem implements Problem {
+public class TSP2DProblem implements Problem<int []> {
     private final String name;
     private final String comment;
     private final String type;
@@ -16,6 +22,8 @@ public class TSP2DProblem implements Problem {
     private final double maxY;
     private final double minX;
     private final double minY;
+
+    private int maxIterations;
 
     private final int nodeCount;
 
@@ -48,6 +56,35 @@ public class TSP2DProblem implements Problem {
     public String getName() {
         return name;
     }
+
+    @Override
+    public void setMaxIterations(int maxIterations) {
+        this.maxIterations = maxIterations;
+    }
+
+    @Override
+    public VisualizeView<int []> getVisualizeView() {
+        return new TspVisualizeView(this);
+    }
+
+    @Override
+    public FitnessView getFitnessView() {
+        return new GraphFitnessView(maxIterations);
+    }
+
+    @Override
+    public ConfigurationView getConfigView() {
+        return new ConfigurationView();
+
+    }
+
+
+
+    @Override
+    public StatView getStatView() {
+        return new StatView();
+    }
+
     public String getComment() {
         return comment;
     }
@@ -64,8 +101,16 @@ public class TSP2DProblem implements Problem {
         return distanceMatrix;
     }
     public int[] getDefaultPermutation() {
+        if (defaultPermutation == null || defaultPermutation.length == 0) {
+            throw new IllegalStateException("Default permutation was not set.");
+        }
         return defaultPermutation;
     }
+
+    public void setDefaultPermutation(int[] permutation) {
+        this.defaultPermutation = permutation;
+    }
+
     public double getMaxX() {
         return maxX;
     }
@@ -81,9 +126,5 @@ public class TSP2DProblem implements Problem {
 
     public int getNodeCount() {
         return nodeCount;
-    }
-
-    public void setDefaultPermutation(int[] defaultPermutation) {
-        this.defaultPermutation = defaultPermutation.clone();
     }
 }

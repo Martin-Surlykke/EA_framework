@@ -1,5 +1,6 @@
 package com.ea_framework.Controllers;
 
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
@@ -17,10 +18,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BatchController {
 
@@ -184,7 +188,7 @@ public class BatchController {
 
         System.out.println(currentConfig.getProblemName());
 
-        String fullPath = "src/main/resources/tspFiles/brg180.tsp";  // adjust this if needed
+        String fullPath = "src/main/resources/tspFiles/st70.tsp";  // adjust this if needed
         File file = new File(fullPath);
         if (!file.exists()) {
             System.err.println("File not found at: " + file.getAbsolutePath());
@@ -310,9 +314,27 @@ public class BatchController {
     }
 
     private void populateAlgorithmConfigs() {
-        currentConfig.getAlgorithmConfig().putAll(currentAlgoConfigUI.getConfigs());
-        if (genericAlgorithmController != null) {
-            currentConfig.getAlgorithmConfig().putAll(genericAlgorithmController.getConfigs());
+        // 1. Gather config maps from UI
+        Map<String, Object> configA = currentAlgoConfigUI.getConfigs();
+        Map<String, Object> configB = (genericAlgorithmController != null)
+                ? genericAlgorithmController.getConfigs()
+                : Map.of();
+
+        // 2. Merge them
+        Map<String, Object> allConfigs = new HashMap<>();
+        allConfigs.putAll(configA);
+        allConfigs.putAll(configB);
+
+        // 3. Create the correct AlgorithmConfig instance
+        AlgorithmDescriptor<?, ?> descriptor = currentConfig.getAlgorithmDescriptor();
+        Class<? extends AlgorithmConfig> configClass = (Class<? extends AlgorithmConfig>) descriptor.getConfigClass();
+
+        try {
+            AlgorithmConfig configInstance = configClass.getDeclaredConstructor().newInstance();
+            configInstance.populate(allConfigs); // 💥 BOOM — this applies the selected operators
+            currentConfig.setAlgorithmConfig(configInstance);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to populate algorithm config: " + configClass.getSimpleName(), e);
         }
     }
 
@@ -392,7 +414,8 @@ public class BatchController {
     }
 
     private void runBatch(BatchConfig config) throws IOException {
-        RunBatch runBatch = new RunBatch(config);
-        runBatch.run();
+        Stage currentStage = (Stage) tabPane.getScene().getWindow();  // 👈 this is the stage showing your app
+        RunBatch runBatch = new RunBatch(config, currentStage);       // reuse it
+        runBatch.run();                                               // switch scene
     }
 }

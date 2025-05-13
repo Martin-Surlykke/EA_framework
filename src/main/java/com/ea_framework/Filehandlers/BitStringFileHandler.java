@@ -18,6 +18,7 @@ public class BitStringFileHandler implements ProblemLoader<BitStringProblem> {
 
     @Override
     public Problem load(InputStream stream) throws IOException {
+        String name = stream.toString();
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
         String bitString = br.readLine();
         boolean[] bitArray = new boolean[bitString.length()];
@@ -27,6 +28,6 @@ public class BitStringFileHandler implements ProblemLoader<BitStringProblem> {
         }
 
         int length = bitString.length();
-        return new BitStringProblem(bitArray, "inline-stream", length);
+        return new BitStringProblem(name, length, bitArray);
     }
 }
