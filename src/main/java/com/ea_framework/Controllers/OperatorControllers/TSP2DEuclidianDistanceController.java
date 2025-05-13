@@ -24,4 +24,9 @@ public class TSP2DEuclidianDistanceController implements OperatorConfigControlle
     public boolean isFilled() {
         return distanceMatrix != null;
     }
+
+    @Override
+    public Object getOperator() {
+        return null;
+    }
 }

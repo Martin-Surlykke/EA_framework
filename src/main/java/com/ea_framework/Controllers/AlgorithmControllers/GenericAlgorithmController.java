@@ -156,4 +156,18 @@ public class GenericAlgorithmController implements AlgorithmConfigUI {
     }
 
 
+    public Map<String,?> getOperatorInstances() {
+        Map<String, Object> map = new HashMap<>();
+
+        if (fitnessConfigUI != null)
+            map.put("fitness", fitnessConfigUI.getController().getOperator());
+
+        if (mutationConfigUI != null)
+            map.put("mutation", mutationConfigUI.getController().getOperator());
+
+        if (choiceConfigUI != null)
+            map.put("choice", choiceConfigUI.getController().getOperator());
+
+        return map;
+    }
 }

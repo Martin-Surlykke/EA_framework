@@ -173,26 +173,16 @@ public class BatchController {
     @FXML
     private void onAddToSchedule() throws FileNotFoundException {
         disableTabsAfterAdd();
-
         if (currentAlgoConfigUI == null) return;
 
-        Map<String, Object> configA = currentAlgoConfigUI.getConfigs();
-        Map<String, Object> configB = (genericAlgorithmController != null)
-                ? genericAlgorithmController.getConfigs()
-                : Map.of();
+        Map<String, Object> allOperators = new HashMap<>();
+        if (currentAlgoConfigUI instanceof GenericAlgorithmController gac) {
+            allOperators.putAll(gac.getOperatorInstances());
+        }
 
-        Map<String, Object> allConfigs = new HashMap<>();
-        allConfigs.putAll(configA);
-        allConfigs.putAll(configB);
+        currentConfig.setRawOperatorConfigs(allOperators);
 
-        currentConfig.setRawOperatorConfigs(allConfigs);
         populateTerminationConfig();
-        populateMetaConfig();
-
-        String problemName = currentConfig.getProblemName();
-        String fileName = currentConfig.getStreamName();
-
-        System.out.println(currentConfig.getProblemName());
 
         String fullPath = "src/main/resources/tspFiles/st70.tsp";
         File file = new File(fullPath);
@@ -202,15 +192,15 @@ public class BatchController {
             currentConfig.setInputFile(file);
             System.out.println(file.getAbsolutePath());
         }
-
         if (scheduleController != null) {
             scheduleController.addBatch(currentConfig);
             savedBatches.add(currentConfig);
             updateRunScheduleButton();
         }
 
-       resetBatchUI();
+        resetBatchUI();
     }
+
 
 
     @FXML

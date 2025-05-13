@@ -4,4 +4,6 @@ public interface OperatorConfigController {
     Object getConfig();
     boolean isFilled();
     default void setChangeListener(Runnable onChange) {}
+
+    Object getOperator();
 }
