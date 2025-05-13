@@ -1,7 +1,9 @@
 package com.ea_framework.Operators.ChoiceFunctions;
 
-public interface ChoiceFunction<Permutation, Value> {
-    Permutation choose(Permutation current, Permutation candidate,
-                  Value fitnessCurrent, Value fitnessCandidate,
+public interface ChoiceFunction {
+    Object choose(Object current,
+                  Object candidate,
+                  Object fitnessCurrent,
+                  Object fitnessCandidate,
                   int iteration);
 }

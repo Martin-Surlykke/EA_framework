@@ -2,15 +2,27 @@ package com.ea_framework.Operators.ChoiceFunctions;
 
 import com.ea_framework.Configs.OperatorConfigs.BitStringChoiceConfig;
 import com.ea_framework.Configurable;
+import com.ea_framework.Problems.BitStringProblem;
+import com.ea_framework.Problems.Problem;
 
-public class BitStringGreedyChoice implements ChoiceFunction<boolean[], Integer>, Configurable<BitStringChoiceConfig> {
+import java.util.Map;
+
+public class BitStringGreedyChoice implements ChoiceFunction, Configurable {
+
     @Override
-    public void configure(BitStringChoiceConfig config) {
+    public Object choose(Object current, Object candidate, Object fitnessCurrent, Object fitnessCandidate, int iteration) {
+        if (!(current instanceof boolean[] curr &&
+                candidate instanceof boolean[] cand &&
+                fitnessCurrent instanceof Integer currFitness &&
+                fitnessCandidate instanceof Integer candFitness)) {
+            throw new IllegalArgumentException("BitStringGreedyChoice received incompatible types.");
+        }
 
+        return candFitness > currFitness ? cand : curr;
     }
 
     @Override
-    public boolean[] choose(boolean[] current, boolean[] candidate, Integer fitnessCurrent, Integer fitnessCandidate, int iteration) {
-        return fitnessCandidate > fitnessCurrent ? candidate : current;
+    public void configure(Map<String, Object> config) {
+
     }
 }

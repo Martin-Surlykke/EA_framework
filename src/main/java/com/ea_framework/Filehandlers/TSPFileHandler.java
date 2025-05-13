@@ -5,16 +5,12 @@ import com.ea_framework.Loaders.ProblemLoader;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Problems.TSP2DProblem;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-public class TSPFileHandler implements ProblemLoader<TSP2DProblem> {
-
-    @Override
-    public boolean isValid(InputStream inputStream) {
-        return false;
-    }
+public class TSPFileHandler implements ProblemLoader {
 
     @Override
     public TSP2DProblem load(InputStream in) throws IOException {

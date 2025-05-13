@@ -5,6 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimulatedAnnealingTSPController implements OperatorConfigController {
     @FXML
@@ -14,8 +16,10 @@ public class SimulatedAnnealingTSPController implements OperatorConfigController
 
     @Override
     public Object getConfig() {
-        return new TSP2DSimulatedAnnealing (
-        );
+        Map<String, Object> config = new HashMap<>();
+        config.put("alpha", Double.parseDouble(alphaValue.getText()));
+        config.put("t0", Double.parseDouble(temperatureValue.getText()));
+        return config;
     }
 
     @Override

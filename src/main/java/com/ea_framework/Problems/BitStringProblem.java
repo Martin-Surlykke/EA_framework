@@ -1,16 +1,23 @@
 package com.ea_framework.Problems;
 
+import com.ea_framework.OperatorType;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
 import com.ea_framework.Views.InfoViews.StatView;
 import com.ea_framework.Views.VisualizeView.VisualizeView;
 
-public class BitStringProblem implements Problem<boolean[]> {
+import java.util.List;
+import java.util.Map;
+
+public class BitStringProblem implements Problem {
 
     private boolean[] defaultBitString;
     private final String name;
     private final int length;
     private int maxIterations;
+
+    public double saAlpha;
+    public double saT0;
 
     public BitStringProblem(String name, int length, boolean[] defaultBitString) {
         this.name = name;
@@ -24,8 +31,8 @@ public class BitStringProblem implements Problem<boolean[]> {
     }
 
     @Override
-    public VisualizeView<?> getVisualizeView() {
-        return null; // Implement when ready
+    public VisualizeView getVisualizer() {
+        return null;
     }
 
     @Override
@@ -49,8 +56,8 @@ public class BitStringProblem implements Problem<boolean[]> {
     }
 
     @Override
-    public void setDefaultPermutation(boolean[] permutation) {
-        this.defaultBitString = permutation;
+    public void setDefaultPermutation(Object permutation) {
+        this.defaultBitString = (boolean[]) permutation;
     }
 
     @Override
@@ -58,7 +65,27 @@ public class BitStringProblem implements Problem<boolean[]> {
         return defaultBitString;
     }
 
+    @Override
+    public Map<OperatorType, Object> getOperatorConfigurations() {
+        return Map.of();
+    }
+
     public int getLength() {
         return length;
     }
+
+    public double getAlpha() { return saAlpha; }
+    public double getT0() { return saT0; }
+
+    @Override
+    public void setSimulatedAnnealingParams(double alpha, double t0) {
+        this.saAlpha = alpha;
+        this.saT0 = t0;
+    }
+
+    @Override
+    public List<Double> getSimulatedAnnealingParams() {
+        return List.of(saAlpha, saT0);
+    }
+
 }

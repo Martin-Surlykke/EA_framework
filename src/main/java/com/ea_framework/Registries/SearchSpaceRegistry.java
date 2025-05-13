@@ -9,39 +9,25 @@ import java.util.function.Supplier;
 
 public class SearchSpaceRegistry {
 
-    private static final Map<String, TypedSearchSpace<?>> registry = new HashMap<>();
+    private static final Map<String, Supplier<SearchSpace>> registry = new HashMap<>();
 
-    public static <S> void register(String name, Supplier<SearchSpace<S>> supplier, Class<S> solutionType) {
-        registry.put(name, new TypedSearchSpace<>(supplier, solutionType));
+    public static void register(String name, Supplier<SearchSpace> supplier) {
+        registry.put(name, supplier);
     }
 
-    public static <S> SearchSpace<S> get(String name, Class<S> solutionType) {
-        TypedSearchSpace<?> entry = registry.get(name);
-        if (entry == null) {
+    public static SearchSpace get(String name) {
+        Supplier<SearchSpace> supplier = registry.get(name);
+        if (supplier == null) {
             throw new IllegalArgumentException("Search space not found: " + name);
         }
-
-        if (!entry.solutionType.equals(solutionType)) {
-            throw new IllegalArgumentException("Type mismatch for search space: expected " + solutionType.getSimpleName());
-        }
-
-        @SuppressWarnings("unchecked")
-        TypedSearchSpace<S> typed = (TypedSearchSpace<S>) entry;
-        return typed.supplier.get();
+        return supplier.get();
     }
 
     public static Set<String> getRegisteredNames() {
         return registry.keySet();
     }
 
-    private static final class TypedSearchSpace<S> {
-        final Supplier<SearchSpace<S>> supplier;
-        final Class<S> solutionType;
-
-        TypedSearchSpace(Supplier<SearchSpace<S>> supplier, Class<S> solutionType) {
-            this.supplier = supplier;
-            this.solutionType = solutionType;
-        }
-
+    public static void clear() {
+        registry.clear();
     }
 }

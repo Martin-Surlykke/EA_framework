@@ -9,14 +9,14 @@ import javafx.animation.AnimationTimer;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Runner<S> {
+public class Runner {
 
-    public <A extends Algorithm<S>> void run(Problem<S> problem,
-                                             A algorithm,
-                                             VisualizeController<A> controller,
-                                             int termination) {
+    public void run(Problem problem,
+                    Algorithm algorithm,
+                    VisualizeController controller,
+                    int termination) {
 
-        S initial = problem.getDefaultPermutation();
+        Object initial = problem.getDefaultPermutation();
         algorithm.setCurrentSolution(initial);
 
         AtomicInteger latestIteration = new AtomicInteger();
@@ -32,7 +32,7 @@ public class Runner<S> {
                 algorithm.run(i);
 
                 latestIteration.set(i);
-                latestFitness.set(algorithm.getCurrentFitness());
+                latestFitness.set(algorithm.getCurrentFitness()); // assumes Double fitness
                 latestStat.set(new StatRecord(
                         i,
                         i * 2,
@@ -43,12 +43,13 @@ public class Runner<S> {
                 ));
 
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
         });
+
         solver.setDaemon(true);
         solver.start();
 
@@ -67,11 +68,10 @@ public class Runner<S> {
                 double fitness = latestFitness.get();
                 StatRecord stat = latestStat.get();
 
-                controller.updateAll(algorithm, i, fitness, stat);
+                controller.updateAll(algorithm.getCurrentSolution(), i, fitness, stat);
 
                 if (i >= termination) stop();
             }
         }.start();
     }
 }
-

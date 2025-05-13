@@ -2,10 +2,13 @@ package com.ea_framework.Operators.ChoiceFunctions;
 
 import com.ea_framework.Configs.OperatorConfigs.BitStringChoiceConfig;
 import com.ea_framework.Configurable;
+import com.ea_framework.Problems.BitStringProblem;
+import com.ea_framework.Problems.Problem;
 
+import java.util.Map;
 import java.util.Random;
 
-public class BitStringSimulatedAnnealing implements ChoiceFunction<boolean[], Integer>, Configurable<BitStringChoiceConfig> {
+public class BitStringSimulatedAnnealing implements ChoiceFunction, Configurable {
 
     private double alpha;
     private double T_0;
@@ -13,31 +16,26 @@ public class BitStringSimulatedAnnealing implements ChoiceFunction<boolean[], In
     private static final Random rand = new Random();
 
     @Override
-    public boolean[] choose(boolean[] current, boolean[] candidate, Integer currentFitness, Integer candidateFitness, int iteration) {
-        if (candidateFitness > currentFitness) {
-            return candidate;
+    public Object choose(Object current, Object candidate, Object currentFitness, Object candidateFitness, int iteration) {
+        if (!(current instanceof boolean[] curr &&
+                candidate instanceof boolean[] cand &&
+                currentFitness instanceof Integer fCurr &&
+                candidateFitness instanceof Integer fCand)) {
+            throw new IllegalArgumentException("BitStringSimulatedAnnealing received incompatible types.");
         }
+
+        if (fCand > fCurr) return cand;
 
         double T_i = T_0 * Math.pow(alpha, iteration);
         double probability = rand.nextDouble();
-        double acceptance = Math.exp((candidateFitness - currentFitness) / T_i);
+        double acceptance = Math.exp((double) (fCand - fCurr) / T_i);
 
-        System.out.println("Current fitness: " + currentFitness + ", candidate fitness: " + candidateFitness);
-        System.out.println("Probability: " + probability + ", acceptance: " + acceptance);
-
-        return probability < acceptance ? candidate : current;
-    }
-
-    public void setAlpha(double a) {
-        alpha = a;
-    }
-
-    public void setT0(double t) {
-        T_0 = t;
+        return probability < acceptance ? cand : curr;
     }
 
     @Override
-    public void configure(BitStringChoiceConfig config) {
-
+    public void configure(Map<String, Object> config) {
+        this.alpha = Double.parseDouble(config.get("alpha").toString());
+        this.T_0 = Double.parseDouble(config.get("t0").toString());
     }
 }

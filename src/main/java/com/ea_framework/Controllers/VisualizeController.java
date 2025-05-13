@@ -1,5 +1,5 @@
 package com.ea_framework.Controllers;
-import com.ea_framework.Algorithms.Algorithm;
+
 import com.ea_framework.Views.InfoViews.StatRecord;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
@@ -14,9 +14,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class VisualizeController<S extends Algorithm<?>> {
+public class VisualizeController {
 
-    private VisualizeView<S> visualizeView;
+    private VisualizeView visualizeView;
     private FitnessView fitnessView;
     private StatView statView;
 
@@ -28,7 +28,7 @@ public class VisualizeController<S extends Algorithm<?>> {
     @FXML public Rectangle minimizeWindow;
 
     @FXML
-    public void initialize(VisualizeView<S> visualizeView,
+    public void initialize(VisualizeView visualizeView,
                            FitnessView fitnessView,
                            ConfigurationView configView,
                            StatView statView,
@@ -38,16 +38,30 @@ public class VisualizeController<S extends Algorithm<?>> {
         this.fitnessView = fitnessView;
         this.statView = statView;
 
+        if (visualizeView == null || visualizeView.getView() == null)
+            System.err.println("Visualizer view or its node is null");
+        if (fitnessView == null || fitnessView.getView() == null)
+            System.err.println("Fitness view or its node is null");
+        if (configView == null || configView.getView() == null)
+            System.err.println("Config view or its node is null");
+        if (statView == null || statView.getView() == null)
+            System.err.println("Stat view or its node is null");
+
+        assert visualizeView != null;
         fitToPane(visualizeView.getView(), visualizePane);
+        assert fitnessView != null;
         fitToPane(fitnessView.getView(), fitnessPane);
+        assert configView != null;
         fitToPane(configView.getView(), configPane);
+        assert statView != null;
         fitToPane(statView.getView(), statPane);
 
         closeWindow.setOnMouseClicked(event -> Platform.exit());
         minimizeWindow.setOnMouseClicked(event -> stage.setIconified(true));
     }
 
-    public void updateAll(S solution, int iteration, double fitness, StatRecord stat) {
+
+    public void updateAll(Object solution, int iteration, double fitness, StatRecord stat) {
         visualizeView.update(solution);
         fitnessView.update(fitness, iteration);
         statView.update(stat);
@@ -60,5 +74,3 @@ public class VisualizeController<S extends Algorithm<?>> {
         pane.getChildren().add(region);
     }
 }
-
-

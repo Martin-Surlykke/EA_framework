@@ -4,7 +4,7 @@ import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Algorithms.TSPAlgorithm;
 import javafx.scene.Node;
 
-public interface VisualizeView<S> {
+public interface VisualizeView {
     Node getView();
-    void update(S solution);
+    void update(Object solution);
 }

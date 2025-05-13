@@ -1,29 +1,22 @@
 package com.ea_framework.Descriptors;
 
-import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Loaders.ProblemLoader;
-import com.ea_framework.Problems.Problem;
-import com.ea_framework.Runners.Runner;
 
-
-public class ProblemDescriptor<
-        S,
-        P extends Problem<S>
-        > implements Descriptor {
+public class ProblemDescriptor implements Descriptor {
 
     private final String name;
     private final String searchSpaceType;
-    private final ProblemLoader<P> loader;
+    private final ProblemLoader loader;
 
     public ProblemDescriptor(String name,
                              String searchSpaceType,
-                             ProblemLoader<P> loader) {
+                             ProblemLoader loader) {
         this.name = name;
         this.searchSpaceType = searchSpaceType;
         this.loader = loader;
     }
 
-    public ProblemLoader<P> getLoader() {
+    public ProblemLoader getLoader() {
         return loader;
     }
 

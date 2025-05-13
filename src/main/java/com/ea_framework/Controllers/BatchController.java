@@ -1,6 +1,5 @@
 package com.ea_framework.Controllers;
 
-import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
@@ -19,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +64,6 @@ public class BatchController {
             Node scheduleNode = loader.load();
             scheduleController = loader.getController();
 
-            // Inject into the placeholder pane
             scheduleContainer.getChildren().add(scheduleNode);
             AnchorPane.setTopAnchor(scheduleNode, 0.0);
             AnchorPane.setBottomAnchor(scheduleNode, 0.0);
@@ -177,7 +176,16 @@ public class BatchController {
 
         if (currentAlgoConfigUI == null) return;
 
-        populateAlgorithmConfigs();
+        Map<String, Object> configA = currentAlgoConfigUI.getConfigs();
+        Map<String, Object> configB = (genericAlgorithmController != null)
+                ? genericAlgorithmController.getConfigs()
+                : Map.of();
+
+        Map<String, Object> allConfigs = new HashMap<>();
+        allConfigs.putAll(configA);
+        allConfigs.putAll(configB);
+
+        currentConfig.setRawOperatorConfigs(allConfigs);
         populateTerminationConfig();
         populateMetaConfig();
 
@@ -186,14 +194,13 @@ public class BatchController {
 
         System.out.println(currentConfig.getProblemName());
 
-        String fullPath = "src/main/resources/tspFiles/st70.tsp";  // adjust this if needed
+        String fullPath = "src/main/resources/tspFiles/st70.tsp";
         File file = new File(fullPath);
         if (!file.exists()) {
             System.err.println("File not found at: " + file.getAbsolutePath());
         } else {
-            InputStream in = new FileInputStream(file);
-            currentConfig.setInputStream(in);
-            System.out.println("✅ Successfully opened: " + file.getAbsolutePath());
+            currentConfig.setInputFile(file);
+            System.out.println(file.getAbsolutePath());
         }
 
         if (scheduleController != null) {
@@ -210,7 +217,7 @@ public class BatchController {
     private void handleSearchSpaceSelect() {
         String selected = searchSpaceDropDown.getValue();
         if (selected != null) {
-            SearchSpace<?> space = Registry.getSearchSpace(selected);
+            SearchSpace space = Registry.getSearchSpace(selected);
 
             if (space != null) {
                 currentConfig.setSearchSpaceName(selected);
@@ -221,8 +228,6 @@ public class BatchController {
                 problemDropDown.getItems().setAll(filteredProblems);
                 problemDropDown.getSelectionModel().clearSelection();
                 algorithmDropDown.getItems().clear();
-            } else {
-                System.err.println("⚠️ No search space found for: " + selected);
             }
         }
     }
@@ -235,7 +240,8 @@ public class BatchController {
             List<String> filteredAlgorithms = Registry.getAlgorithmsForProblem(selected);
             algorithmDropDown.getItems().setAll(filteredAlgorithms);
             algorithmDropDown.getSelectionModel().clearSelection();
-            ProblemDescriptor problemShell = Registry.getProblem(selected);
+            ProblemDescriptor problemShell = Registry.getProblem(selected)
+                    .orElseThrow(() -> new IllegalArgumentException("Unknown problem: " + selected));
             currentConfig.setProblemDescriptor(problemShell);
             currentConfig.setProblemName(selected);
         }
@@ -311,30 +317,6 @@ public class BatchController {
         terminationTab.setDisable(true);
     }
 
-    private void populateAlgorithmConfigs() {
-        // 1. Gather config maps from UI
-        Map<String, Object> configA = currentAlgoConfigUI.getConfigs();
-        Map<String, Object> configB = (genericAlgorithmController != null)
-                ? genericAlgorithmController.getConfigs()
-                : Map.of();
-
-        // 2. Merge them
-        Map<String, Object> allConfigs = new HashMap<>();
-        allConfigs.putAll(configA);
-        allConfigs.putAll(configB);
-
-        AlgorithmDescriptor descriptor = currentConfig.getAlgorithmDescriptor();
-        Class<? extends AlgorithmConfig> configClass = (Class<? extends AlgorithmConfig>) descriptor.getConfigClass();
-
-        try {
-            AlgorithmConfig configInstance = configClass.getDeclaredConstructor().newInstance();
-            configInstance.populate(allConfigs); // 💥 BOOM — this applies the selected operators
-            currentConfig.setAlgorithmConfig(configInstance);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to populate algorithm config: " + configClass.getSimpleName(), e);
-        }
-    }
-
     private void populateTerminationConfig() {
         String terminationType = terminationDropDown.getValue();
         String terminationParam = terminationSize.getText();
@@ -348,6 +330,16 @@ public class BatchController {
         String batchCount = batchSize.getText();
         if (batchCount != null && !batchCount.isBlank()) {
             currentConfig.getMetaConfigs().put("batchCount", batchCount);
+        }
+
+        if (currentAlgoConfigUI != null) {
+            Map<String, Object> configMap = currentAlgoConfigUI.getConfigs();
+
+            for (Map.Entry<String, Object> entry : configMap.entrySet()) {
+                if (entry.getValue() != null) {
+                    currentConfig.getMetaConfigs().put(entry.getKey(), entry.getValue().toString());
+                }
+            }
         }
     }
 
@@ -381,7 +373,7 @@ public class BatchController {
     }
 
     @FXML
-    private void handleRunSchedule() throws IOException {
+    private void handleRunSchedule() throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         List<BatchConfig> batches = scheduleController.getBatches();
 
         if (batches.isEmpty()) {
@@ -394,25 +386,23 @@ public class BatchController {
         }
 
         for (BatchConfig config : batches) {
-            if (config.getInputStream() == null) {
-                System.out.println("⚠️ Missing stream. Re-resolving: " + config.getProblemName() + " / " + config.getStreamName());
+            if (config.getInputFile() == null) {
                 try {
-                    InputStream stream = ResourceLister.resolveProblemStream(config.getProblemName(), config.getStreamName());
-                    config.setInputStream(stream);
+                    File file = ResourceLister.resolveProblemFile(config.getProblemName(), config.getStreamName());
+                    config.setInputFile(file);
                 } catch (Exception e) {
-                    System.err.println("❌ Failed to re-resolve stream: " + e.getMessage());
                     e.printStackTrace();
                     continue;
                 }
             }
-
             runBatch(config);
         }
     }
 
-    private void runBatch(BatchConfig config) throws IOException {
-        Stage currentStage = (Stage) tabPane.getScene().getWindow();  // 👈 this is the stage showing your app
-        RunBatch runBatch = new RunBatch(config, currentStage);       // reuse it
-        runBatch.run();                                               // switch scene
+
+    private void runBatch(BatchConfig config) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        Stage currentStage = (Stage) tabPane.getScene().getWindow();
+        RunBatch runBatch = new RunBatch(config, currentStage);
+        runBatch.run();
     }
 }

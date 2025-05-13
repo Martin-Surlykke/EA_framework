@@ -4,8 +4,6 @@ import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.VisualizeController;
-import com.ea_framework.Descriptors.AlgorithmDescriptor;
-import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Runners.Runner;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
 
 public class RunBatch {
 
@@ -24,39 +24,39 @@ public class RunBatch {
         this.stage = stage;
     }
 
-    @SuppressWarnings("unchecked")
-    public void run() throws IOException {
-        ProblemDescriptor<?, ?> rawProblem = config.getProblemDescriptor();
-        AlgorithmDescriptor<?, ?, ?, ?> rawAlgo = config.getAlgorithmDescriptor();
+    public void run() throws IOException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
-        // You MUST ensure these match when you register them in the registry
-        runTyped(
-                (ProblemDescriptor<Object, Problem<Object>>) rawProblem,
-                (AlgorithmDescriptor<Object, Problem<Object>, Algorithm<Object>, AlgorithmConfig>) rawAlgo
-        );
-    }
-
-    private <S, P extends Problem<S>, A extends Algorithm<S>, C extends AlgorithmConfig>
-    void runTyped(
-            ProblemDescriptor<S, P> problemDescriptor,
-            AlgorithmDescriptor<S, P, A, C> algorithmDescriptor
-    ) throws IOException {
-
-        // Load and configure problem
-        P problem = problemDescriptor.getLoader().load(config.getInputStream());
+        Problem problem = config.resolveProblem();
         problem.setMaxIterations(config.getTermination());
 
-        // Create algorithm
-        C algoConfig = algorithmDescriptor.getConfigClass().cast(config.getAlgorithmConfig());
-        A algorithm = algorithmDescriptor.create(algoConfig);
+        Map<String, String> meta = config.getMetaConfigs();
 
-        // Load FXML & controller
+        if (meta.containsKey("alpha") && meta.containsKey("t0")) {
+            try {
+                double alpha = Double.parseDouble(meta.get("alpha"));
+                double t0 = Double.parseDouble(meta.get("t0"));
+                problem.setSimulatedAnnealingParams(alpha, t0);
+            } catch (NumberFormatException e) {
+                System.err.println("Invalid alpha or t0 format");
+            }
+
+        }
+
+        var algorithmDescriptor = config.getAlgorithmDescriptor();
+        var configClass = algorithmDescriptor.getConfigClass();
+
+        AlgorithmConfig algoConfig = configClass.getDeclaredConstructor().newInstance();
+        algoConfig.populate(config.getRawOperatorConfigs(), problem);
+        config.setAlgorithmConfig(algoConfig);
+
+        Algorithm algorithm = algorithmDescriptor.create(algoConfig);
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
         Scene scene = new Scene(loader.load());
 
-        VisualizeController<S> controller = loader.getController();
+        VisualizeController controller = loader.getController();
         controller.initialize(
-                problem.getVisualizeView(),
+                problem.getVisualizer(),
                 problem.getFitnessView(),
                 problem.getConfigView(),
                 problem.getStatView(),
@@ -67,7 +67,6 @@ public class RunBatch {
         stage.setTitle("Visualizer");
         stage.show();
 
-        // Run it
-        new Runner<S>().run(problem, algorithm, controller, config.getTermination());
+        new Runner().run(problem, algorithm, controller, config.getTermination());
     }
 }

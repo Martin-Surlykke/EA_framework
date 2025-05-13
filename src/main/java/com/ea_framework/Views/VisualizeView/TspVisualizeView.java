@@ -1,6 +1,5 @@
 package com.ea_framework.Views.VisualizeView;
 
-import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Coordinate;
 import com.ea_framework.Problems.TSP2DProblem;
 import javafx.scene.Node;
@@ -13,7 +12,7 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-public class TspVisualizeView implements VisualizeView<int[]> {
+public class TspVisualizeView implements VisualizeView {
 
     private final Pane graphPane = new Pane();
     private final Canvas historyCanvas = new Canvas(700, 700);
@@ -63,14 +62,18 @@ public class TspVisualizeView implements VisualizeView<int[]> {
     }
 
     @Override
-    public void update(int[] permutation) {
+    public void update(Object solution) {
+        if (!(solution instanceof int[] permutation)) {
+            System.err.println("Invalid solution passed to TspVisualizeView");
+            return;
+        }
+
         GraphicsContext edgeGC = edgeCanvas.getGraphicsContext2D();
         edgeGC.clearRect(0, 0, edgeCanvas.getWidth(), edgeCanvas.getHeight());
 
         drawOldPath(permutation);
         drawCurrentPath(permutation);
     }
-
 
     private void drawCurrentPath(int[] permutation) {
         GraphicsContext gc = edgeCanvas.getGraphicsContext2D();

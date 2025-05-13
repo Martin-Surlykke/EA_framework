@@ -2,21 +2,30 @@ package com.ea_framework.Operators.FitnessFunctions;
 
 import com.ea_framework.Configs.OperatorConfigs.BitStringFitnessConfig;
 import com.ea_framework.Configurable;
+import com.ea_framework.Problems.BitStringProblem;
+import com.ea_framework.Problems.Problem;
 
-public class BitStringOneMax implements Fitness<boolean[], Integer>, Configurable<BitStringFitnessConfig> {
+import java.util.Map;
+
+public class BitStringOneMax implements Fitness, Configurable {
+
     @Override
-    public Integer evaluate(boolean[] bitString) {
-        int x = 0;
-        for (boolean b : bitString) {
-            if (b) {
-                x += 1;
-            }
+    public Double evaluate(Object input) {
+        if (!(input instanceof boolean[] bitString)) {
+            throw new IllegalArgumentException("Expected boolean[] in BitStringOneMax");
         }
-        return x;
+
+        int count = 0;
+        for (boolean b : bitString) {
+            if (b) count++;
+        }
+        return (double) count;
     }
 
     @Override
-    public void configure(BitStringFitnessConfig config) {
-
+    public void configure(Map<String, Object> config) {
+        if (!(config instanceof BitStringProblem)) {
+            throw new IllegalArgumentException("Expected BitStringProblem");
+        }
     }
 }

@@ -1,17 +1,25 @@
 package com.ea_framework.Operators.ChoiceFunctions;
 
-import com.ea_framework.Configs.OperatorConfigs.TSP2DChoiceConfig;
 import com.ea_framework.Configurable;
+import com.ea_framework.Problems.Problem;
+import com.ea_framework.Problems.TSP2DProblem;
 
-public class TSP2DGreedyChoice implements ChoiceFunction<int [], Double>, Configurable<TSP2DChoiceConfig> {
+import java.util.Map;
+
+public class TSP2DGreedyChoice implements ChoiceFunction, Configurable {
 
     @Override
-    public void configure(TSP2DChoiceConfig config) {
+    public Object choose(Object current, Object candidate, Object fitnessCurrent, Object fitnessCandidate, int iteration) {
+        if (!(current instanceof int[] curr && candidate instanceof int[] cand &&
+                fitnessCurrent instanceof Double currFitness && fitnessCandidate instanceof Double candFitness)) {
+            throw new IllegalArgumentException("TSP2DGreedyChoice received incompatible types.");
+        }
 
+        return candFitness < currFitness ? cand : curr;
     }
 
     @Override
-    public int[] choose(int[] current, int[] candidate, Double fitnessCurrent, Double fitnessCandidate, int iteration) {
-        return fitnessCandidate < fitnessCurrent ? candidate : current;
+    public void configure(Map<String, Object> config) {
+
     }
 }

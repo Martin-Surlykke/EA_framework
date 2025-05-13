@@ -21,8 +21,8 @@ public class ResourceLister {
         URL dirURL = Thread.currentThread().getContextClassLoader().getResource(path);
 
         if (dirURL != null && dirURL.getProtocol().equals("file")) {
-            java.io.File folder = new java.io.File(dirURL.toURI());
-            java.io.File[] files = folder.listFiles();
+            File folder = new File(dirURL.toURI());
+            File[] files = folder.listFiles();
             if (files != null) {
                 for (var file : files) {
                     filenames.add(file.getName());
@@ -45,9 +45,24 @@ public class ResourceLister {
     }
 
     public static InputStream resolveProblemStream(String problemType, String resourceName) throws FileNotFoundException {
-        File file = new File("src/main/resources/tspFiles/a280.tsp");
-
+        File file = resolveProblemFile(problemType, resourceName);
         return new FileInputStream(file);
+    }
+
+    public static File resolveProblemFile(String problemType, String streamName) {
+        String folder = getProblemFolder(problemType);
+        String fullPath = folder + "/" + streamName;
+
+        URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(fullPath);
+        if (resourceUrl == null) {
+            throw new IllegalArgumentException("Could not locate resource: " + fullPath);
+        }
+
+        try {
+            return new File(resourceUrl.toURI());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Invalid URI for resource: " + resourceUrl, e);
+        }
     }
 
     private static String getProblemFolder(String problemType) {
@@ -57,5 +72,4 @@ public class ResourceLister {
             default -> throw new IllegalArgumentException("Unknown problem type: " + problemType);
         };
     }
-
 }

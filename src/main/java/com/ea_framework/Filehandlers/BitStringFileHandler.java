@@ -9,17 +9,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class BitStringFileHandler implements ProblemLoader<BitStringProblem> {
-
-    @Override
-    public boolean isValid(InputStream inputStream) {
-        return true;
-    }
-
-    @Override
-    public Problem load(InputStream stream) throws IOException {
-        String name = stream.toString();
-        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+public class BitStringFileHandler implements ProblemLoader {
+        @Override
+        public Problem load(InputStream inputStream) throws IOException {
+        String name = inputStream.toString();
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String bitString = br.readLine();
         boolean[] bitArray = new boolean[bitString.length()];
 

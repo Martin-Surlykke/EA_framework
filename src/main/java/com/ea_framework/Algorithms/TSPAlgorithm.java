@@ -5,30 +5,21 @@ import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Operators.MutationFunctions.MutationOperator;
-import com.ea_framework.Problems.TSP2DProblem;
 
-public class TSPAlgorithm implements Algorithm<int[]> {
+public class TSPAlgorithm implements Algorithm {
 
     private int[] currentSolution;
-    private ChoiceFunction<int[], Double> choiceFunction;
-    private Fitness<int[], Double> fitnessFunction;
-    private MutationOperator<int[]> mutationOperator;
 
-    private final TSP2DProblem problem;
-
-    private final double[][] distanceMatrix;
+    private ChoiceFunction choiceFunction;
+    private Fitness fitnessFunction;
+    private MutationOperator mutationOperator;
 
     private double currentFitness = Double.MAX_VALUE;
     private double bestFitness = Double.MAX_VALUE;
     private int bestIteration = 0;
 
-    public TSPAlgorithm(TSP2DProblem problem) {
-        this.problem = problem;
-        this.distanceMatrix = problem.getDistanceMatrix();
-    }
-
     @Override
-    public Algorithm<?> apply(AlgorithmConfig config) {
+    public Algorithm apply(AlgorithmConfig config) {
         if (!(config instanceof TSP2DConfig tspConfig)) {
             throw new IllegalArgumentException("Expected TSP2DConfig, got " + config.getClass().getSimpleName());
         }
@@ -42,12 +33,20 @@ public class TSPAlgorithm implements Algorithm<int[]> {
 
     @Override
     public void run(int iteration) {
-        int[] candidate = mutationOperator.mutate(deepCopy(currentSolution));
+        Object candidateObj = mutationOperator.mutate(deepCopy(currentSolution));
+        if (!(candidateObj instanceof int[] candidate)) {
+            throw new IllegalStateException("Mutation did not return int[]");
+        }
 
         double fitnessOriginal = evalFitness(currentSolution);
         double fitnessCandidate = evalFitness(candidate);
 
-        currentSolution = choiceFunction.choose(currentSolution, candidate, fitnessOriginal, fitnessCandidate, iteration);
+        Object chosen = choiceFunction.choose(currentSolution, candidate, fitnessOriginal, fitnessCandidate, iteration);
+        if (!(chosen instanceof int[] chosenTour)) {
+            throw new IllegalStateException("Choice function did not return int[]");
+        }
+
+        currentSolution = chosenTour;
         currentFitness = evalFitness(currentSolution);
 
         if (currentFitness < bestFitness) {
@@ -57,18 +56,16 @@ public class TSPAlgorithm implements Algorithm<int[]> {
     }
 
     @Override
-    public void setCurrentSolution(int[] defaultPermutation) {
-        this.currentSolution = defaultPermutation;
+    public void setCurrentSolution(Object defaultPermutation) {
+        if (!(defaultPermutation instanceof int[] ints)) {
+            throw new IllegalArgumentException("Expected int[] for TSPAlgorithm");
+        }
+        this.currentSolution = ints;
     }
 
     @Override
-    public int[] getCurrentSolution() {
+    public Object getCurrentSolution() {
         return currentSolution;
-    }
-
-    @Override
-    public void setFirst(int[] first) {
-        this.currentSolution = first;
     }
 
     @Override
@@ -86,13 +83,17 @@ public class TSPAlgorithm implements Algorithm<int[]> {
         return bestIteration;
     }
 
-    public int [] deepCopy(int[] array) {
+    private int[] deepCopy(int[] array) {
         int[] copy = new int[array.length];
         System.arraycopy(array, 0, copy, 0, array.length);
         return copy;
     }
 
     private double evalFitness(int[] permutation) {
-        return fitnessFunction.evaluate(permutation);
+        Object result = fitnessFunction.evaluate(permutation);
+        if (!(result instanceof Double f)) {
+            throw new IllegalStateException("Fitness function did not return Double");
+        }
+        return f;
     }
 }

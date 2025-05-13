@@ -5,61 +5,68 @@ import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
-public class BitStringAlgorithm implements Algorithm<boolean[]> {
+public class BitStringAlgorithm implements Algorithm {
+
     protected boolean[] currentSolution;
-    private final ChoiceFunction<boolean[], Integer> choiceFunction;
+    private final ChoiceFunction choiceFunction;
+    private final Fitness fitnessFunction;
+    private final MutationOperator mutationOperator;
 
-    private final Fitness<boolean[], Integer> fitnessFunction;
+    private int currentFitness;
 
-    private final MutationOperator<boolean[]> mutationOperator;
-
-    int currentFitness;
-
-    public BitStringAlgorithm(Fitness<boolean[], Integer> fitness,
-                              MutationOperator<boolean[]> mutation,
-                              ChoiceFunction <boolean[], Integer> choice) {
+    public BitStringAlgorithm(Fitness fitness, MutationOperator mutation, ChoiceFunction choice) {
         this.choiceFunction = choice;
         this.fitnessFunction = fitness;
         this.mutationOperator = mutation;
-        currentFitness = 0;
+        this.currentFitness = 0;
     }
 
     @Override
-    public void run(int i) {
-            boolean[] copy = mutationOperator.mutate(deepCopy(currentSolution));
+    public void run(int iteration) {
+        Object mutatedObj = mutationOperator.mutate(deepCopy(currentSolution));
+        if (!(mutatedObj instanceof boolean[] mutated)) {
+            throw new IllegalStateException("Mutation operator must return boolean[]");
+        }
 
-            currentSolution = choiceFunction.choose(currentSolution, copy, evalFitness(currentSolution), evalFitness(copy), i);
-            currentFitness = evalFitness(currentSolution);
+        double fitnessCurrent = evalFitness(currentSolution);
+        double fitnessCandidate = evalFitness(mutated);
 
-            System.out.println("Fitness: " + currentFitness + " Iteration: " + i);
+        Object chosen = choiceFunction.choose(currentSolution, mutated, fitnessCurrent, fitnessCandidate, iteration);
+        if (!(chosen instanceof boolean[] chosenBits)) {
+            throw new IllegalStateException("Choice function must return boolean[]");
+        }
 
+        currentSolution = chosenBits;
+        currentFitness = (int) evalFitness(currentSolution);
+
+        System.out.println("Fitness: " + currentFitness + " Iteration: " + iteration);
     }
 
     @Override
-    public boolean[] getCurrentSolution() {
+    public Object getCurrentSolution() {
         return currentSolution;
     }
 
     @Override
-    public void setFirst(boolean[] start) {
-        currentSolution = start;
+    public void setCurrentSolution(Object solution) {
+        if (!(solution instanceof boolean[] bits)) {
+            throw new IllegalArgumentException("Expected boolean[] for BitStringAlgorithm");
+        }
+        this.currentSolution = bits;
+        this.currentFitness = (int) evalFitness(bits);
     }
 
     @Override
-    public Algorithm<?> apply(AlgorithmConfig config) {
-
-        return this;
+    public Algorithm apply(AlgorithmConfig config) {
+        return this; // Not used since you manually pass all operators in constructor
     }
 
-
-    public int evalFitness(boolean[] permutation) {
-        return fitnessFunction.evaluate(permutation);
-    }
-
-
-    public void setCurrentSolution(boolean[] currentSolution) {
-        this.currentSolution = currentSolution;
-        currentFitness = evalFitness(currentSolution);
+    private double evalFitness(boolean[] bitString) {
+        Object result = fitnessFunction.evaluate(bitString);
+        if (!(result instanceof Number n)) {
+            throw new IllegalStateException("Fitness function must return a number");
+        }
+        return n.doubleValue();
     }
 
     @Override
@@ -82,5 +89,4 @@ public class BitStringAlgorithm implements Algorithm<boolean[]> {
         System.arraycopy(bitString, 0, copy, 0, bitString.length);
         return copy;
     }
-
 }

@@ -1,13 +1,14 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
+import com.ea_framework.Operators.ChoiceFunctions.TSP2DGreedyChoice;
+
 import java.util.Comparator;
 
 public class GreedyTSPController implements OperatorConfigController {
 
     @Override
     public Object getConfig() {
-        Comparator<Double> comparator = Comparator.reverseOrder();
-        return new GreedyChoice<int[], Double>(comparator);
+        return new TSP2DGreedyChoice();
     }
 
     @Override

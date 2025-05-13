@@ -1,16 +1,20 @@
 package com.ea_framework.Problems;
 
+import com.ea_framework.Configs.OperatorConfigs.TSP2DFitnessConfig;
 import com.ea_framework.Coordinate;
+import com.ea_framework.OperatorType;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.FitnessView.GraphFitnessView;
 import com.ea_framework.Views.InfoViews.StatView;
 import com.ea_framework.Views.VisualizeView.TspVisualizeView;
 import com.ea_framework.Views.VisualizeView.VisualizeView;
+import javafx.fxml.FXML;
 
 import java.util.List;
+import java.util.Map;
 
-public class TSP2DProblem implements Problem<int []> {
+public class TSP2DProblem implements Problem {
     private final String name;
     private final String comment;
     private final String type;
@@ -22,7 +26,8 @@ public class TSP2DProblem implements Problem<int []> {
     private final double maxY;
     private final double minX;
     private final double minY;
-
+    private double saAlpha;
+    private double saT0;
     private int maxIterations;
 
     private final int nodeCount;
@@ -63,7 +68,12 @@ public class TSP2DProblem implements Problem<int []> {
     }
 
     @Override
-    public VisualizeView<int []> getVisualizeView() {
+    public void setDefaultPermutation(Object permutation) {
+
+    }
+
+    @Override
+    public VisualizeView getVisualizer() {
         return new TspVisualizeView(this);
     }
 
@@ -111,6 +121,14 @@ public class TSP2DProblem implements Problem<int []> {
         this.defaultPermutation = permutation;
     }
 
+    @Override
+    public Map<OperatorType, Object> getOperatorConfigurations() {
+        return Map.of(
+                OperatorType.FITNESS_TSP,
+                new TSP2DFitnessConfig(distanceMatrix)
+        );
+    }
+
     public double getMaxX() {
         return maxX;
     }
@@ -127,4 +145,26 @@ public class TSP2DProblem implements Problem<int []> {
     public int getNodeCount() {
         return nodeCount;
     }
+
+    public double [][] getDistanceMatrix(int[] permutation) {
+        double[][] matrix = new double[permutation.length][permutation.length];
+        for (int i = 0; i < permutation.length; i++) {
+            for (int j = 0; j < permutation.length; j++) {
+                matrix[i][j] = distanceMatrix[permutation[i]][permutation[j]];
+            }
+        }
+        return matrix;
+    }
+
+    @Override
+    public void setSimulatedAnnealingParams(double alpha, double t0) {
+        this.saAlpha = alpha;
+        this.saT0 = t0;
+    }
+
+    @Override
+    public List<Double> getSimulatedAnnealingParams() {
+        return List.of(saAlpha, saT0);
+    }
+
 }

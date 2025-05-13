@@ -1,24 +1,20 @@
 package com.ea_framework.Algorithms;
 
 import com.ea_framework.Configs.AlgorithmConfig;
-import com.sun.jdi.Value;
 
-public interface Algorithm<SolutionType> {
+public interface Algorithm {
+
     void run(int iteration);
-    SolutionType getCurrentSolution();
-    void setFirst(SolutionType first);
 
-    Algorithm<?> apply(AlgorithmConfig config);
-
-    void setCurrentSolution(SolutionType defaultPermutation);
+    Object getCurrentSolution();
+    void setCurrentSolution(Object solution);
 
     Double getCurrentFitness();
-
     Double getBestFitness();
-
     int getBestIteration();
 
-    default SolutionType getSolution(SolutionType solution) {
-        return solution;
+    // Optional runtime configuration
+    default Algorithm apply(AlgorithmConfig config) {
+        throw new UnsupportedOperationException("apply(...) not implemented");
     }
 }

@@ -1,32 +1,34 @@
 package com.ea_framework.Registries;
 
 import com.ea_framework.Descriptors.ProblemDescriptor;
-import com.ea_framework.Problems.Problem;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class ProblemRegistry {
 
-    private static final Map<String, ProblemDescriptor<?, ?>> registry = new HashMap<>();
+    private static final Map<String, ProblemDescriptor> registry = new HashMap<>();
 
-    public static <S, P extends Problem<S>> void register(
-            String name,
-            ProblemDescriptor<S, P> descriptor
-    ) {
+    public static void register(String name, ProblemDescriptor descriptor) {
         registry.put(name, descriptor);
     }
 
-        public static <S, P extends Problem<S>> Optional<ProblemDescriptor<S, P>> getProblem(
-                String name
-        ) {
-            ProblemDescriptor<?, ?> raw = registry.get(name);
+    public static Optional<ProblemDescriptor> getProblem(String name) {
+        return Optional.ofNullable(registry.get(name));
+    }
 
-            if (raw == null) return Optional.empty();
+    public static boolean contains(String name) {
+        return registry.containsKey(name);
+    }
 
-            return Optional.of((ProblemDescriptor<S, P>) raw);
+    public static void clear() {
+        registry.clear();
+    }
 
-        }
+    public static Set<String> getAvailableProblems() {
+        return registry.keySet();
+    }
+
 }
-
