@@ -1,8 +1,8 @@
 package com.ea_framework.Configs;
 
-import com.ea_framework.ChoiceFunctions.ChoiceFunction;
-import com.ea_framework.FitnessFunctions.Fitness;
-import com.ea_framework.MutationFunctions.MutationOperator;
+import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Operators.FitnessFunctions.Fitness;
+import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
 import java.util.Map;
 

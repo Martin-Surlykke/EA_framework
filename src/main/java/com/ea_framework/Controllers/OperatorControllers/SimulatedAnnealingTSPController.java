@@ -1,6 +1,6 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.ChoiceFunctions.TSP2DSimulatedAnnealing;
+import com.ea_framework.Operators.ChoiceFunctions.TSP2DSimulatedAnnealing;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -14,10 +14,7 @@ public class SimulatedAnnealingTSPController implements OperatorConfigController
 
     @Override
     public Object getConfig() {
-        return new TSP2DSimulatedAnnealing<int [], Double>(
-                Comparator.reverseOrder(),
-                Double.parseDouble(alphaValue.getText()),
-                Double.parseDouble(temperatureValue.getText())
+        return new TSP2DSimulatedAnnealing (
         );
     }
 

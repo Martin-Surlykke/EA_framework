@@ -3,36 +3,30 @@ package com.ea_framework.Registries;
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Problems.Problem;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 public class ProblemRegistry {
 
-    private static final Map<String, ProblemDescriptor> problems = new HashMap<>();
+    private static final Map<String, ProblemDescriptor<?, ?>> registry = new HashMap<>();
 
-    public static void register(ProblemDescriptor descriptor) {
-        problems.put(descriptor.getName(), descriptor);
+    public static <S, P extends Problem<S>> void register(
+            String name,
+            ProblemDescriptor<S, P> descriptor
+    ) {
+        registry.put(name, descriptor);
     }
 
-    public static ProblemDescriptor getDescriptor (String name) {
-        return problems.get(name);
-    }
+        public static <S, P extends Problem<S>> Optional<ProblemDescriptor<S, P>> getProblem(
+                String name
+        ) {
+            ProblemDescriptor<?, ?> raw = registry.get(name);
 
-    public static Problem create(String name, InputStream stream) throws IOException {
-        ProblemDescriptor descriptor = problems.get(name);
-        if (descriptor == null) {
-            throw new IllegalArgumentException("Problem not found: " + name);
-        } else {
-            return descriptor.getLoader().load(stream);
+            if (raw == null) return Optional.empty();
+
+            return Optional.of((ProblemDescriptor<S, P>) raw);
+
         }
-
-    }
-
-    public static Set<String> getAvailableProblems() {
-        return problems.keySet();
-    }
 }
+

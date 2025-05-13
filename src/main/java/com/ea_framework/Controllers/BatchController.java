@@ -6,8 +6,6 @@ import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
-import com.ea_framework.Filehandlers.TSPFileHandler;
-import com.ea_framework.Problems.Problem;
 import com.ea_framework.Registries.Registry;
 import com.ea_framework.ResourceLister;
 import com.ea_framework.RunBatch;
@@ -143,7 +141,7 @@ public class BatchController {
 
     public void onSearchSpaceSelected(String searchSpace) {
         currentConfig.setSearchSpaceName(searchSpace);
-        currentConfig.setSearchSpace(Registry.getSearchSpace(searchSpace));
+        currentConfig.setSearchSpace(Registry.getSearchSpace(searchSpace))  ;
         problemTab.setDisable(false);
         tabPane.getSelectionModel().select(problemTab);
     }
@@ -152,7 +150,7 @@ public class BatchController {
     public void onAlgorithmSelected(String algorithmName) {
         configTab.setDisable(false);
 
-        AlgorithmDescriptor<?, ?> descriptor = Registry.getAlgorithmDescriptor(algorithmName);
+        AlgorithmDescriptor descriptor = Registry.getAlgorithmDescriptor(algorithmName);
         ConfigView view = descriptor.getConfigPage();
         AlgorithmConfigUI controller = view.getController();
         currentConfig.setAlgorithmName(algorithmName);
@@ -325,8 +323,7 @@ public class BatchController {
         allConfigs.putAll(configA);
         allConfigs.putAll(configB);
 
-        // 3. Create the correct AlgorithmConfig instance
-        AlgorithmDescriptor<?, ?> descriptor = currentConfig.getAlgorithmDescriptor();
+        AlgorithmDescriptor descriptor = currentConfig.getAlgorithmDescriptor();
         Class<? extends AlgorithmConfig> configClass = (Class<? extends AlgorithmConfig>) descriptor.getConfigClass();
 
         try {

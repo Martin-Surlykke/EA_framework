@@ -1,12 +1,12 @@
 package com.ea_framework.Controllers.AlgorithmControllers;
 
-import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.Descriptors.OperatorDescriptor;
-import com.ea_framework.FitnessFunctions.Fitness;
-import com.ea_framework.MutationFunctions.MutationOperator;
+import com.ea_framework.Operators.FitnessFunctions.Fitness;
+import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 import com.ea_framework.OperatorType;
 import com.ea_framework.UIs.GenericOperatorUI;
 import com.ea_framework.Registries.OperatorRegistry;

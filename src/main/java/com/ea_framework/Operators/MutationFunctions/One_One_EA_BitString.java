@@ -1,8 +1,11 @@
-package com.ea_framework.MutationFunctions;
+package com.ea_framework.Operators.MutationFunctions;
+
+import com.ea_framework.Configs.OperatorConfigs.BitStringMutationConfig;
+import com.ea_framework.Configurable;
 
 import java.util.Random;
 
-public class One_One_EA_BitString implements MutationOperator<boolean[]> {
+public class One_One_EA_BitString implements MutationOperator<boolean[]>, Configurable<BitStringMutationConfig> {
     @Override
     public boolean [] mutate(boolean[] currentSolution) {
         int n = currentSolution.length;
@@ -19,4 +22,8 @@ public class One_One_EA_BitString implements MutationOperator<boolean[]> {
         return currentSolution;
     }
 
+    @Override
+    public void configure(BitStringMutationConfig config) {
+
+    }
 }

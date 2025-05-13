@@ -1,6 +1,6 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.MutationFunctions.One_One_EA_BitString;
+import com.ea_framework.Operators.MutationFunctions.One_One_EA_BitString;
 
 public class One_One_EA_Controller implements OperatorConfigController{
 

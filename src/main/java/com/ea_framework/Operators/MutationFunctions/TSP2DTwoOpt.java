@@ -1,8 +1,11 @@
-package com.ea_framework.MutationFunctions;
+package com.ea_framework.Operators.MutationFunctions;
+
+import com.ea_framework.Configs.TSP2DConfig;
+import com.ea_framework.Configurable;
 
 import java.util.Random;
 
-public class TSP2DTwoOpt implements MutationOperator<int[]> {
+public class TSP2DTwoOpt implements MutationOperator<int[]>, Configurable<TSP2DConfig> {
 
     @Override
     public int [] mutate(int[] solution) {
@@ -52,4 +55,8 @@ public class TSP2DTwoOpt implements MutationOperator<int[]> {
             return copy;
         }
 
+    @Override
+    public void configure(TSP2DConfig config) {
+
+    }
 }

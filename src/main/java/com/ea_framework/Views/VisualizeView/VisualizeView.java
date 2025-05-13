@@ -6,5 +6,5 @@ import javafx.scene.Node;
 
 public interface VisualizeView<S> {
     Node getView();
-    void update(Algorithm<S> problem);
+    void update(S solution);
 }

@@ -19,9 +19,9 @@ module com.ea_framework {
     exports com.ea_framework.Views.FitnessView;
     exports com.ea_framework.Views.InfoViews;
     exports com.ea_framework.Views.VisualizeView;
-    exports com.ea_framework.FitnessFunctions;
-    exports com.ea_framework.ChoiceFunctions;
-    exports com.ea_framework.MutationFunctions;
+    exports com.ea_framework.Operators.FitnessFunctions;
+    exports com.ea_framework.Operators.ChoiceFunctions;
+    exports com.ea_framework.Operators.MutationFunctions;
     exports com.ea_framework.Filehandlers;
     exports com.ea_framework.Controllers.OperatorControllers;
     opens com.ea_framework.Loaders;
@@ -36,4 +36,5 @@ module com.ea_framework {
     opens com.ea_framework.Controllers.OperatorControllers to javafx.fxml;
     exports com.ea_framework.Runners;
     opens com.ea_framework.Runners to javafx.fxml;
+    exports com.ea_framework.Configs.OperatorConfigs;
 }

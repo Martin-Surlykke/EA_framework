@@ -1,8 +1,11 @@
-package com.ea_framework.ChoiceFunctions;
+package com.ea_framework.Operators.ChoiceFunctions;
+
+import com.ea_framework.Configs.OperatorConfigs.BitStringChoiceConfig;
+import com.ea_framework.Configurable;
 
 import java.util.Random;
 
-public class BitStringSimulatedAnnealing implements ChoiceFunction<boolean[], Integer> {
+public class BitStringSimulatedAnnealing implements ChoiceFunction<boolean[], Integer>, Configurable<BitStringChoiceConfig> {
 
     private double alpha;
     private double T_0;
@@ -31,5 +34,10 @@ public class BitStringSimulatedAnnealing implements ChoiceFunction<boolean[], In
 
     public void setT0(double t) {
         T_0 = t;
+    }
+
+    @Override
+    public void configure(BitStringChoiceConfig config) {
+
     }
 }

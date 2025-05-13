@@ -1,6 +1,6 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.MutationFunctions.TSP2DTwoOpt;
+import com.ea_framework.Operators.MutationFunctions.TSP2DTwoOpt;
 
 public class TwoOptTSPController implements OperatorConfigController {
 

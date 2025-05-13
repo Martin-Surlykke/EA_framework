@@ -1,9 +1,9 @@
 package com.ea_framework.Algorithms;
 
-import com.ea_framework.ChoiceFunctions.ChoiceFunction;
+import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Configs.AlgorithmConfig;
-import com.ea_framework.FitnessFunctions.Fitness;
-import com.ea_framework.MutationFunctions.MutationOperator;
+import com.ea_framework.Operators.FitnessFunctions.Fitness;
+import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
 public class BitStringAlgorithm implements Algorithm<boolean[]> {
     protected boolean[] currentSolution;

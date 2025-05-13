@@ -1,6 +1,6 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.MutationFunctions.RLSBitString;
+import com.ea_framework.Operators.MutationFunctions.RLSBitString;
 
 public class RLSBitStringController implements OperatorConfigController {
 

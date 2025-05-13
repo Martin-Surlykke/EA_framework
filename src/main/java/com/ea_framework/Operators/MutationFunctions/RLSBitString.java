@@ -1,9 +1,12 @@
-package com.ea_framework.MutationFunctions;
+package com.ea_framework.Operators.MutationFunctions;
+
+import com.ea_framework.Configs.OperatorConfigs.BitStringMutationConfig;
+import com.ea_framework.Configurable;
 
 import java.util.Arrays;
 import java.util.Random;
 
-public class RLSBitString implements MutationOperator<boolean[]> {
+public class RLSBitString implements MutationOperator<boolean[]>, Configurable<BitStringMutationConfig> {
 
     @Override
     public boolean[] mutate(boolean [] bitString) {
@@ -16,4 +19,8 @@ public class RLSBitString implements MutationOperator<boolean[]> {
     }
 
 
+    @Override
+    public void configure(BitStringMutationConfig config) {
+
+    }
 }

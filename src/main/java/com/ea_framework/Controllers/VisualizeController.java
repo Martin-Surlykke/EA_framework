@@ -14,29 +14,18 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class VisualizeController<S> {
+public class VisualizeController<S extends Algorithm<?>> {
 
     private VisualizeView<S> visualizeView;
     private FitnessView fitnessView;
     private StatView statView;
-    @FXML
-    public Pane visualizePane;
 
-    @FXML
-    public Pane fitnessPane;
-
-    @FXML
-    public Pane statPane;
-
-    @FXML
-    public Pane configPane;
-
-    @FXML
-    public Text closeWindow;
-
-    @FXML
-    public Rectangle minimizeWindow;
-
+    @FXML public Pane visualizePane;
+    @FXML public Pane fitnessPane;
+    @FXML public Pane statPane;
+    @FXML public Pane configPane;
+    @FXML public Text closeWindow;
+    @FXML public Rectangle minimizeWindow;
 
     @FXML
     public void initialize(VisualizeView<S> visualizeView,
@@ -45,7 +34,6 @@ public class VisualizeController<S> {
                            StatView statView,
                            Stage stage) {
 
-        // Store views for use in updateAll
         this.visualizeView = visualizeView;
         this.fitnessView = fitnessView;
         this.statView = statView;
@@ -58,18 +46,19 @@ public class VisualizeController<S> {
         closeWindow.setOnMouseClicked(event -> Platform.exit());
         minimizeWindow.setOnMouseClicked(event -> stage.setIconified(true));
     }
-    public void fitToPane(Node node, Pane pane) {
+
+    public void updateAll(S solution, int iteration, double fitness, StatRecord stat) {
+        visualizeView.update(solution);
+        fitnessView.update(fitness, iteration);
+        statView.update(stat);
+    }
+
+    private void fitToPane(Node node, Pane pane) {
         Region region = (Region) node;
         region.prefWidthProperty().bind(pane.widthProperty());
         region.prefHeightProperty().bind(pane.heightProperty());
         pane.getChildren().add(region);
     }
-
-    public void updateAll(Algorithm<S> algorithm, int iteration, double fitness, StatRecord stat) {
-            visualizeView.update(algorithm);
-
-            fitnessView.update(fitness, iteration);
-
-            statView.update(stat);
-    }
 }
+
+

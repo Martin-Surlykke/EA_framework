@@ -1,9 +1,7 @@
 package com.ea_framework.Configs;
 
-
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
-import com.ea_framework.Filehandlers.FileLoader;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.SearchSpaces.SearchSpace;
 
@@ -12,31 +10,34 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BatchConfig {
+public class BatchConfig<
+        S,
+        P extends Problem<S>,
+        A extends com.ea_framework.Algorithms.Algorithm<S>,
+        C extends AlgorithmConfig
+        > {
+
     private String streamName;
     private InputStream inputStream;
 
     private String searchSpaceName;
-    private SearchSpace<?> searchSpace;
+    private SearchSpace<S> searchSpace;
 
     private String problemName;
+    private ProblemDescriptor<S, P> problemDescriptor;
+    private P problem;
 
     private String algorithmName;
-    private AlgorithmDescriptor<?, ?> algorithmDescriptor;
+    private AlgorithmDescriptor<S, P, A, C> algorithmDescriptor;
+    private C algorithmConfig;
 
-    private AlgorithmConfig algorithmConfig;
-
-    private Map<String, String> terminationConfigs = new HashMap<>();
-
-    private Map<String, String> metaConfigs = new HashMap<>();
+    private final Map<String, String> terminationConfigs = new HashMap<>();
+    private final Map<String, String> metaConfigs = new HashMap<>();
 
     private int repeats;
-
     private int termination;
 
-    private Problem problem;
-
-    private ProblemDescriptor problemDescriptor;
+    // === Getters and Setters ===
 
     public String getStreamName() {
         return streamName;
@@ -46,12 +47,28 @@ public class BatchConfig {
         this.streamName = streamName;
     }
 
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
     public String getSearchSpaceName() {
         return searchSpaceName;
     }
 
     public void setSearchSpaceName(String searchSpaceName) {
         this.searchSpaceName = searchSpaceName;
+    }
+
+    public SearchSpace<S> getSearchSpace() {
+        return searchSpace;
+    }
+
+    public void setSearchSpace(SearchSpace<S> searchSpace) {
+        this.searchSpace = searchSpace;
     }
 
     public String getProblemName() {
@@ -70,24 +87,39 @@ public class BatchConfig {
         this.algorithmName = algorithmName;
     }
 
-    public void setSearchSpace(SearchSpace<?> searchSpace) {
-        this.searchSpace = searchSpace;
+    public AlgorithmDescriptor<S, P, A, C> getAlgorithmDescriptor() {
+        return algorithmDescriptor;
     }
 
-    public void setAlgorithmDescriptor(AlgorithmDescriptor<?, ?> descriptor) {
+    public void setAlgorithmDescriptor(AlgorithmDescriptor<S, P, A, C> descriptor) {
         this.algorithmDescriptor = descriptor;
     }
 
-    public AlgorithmConfig getAlgorithmConfig() {
+    public ProblemDescriptor<S, P> getProblemDescriptor() {
+        return problemDescriptor;
+    }
+
+    public void setProblemDescriptor(ProblemDescriptor<S, P> problemDescriptor) {
+        this.problemDescriptor = problemDescriptor;
+    }
+
+    public C getAlgorithmConfig() {
         return algorithmConfig;
     }
 
-    public Map<String, String> getTerminationConfigs() {
-        return terminationConfigs;
+    public void setAlgorithmConfig(C config) {
+        this.algorithmConfig = config;
     }
 
-    public Map<String, String> getMetaConfigs() {
-        return metaConfigs;
+    public P getProblem() throws IOException {
+        if (problem == null) {
+            problem = getProblemFromDescriptor();
+        }
+        return problem;
+    }
+
+    public P getProblemFromDescriptor() throws IOException {
+        return problemDescriptor.getLoader().load(inputStream);
     }
 
     public int getRepeats() {
@@ -106,41 +138,11 @@ public class BatchConfig {
         this.termination = termination;
     }
 
-    public InputStream getInputStream() {
-        return inputStream;
+    public Map<String, String> getTerminationConfigs() {
+        return terminationConfigs;
     }
 
-    public Problem getProblem() throws IOException {
-        return getProblemFromDescriptor();
-    }
-
-    public SearchSpace<?> getSearchSpace() {
-        return searchSpace;
-    }
-
-    public AlgorithmDescriptor<?, ?> getAlgorithmDescriptor() {
-        return algorithmDescriptor;
-    }
-
-
-    public void setProblemDescriptor(ProblemDescriptor problemShell) {
-        this.problemDescriptor = problemShell;
-    }
-
-    public void setInputStream(InputStream stream) {
-        this.inputStream = stream;
-    }
-
-    public Problem getProblemFromDescriptor() throws IOException {
-        return problemDescriptor.getLoader().load(inputStream);
-    }
-
-    public InputStream getResourceStream() {
-        return inputStream;
-    }
-
-
-    public void setAlgorithmConfig(AlgorithmConfig configInstance) {
-        this.algorithmConfig = configInstance;
+    public Map<String, String> getMetaConfigs() {
+        return metaConfigs;
     }
 }

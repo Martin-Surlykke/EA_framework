@@ -25,7 +25,7 @@ public class BitStringView implements VisualizeView<boolean[]> {
     }
 
     @Override
-    public void update(Algorithm<boolean[]> algorithm) {
+    public void update(boolean[] algorithm) {
 
     }
 

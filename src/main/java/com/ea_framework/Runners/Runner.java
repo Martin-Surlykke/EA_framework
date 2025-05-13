@@ -9,13 +9,14 @@ import javafx.animation.AnimationTimer;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class DefaultRunner<S> implements ProblemRunner<Problem<S>> {
-    @Override
-    public void run(Problem<S> problem, Algorithm<S> algorithm, VisualizeController controller, int termination) {
+public class Runner<S> {
+
+    public <A extends Algorithm<S>> void run(Problem<S> problem,
+                                             A algorithm,
+                                             VisualizeController<A> controller,
+                                             int termination) {
+
         S initial = problem.getDefaultPermutation();
-        if (initial == null) {
-            throw new IllegalStateException("Problem did not provide a valid default permutation.");
-        }
         algorithm.setCurrentSolution(initial);
 
         AtomicInteger latestIteration = new AtomicInteger();
@@ -73,3 +74,4 @@ public class DefaultRunner<S> implements ProblemRunner<Problem<S>> {
         }.start();
     }
 }
+

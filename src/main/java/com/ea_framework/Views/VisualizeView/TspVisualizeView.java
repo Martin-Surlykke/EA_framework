@@ -63,15 +63,14 @@ public class TspVisualizeView implements VisualizeView<int[]> {
     }
 
     @Override
-    public void update(Algorithm<int[]> algorithm) {
-        int[] permutation = algorithm.getCurrentSolution();
-
+    public void update(int[] permutation) {
         GraphicsContext edgeGC = edgeCanvas.getGraphicsContext2D();
         edgeGC.clearRect(0, 0, edgeCanvas.getWidth(), edgeCanvas.getHeight());
 
         drawOldPath(permutation);
         drawCurrentPath(permutation);
     }
+
 
     private void drawCurrentPath(int[] permutation) {
         GraphicsContext gc = edgeCanvas.getGraphicsContext2D();

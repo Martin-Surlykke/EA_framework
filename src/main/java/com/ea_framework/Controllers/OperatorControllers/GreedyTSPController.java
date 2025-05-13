@@ -1,6 +1,5 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.ChoiceFunctions.GreedyChoice;
 import java.util.Comparator;
 
 public class GreedyTSPController implements OperatorConfigController {

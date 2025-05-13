@@ -3,31 +3,37 @@ package com.ea_framework.Descriptors;
 import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Loaders.ProblemLoader;
 import com.ea_framework.Problems.Problem;
-import com.ea_framework.Runners.ProblemRunner;
+import com.ea_framework.Runners.Runner;
 
-public class ProblemDescriptor implements Descriptor {
+
+public class ProblemDescriptor<
+        S,
+        P extends Problem<S>
+        > implements Descriptor {
+
     private final String name;
     private final String searchSpaceType;
-    private final ProblemLoader<? extends Problem<?>> loader;
+    private final ProblemLoader<P> loader;
 
-    private final ProblemRunner<Problem, Algorithm<?>> runner;
-
-    public ProblemDescriptor(String name, String searchSpaceType, ProblemLoader loader, ProblemRunner<Problem, Algorithm<?>> runner) {
+    public ProblemDescriptor(String name,
+                             String searchSpaceType,
+                             ProblemLoader<P> loader) {
         this.name = name;
         this.searchSpaceType = searchSpaceType;
         this.loader = loader;
-        this.runner = runner;
     }
 
-    public ProblemLoader getLoader() {
+    public ProblemLoader<P> getLoader() {
         return loader;
     }
 
-    @Override public String getName() {
+    @Override
+    public String getName() {
         return name;
     }
 
-    @Override public String getCompatibleKey() {
+    @Override
+    public String getCompatibleKey() {
         return searchSpaceType;
     }
-    }
+}

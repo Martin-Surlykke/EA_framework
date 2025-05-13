@@ -1,12 +1,12 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.FitnessFunctions.TspEuclidianDistance;
+import com.ea_framework.Operators.FitnessFunctions.TspEuclideanDistance;
 
 public class TSP2DEuclidianDistanceController implements OperatorConfigController {
 
     @Override
     public Object getConfig() {
-        return new TspEuclidianDistance();
+        return new TspEuclideanDistance();
     }
 
     @Override
