@@ -22,7 +22,7 @@ public class BitStringGreedyChoice implements ChoiceFunction, Configurable {
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Problem problem) {
 
     }
 }

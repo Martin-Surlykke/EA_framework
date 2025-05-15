@@ -7,7 +7,7 @@ import java.util.Comparator;
 public class GreedyTSPController implements OperatorConfigController {
 
     @Override
-    public Object getConfig() {
+    public Object getOperator() {
         return new TSP2DGreedyChoice();
     }
 

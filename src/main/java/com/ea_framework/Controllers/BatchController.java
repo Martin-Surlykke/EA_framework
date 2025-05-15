@@ -184,8 +184,10 @@ public class BatchController {
 
         populateTerminationConfig();
 
-        String fullPath = "src/main/resources/tspFiles/st70.tsp";
-        File file = new File(fullPath);
+        String problemName = currentConfig.getProblemName();
+        String selectedFile = currentConfig.getStreamName();
+
+        File file = ResourceLister.resolveProblemFile(problemName, selectedFile);
         if (!file.exists()) {
             System.err.println("File not found at: " + file.getAbsolutePath());
         } else {

@@ -18,34 +18,13 @@ public class TSP2DConfig implements AlgorithmConfig {
 
     @Override
     public void populate(Map<String, Object> raw, Problem problem) {
-        Object fitnessObj = raw.get("fitness");
-        Object mutationObj = raw.get("mutation");
-        Object choiceObj = raw.get("choice");
+        this.fitness = (Fitness) raw.get("fitness");
+        this.mutation = (MutationOperator) raw.get("mutation");
+        this.choice = (ChoiceFunction) raw.get("choice");
 
-        if (fitnessObj instanceof Fitness f) {
-            this.fitness = f;
-            if (raw.get("fitnessConfig") instanceof Map<?, ?> config && f instanceof Configurable configurable) {
-                configurable.configure(cast(config));
-            }
-        }
-
-        if (mutationObj instanceof MutationOperator m) {
-            this.mutation = m;
-            if (raw.get("mutationConfig") instanceof Map<?, ?> config && m instanceof Configurable configurable) {
-                configurable.configure(cast(config));
-            }
-        }
-
-        if (choiceObj instanceof ChoiceFunction c) {
-            this.choice = c;
-            if (raw.get("choiceConfig") instanceof Map<?, ?> config && c instanceof Configurable configurable) {
-                configurable.configure(cast(config));
-            }
-        }
-    }
-
-    private static Map<String, Object> cast(Map<?, ?> map) {
-        return (Map<String, Object>) map;
+        if (fitness instanceof Configurable f) f.configure(problem);
+        if (mutation instanceof Configurable m) m.configure(problem);
+        if (choice instanceof Configurable c) c.configure(problem);
     }
 
     public Fitness fitness() {

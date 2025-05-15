@@ -61,7 +61,7 @@ public class TSP2DTwoOpt implements MutationOperator, Configurable {
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Problem problem) {
 
     }
 }

@@ -49,20 +49,14 @@ public class ResourceLister {
         return new FileInputStream(file);
     }
 
-    public static File resolveProblemFile(String problemType, String streamName) {
-        String folder = getProblemFolder(problemType);
-        String fullPath = folder + "/" + streamName;
+    public static File resolveProblemFile(String problemName, String streamName) {
+        String folder = switch (problemName.toLowerCase()) {
+            case "tsp2d" -> "tspFiles";
+            case "bitstringproblem" -> "bitStringFiles";
+            default -> throw new IllegalArgumentException("Unknown problem: " + problemName);
+        };
 
-        URL resourceUrl = Thread.currentThread().getContextClassLoader().getResource(fullPath);
-        if (resourceUrl == null) {
-            throw new IllegalArgumentException("Could not locate resource: " + fullPath);
-        }
-
-        try {
-            return new File(resourceUrl.toURI());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Invalid URI for resource: " + resourceUrl, e);
-        }
+        return new File("src/main/resources/" + folder + "/" + streamName);
     }
 
     private static String getProblemFolder(String problemType) {

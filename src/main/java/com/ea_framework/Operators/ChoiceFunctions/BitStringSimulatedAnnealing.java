@@ -34,8 +34,7 @@ public class BitStringSimulatedAnnealing implements ChoiceFunction, Configurable
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
-        this.alpha = Double.parseDouble(config.get("alpha").toString());
-        this.T_0 = Double.parseDouble(config.get("t0").toString());
+    public void configure(Problem problem) {
+
     }
 }

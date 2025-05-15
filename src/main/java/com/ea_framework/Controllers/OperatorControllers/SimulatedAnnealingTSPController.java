@@ -15,11 +15,11 @@ public class SimulatedAnnealingTSPController implements OperatorConfigController
     private Runnable onChange;
 
     @Override
-    public Object getConfig() {
-        Map<String, Object> config = new HashMap<>();
-        config.put("alpha", Double.parseDouble(alphaValue.getText()));
-        config.put("t0", Double.parseDouble(temperatureValue.getText()));
-        return config;
+    public Object getOperator() {
+        TSP2DSimulatedAnnealing sa = new TSP2DSimulatedAnnealing();
+        sa.setAlpha(Double.parseDouble(alphaValue.getText()));
+        sa.setT0(Double.parseDouble(temperatureValue.getText()));
+        return sa;
     }
 
     @Override

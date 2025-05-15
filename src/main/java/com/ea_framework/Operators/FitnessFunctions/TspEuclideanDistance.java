@@ -26,7 +26,10 @@ public class TspEuclideanDistance implements Fitness, Configurable {
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
-        this.distanceMatrix = (double[][]) config.get("distanceMatrix");
+    public void configure(Problem problem) {
+        if (!(problem instanceof TSP2DProblem tsp2dProblem)) {
+            throw new IllegalArgumentException("TspEuclideanDistance expects TSP2DProblem.");
+        }
+        this.distanceMatrix = tsp2dProblem.getDistanceMatrix();
     }
 }

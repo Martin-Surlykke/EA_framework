@@ -41,12 +41,6 @@ public class Runner {
                         algorithm.getBestIteration() * 2,
                         algorithm.getBestFitness()
                 ));
-
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
             }
         });
 

@@ -23,9 +23,7 @@ public class BitStringOneMax implements Fitness, Configurable {
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
-        if (!(config instanceof BitStringProblem)) {
-            throw new IllegalArgumentException("Expected BitStringProblem");
-        }
+    public void configure(Problem problem) {
+
     }
 }

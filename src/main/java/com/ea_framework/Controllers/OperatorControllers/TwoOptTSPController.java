@@ -5,7 +5,7 @@ import com.ea_framework.Operators.MutationFunctions.TSP2DTwoOpt;
 public class TwoOptTSPController implements OperatorConfigController {
 
     @Override
-    public Object getConfig() {
+    public Object getOperator() {
         return new TSP2DTwoOpt();
     }
 

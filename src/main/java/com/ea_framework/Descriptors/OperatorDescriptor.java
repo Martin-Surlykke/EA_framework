@@ -51,9 +51,9 @@ public class OperatorDescriptor {
         return new GenericOperatorUI(root, controller);
     }
 
-    public Configurable createOperator(Map<String, Object> config) {
+    public Configurable createOperator(Problem problem) {
         Configurable operator = operatorSupplier.get();
-        operator.configure(config);
+        operator.configure(problem);
         return operator;
     }
 }

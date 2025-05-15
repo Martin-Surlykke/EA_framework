@@ -1,7 +1,8 @@
 package com.ea_framework;
 
-import java.util.Map;
+import com.ea_framework.Problems.Problem;
+
 
 public interface Configurable {
-    void configure(Map<String, Object> configuration);
+    void configure(Problem problem);
 }

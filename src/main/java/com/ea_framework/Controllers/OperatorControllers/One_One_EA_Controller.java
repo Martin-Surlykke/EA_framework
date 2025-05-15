@@ -6,7 +6,7 @@ public class One_One_EA_Controller implements OperatorConfigController{
 
 
     @Override
-    public Object getConfig() {
+    public Object getOperator() {
         return new One_One_EA_BitString();
     }
 

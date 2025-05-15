@@ -5,7 +5,7 @@ import com.ea_framework.Operators.MutationFunctions.RLSBitString;
 public class RLSBitStringController implements OperatorConfigController {
 
     @Override
-    public Object getConfig() {
+    public Object getOperator() {
         return new RLSBitString();
     }
 

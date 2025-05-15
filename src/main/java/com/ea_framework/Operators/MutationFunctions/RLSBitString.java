@@ -26,7 +26,7 @@ public class RLSBitString implements MutationOperator, Configurable {
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Problem problem) {
 
     }
 }

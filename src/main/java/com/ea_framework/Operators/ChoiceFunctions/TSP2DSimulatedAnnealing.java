@@ -30,14 +30,18 @@ public class TSP2DSimulatedAnnealing implements ChoiceFunction, Configurable {
         double probability = rand.nextDouble();
         double acceptance = Math.exp((currFitness - candFitness) / T_i);
 
-        System.out.println("Alpha: " + alpha + " T0: " + T_0 + " Iteration: " + iteration);
-
         return (probability < acceptance) ? cand : curr;
     }
 
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+    public void setT0(double v) {
+        this.T_0 = v;
+    }
+
     @Override
-    public void configure(Map<String, Object> config) {
-        this.alpha = Double.parseDouble(config.get("alpha").toString());
-        this.T_0 = Double.parseDouble(config.get("t0").toString());
+    public void configure(Problem problem) {
+
     }
 }

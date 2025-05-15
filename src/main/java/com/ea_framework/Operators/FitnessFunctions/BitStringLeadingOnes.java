@@ -24,7 +24,7 @@ public class BitStringLeadingOnes implements Fitness, Configurable {
     }
 
     @Override
-    public void configure(Map<String, Object> config) {
+    public void configure(Problem problem) {
 
     }
 }
