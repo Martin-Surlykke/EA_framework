@@ -1,29 +1,29 @@
 package com.ea_framework.Views.InfoViews;
 
-import com.ea_framework.Views.InfoViews.boxes.ConfigBox;
+import com.ea_framework.Views.InfoViews.boxes.StandardConfigBox;
 import javafx.scene.Node;
 
 public class ConfigurationView implements infoView<ConfigRecord> {
 
-    private final ConfigBox configBox;
+    private final StandardConfigBox standardConfigBox;
 
     public ConfigurationView() {
-        this.configBox = new ConfigBox();
+        this.standardConfigBox = new StandardConfigBox();
     }
 
     @Override
     public Node getView() {
-        return configBox.getView();
+        return standardConfigBox.getView();
     }
 
     @Override
     public void update(ConfigRecord record) {
-        configBox.updateField("Problem", record.problem());
-        configBox.updateField("File", record.file());
-        configBox.updateField("Algorithm", record.algorithm());
-        configBox.updateField("Choice Function", record.choiceFunction());
-        configBox.updateField("Mutation Operator", record.mutationOperator());
-        configBox.updateField("Fitness Function", record.fitnessFunction());
-        configBox.updateField("Start route", record.startRoute());
+        standardConfigBox.updateField("Problem", record.problem());
+        standardConfigBox.updateField("File", record.file());
+        standardConfigBox.updateField("Algorithm", record.algorithm());
+        standardConfigBox.updateField("Choice Function", record.choiceFunction());
+        standardConfigBox.updateField("Mutation Operator", record.mutationOperator());
+        standardConfigBox.updateField("Fitness Function", record.fitnessFunction());
+        standardConfigBox.updateField("Start route", record.startRoute());
     }
 }

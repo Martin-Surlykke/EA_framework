@@ -8,7 +8,12 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.ea_framework.Controllers.OperatorControllers.RLSBitStringController"
+            fx:controller="com.ea_framework.Controllers.OperatorControllers.BitStringSimulatedAnnealingController"
             prefHeight="400.0" prefWidth="600.0">
+
+    <VBox fx:id="vBox" spacing="10.0">
+        <TextField fx:id="alphaValue" promptText="Enter alpha"/>
+        <TextField fx:id="temperatureValue" promptText="Enter temperature"/>
+    </VBox>
 
 </AnchorPane>

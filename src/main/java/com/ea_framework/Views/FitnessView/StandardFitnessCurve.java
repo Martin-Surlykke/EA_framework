@@ -5,13 +5,13 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 
-public class GraphFitnessView implements FitnessView {
+public class StandardFitnessCurve implements FitnessView {
 
     private final LineChart<Number, Number> lineChart;
     private final XYChart.Series<Number, Number> fitnessSeries;
     private int iteration = 0;
 
-    public GraphFitnessView(int MAX_ITERATIONS) {
+    public StandardFitnessCurve(int MAX_ITERATIONS) {
         NumberAxis xAxis = new NumberAxis(0, MAX_ITERATIONS, MAX_ITERATIONS / 10.0);
         NumberAxis yAxis = new NumberAxis();
 

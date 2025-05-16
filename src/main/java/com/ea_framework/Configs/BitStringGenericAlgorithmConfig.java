@@ -8,13 +8,11 @@ import com.ea_framework.Problems.Problem;
 
 import java.util.Map;
 
-public class TSP2DConfig implements AlgorithmConfig {
+public class BitStringGenericAlgorithmConfig implements AlgorithmConfig {
 
     private Fitness fitness;
     private MutationOperator mutation;
     private ChoiceFunction choice;
-
-    public TSP2DConfig() {}
 
     @Override
     public void populate(Map<String, Object> raw, Problem problem) {
@@ -27,15 +25,7 @@ public class TSP2DConfig implements AlgorithmConfig {
         if (choice instanceof Configurable c) c.configure(problem);
     }
 
-    public Fitness fitness() {
-        return fitness;
-    }
-
-    public MutationOperator mutation() {
-        return mutation;
-    }
-
-    public ChoiceFunction choice() {
-        return choice;
-    }
+    public Fitness fitness() { return fitness; }
+    public MutationOperator mutation() { return mutation; }
+    public ChoiceFunction choice() { return choice; }
 }

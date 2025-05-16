@@ -4,7 +4,9 @@ public class BitStringSearchSpace implements SearchSpace {
 
     @Override
     public boolean isValidSolution(Object solution) {
-        return solution instanceof boolean[];
+
+        return solution
+                instanceof boolean[];
     }
 
     @Override

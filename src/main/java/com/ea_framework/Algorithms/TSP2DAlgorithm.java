@@ -2,11 +2,11 @@ package com.ea_framework.Algorithms;
 
 import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Configs.AlgorithmConfig;
-import com.ea_framework.Configs.TSP2DConfig;
+import com.ea_framework.Configs.TSP2DGenericAlgorithmConfig;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
-public class TSPAlgorithm implements Algorithm {
+public class TSP2DAlgorithm implements Algorithm {
 
     private int[] currentSolution;
 
@@ -19,8 +19,8 @@ public class TSPAlgorithm implements Algorithm {
     private int bestIteration = 0;
 
     @Override
-    public Algorithm apply(AlgorithmConfig config) {
-        if (!(config instanceof TSP2DConfig tspConfig)) {
+    public void apply(AlgorithmConfig config) {
+        if (!(config instanceof TSP2DGenericAlgorithmConfig tspConfig)) {
             throw new IllegalArgumentException("Expected TSP2DConfig, got " + config.getClass().getSimpleName());
         }
 
@@ -28,7 +28,6 @@ public class TSPAlgorithm implements Algorithm {
         this.mutationOperator = tspConfig.mutation();
         this.choiceFunction = tspConfig.choice();
 
-        return this;
     }
 
     @Override

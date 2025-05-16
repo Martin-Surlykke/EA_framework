@@ -5,11 +5,10 @@ import com.ea_framework.Coordinate;
 import com.ea_framework.OperatorType;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
 import com.ea_framework.Views.FitnessView.FitnessView;
-import com.ea_framework.Views.FitnessView.GraphFitnessView;
+import com.ea_framework.Views.FitnessView.StandardFitnessCurve;
 import com.ea_framework.Views.InfoViews.StatView;
-import com.ea_framework.Views.VisualizeView.TspVisualizeView;
+import com.ea_framework.Views.VisualizeView.TSP2DVisualizeView;
 import com.ea_framework.Views.VisualizeView.VisualizeView;
-import javafx.fxml.FXML;
 
 import java.util.List;
 import java.util.Map;
@@ -74,12 +73,12 @@ public class TSP2DProblem implements Problem {
 
     @Override
     public VisualizeView getVisualizer() {
-        return new TspVisualizeView(this);
+        return new TSP2DVisualizeView(this);
     }
 
     @Override
     public FitnessView getFitnessView() {
-        return new GraphFitnessView(maxIterations);
+        return new StandardFitnessCurve(maxIterations);
     }
 
     @Override

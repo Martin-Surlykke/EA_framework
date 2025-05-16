@@ -5,12 +5,11 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.Priority?>
 
 <HBox fx:id="genericAlgorithmConfigPane"
       xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController"
+      fx:controller="com.ea_framework.Controllers.AlgorithmControllers.TSP2DAlgorithmController"
       spacing="20" style="-fx-padding: 10;"
       prefHeight="400.0" prefWidth="900.0">
 
@@ -18,9 +17,7 @@
       <Label text="Fitness Function:"/>
       <ComboBox fx:id="fitnessDropDown" maxWidth="Infinity"/>
       <ScrollPane fx:id="fitnessScroll" fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="300">
-         <content>
-            <VBox fx:id="fitnessConfigPane" spacing="10" minHeight="200"/>
-         </content>
+         <VBox fx:id="fitnessConfigPane" spacing="10" minHeight="200"/>
       </ScrollPane>
    </VBox>
 
@@ -28,9 +25,7 @@
       <Label text="Mutation Operator:"/>
       <ComboBox fx:id="mutationDropDown" maxWidth="Infinity"/>
       <ScrollPane fx:id="mutationScroll" fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="300">
-         <content>
-            <VBox fx:id="mutationConfigPane" spacing="10" minHeight="200"/>
-         </content>
+         <VBox fx:id="mutationConfigPane" spacing="10" minHeight="200"/>
       </ScrollPane>
    </VBox>
 
@@ -38,9 +33,7 @@
       <Label text="Choice Function:"/>
       <ComboBox fx:id="choiceDropDown" maxWidth="Infinity"/>
       <ScrollPane fx:id="choiceScroll" fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="300">
-         <content>
-            <VBox fx:id="choiceConfigPane" spacing="10" minHeight="200"/>
-         </content>
+         <VBox fx:id="choiceConfigPane" spacing="10" minHeight="200"/>
       </ScrollPane>
    </VBox>
 

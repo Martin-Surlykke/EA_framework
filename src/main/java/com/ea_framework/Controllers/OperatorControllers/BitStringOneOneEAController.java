@@ -1,13 +1,13 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.Operators.MutationFunctions.One_One_EA_BitString;
+import com.ea_framework.Operators.MutationFunctions.BitStringOneOneEA;
 
-public class One_One_EA_Controller implements OperatorConfigController{
+public class BitStringOneOneEAController implements OperatorConfigController{
 
 
     @Override
     public Object getOperator() {
-        return new One_One_EA_BitString();
+        return new BitStringOneOneEA();
     }
 
     @Override

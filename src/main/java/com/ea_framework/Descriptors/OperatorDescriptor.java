@@ -9,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.function.Supplier;
 
 public class OperatorDescriptor {

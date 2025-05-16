@@ -32,7 +32,7 @@ public class Runner {
                 algorithm.run(i);
 
                 latestIteration.set(i);
-                latestFitness.set(algorithm.getCurrentFitness()); // assumes Double fitness
+                latestFitness.set(algorithm.getCurrentFitness());
                 latestStat.set(new StatRecord(
                         i,
                         i * 2,
@@ -41,6 +41,11 @@ public class Runner {
                         algorithm.getBestIteration() * 2,
                         algorithm.getBestFitness()
                 ));
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

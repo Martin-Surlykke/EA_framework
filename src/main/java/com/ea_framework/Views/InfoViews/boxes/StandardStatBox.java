@@ -8,19 +8,18 @@ import javafx.scene.layout.VBox;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfigBox {
-
+public class StandardStatBox {
     private final VBox box = new VBox(5);
     private final Map<String, Label> fields = new HashMap<>();
 
-    public ConfigBox() {
-        addField("Problem");
-        addField("File");
-        addField("Algorithm");
-        addField("Choice Function");
-        addField("Mutation Operator");
-        addField("Fitness Function");
-        addField("Start route");
+    public StandardStatBox() {
+        addField("Iterations");
+        addField("Evaluations");
+        addField("Fitness");
+
+        addField("Best iteration");
+        addField("Best evaluation");
+        addField("Best fitness");
     }
 
     public void addField(String title) {

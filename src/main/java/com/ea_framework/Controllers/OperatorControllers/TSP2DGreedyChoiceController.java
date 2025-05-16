@@ -2,9 +2,7 @@ package com.ea_framework.Controllers.OperatorControllers;
 
 import com.ea_framework.Operators.ChoiceFunctions.TSP2DGreedyChoice;
 
-import java.util.Comparator;
-
-public class GreedyTSPController implements OperatorConfigController {
+public class TSP2DGreedyChoiceController implements OperatorConfigController {
 
     @Override
     public Object getOperator() {

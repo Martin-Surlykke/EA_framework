@@ -11,14 +11,18 @@ public class BitStringGreedyChoice implements ChoiceFunction, Configurable {
 
     @Override
     public Object choose(Object current, Object candidate, Object fitnessCurrent, Object fitnessCandidate, int iteration) {
+
         if (!(current instanceof boolean[] curr &&
                 candidate instanceof boolean[] cand &&
-                fitnessCurrent instanceof Integer currFitness &&
-                fitnessCandidate instanceof Integer candFitness)) {
+                fitnessCurrent instanceof Number currFitness &&
+                fitnessCandidate instanceof Number candFitness)) {
             throw new IllegalArgumentException("BitStringGreedyChoice received incompatible types.");
         }
 
-        return candFitness > currFitness ? cand : curr;
+        double fCurr = currFitness.doubleValue();
+        double fCand = candFitness.doubleValue();
+
+        return fCand > fCurr ? cand : curr;
     }
 
     @Override

@@ -2,9 +2,10 @@ package com.ea_framework.Controllers.AlgorithmControllers;
 
 import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
-import com.ea_framework.Configs.TSP2DConfig;
+import com.ea_framework.Configs.BitStringGenericAlgorithmConfig;
 import com.ea_framework.Descriptors.OperatorDescriptor;
 import com.ea_framework.OperatorType;
+import com.ea_framework.Problems.Problem;
 import com.ea_framework.UIs.GenericOperatorUI;
 import com.ea_framework.Registries.OperatorRegistry;
 import javafx.fxml.FXML;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class GenericAlgorithmController implements AlgorithmConfigUI {
+public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
     @FXML
     public Pane genericAlgorithmConfigPane;
 
@@ -55,9 +56,11 @@ public class GenericAlgorithmController implements AlgorithmConfigUI {
 
     private Runnable onOperatorsFilled;
 
-    public void setOnOperatorsFilled(Runnable action) {
-        this.onOperatorsFilled = action;
-    }
+    private static final OperatorType[] OPERATOR_TYPES = {
+            OperatorType.FITNESS_BITSTRING,
+            OperatorType.MUTATION_BITSTRING,
+            OperatorType.CHOICE_BITSTRING
+    };
 
     private void checkAllOperatorsFilled() {
         boolean allFilled =
@@ -115,21 +118,13 @@ public class GenericAlgorithmController implements AlgorithmConfigUI {
 
         return map;
     }
-    @Override
-    public OperatorType[] getOperatorTypes() {
-        return new OperatorType[] {
-                OperatorType.FITNESS_TSP,
-                OperatorType.MUTATION_TSP,
-                OperatorType.CHOICE_TSP
-        };
-    }
 
     @Override
     public void bindTo(Object config) {
-
         this.config = (AlgorithmConfigUI) config;
 
-        OperatorType[] types = getOperatorTypes();
+        OperatorType[] types = OPERATOR_TYPES;
+
         if (types.length != 3) {
             throw new IllegalStateException("GenericAlgorithmController expects 3 operator types.");
         }
@@ -155,19 +150,28 @@ public class GenericAlgorithmController implements AlgorithmConfigUI {
         choiceScroll.setDisable(false);
     }
 
-
-    public Map<String,?> getOperatorInstances() {
-        Map<String, Object> map = new HashMap<>();
-
-        if (fitnessConfigUI != null)
-            map.put("fitness", fitnessConfigUI.getController().getOperator());
-
-        if (mutationConfigUI != null)
-            map.put("mutation", mutationConfigUI.getController().getOperator());
-
-        if (choiceConfigUI != null)
-            map.put("choice", choiceConfigUI.getController().getOperator());
-
-        return map;
+    @Override
+    public AlgorithmConfig buildAlgorithmConfig(Problem problem) {
+        Map<String, Object> operatorInstances = getConfigs();
+        BitStringGenericAlgorithmConfig config = new BitStringGenericAlgorithmConfig();
+        config.populate(operatorInstances, problem);
+        return config;
     }
+
+    @Override
+    public boolean isReadyToProceed() {
+        return fitnessConfigUI != null &&
+                mutationConfigUI != null &&
+                choiceConfigUI != null &&
+                fitnessConfigUI.getController().isFilled() &&
+                mutationConfigUI.getController().isFilled() &&
+                choiceConfigUI.getController().isFilled();
+    }
+
+    @Override
+    public void setOnReady(Runnable callback) {
+        this.onOperatorsFilled = callback;
+        checkAllOperatorsFilled();
+    }
+
 }

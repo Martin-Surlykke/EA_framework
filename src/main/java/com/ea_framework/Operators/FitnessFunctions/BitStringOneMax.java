@@ -10,7 +10,7 @@ import java.util.Map;
 public class BitStringOneMax implements Fitness, Configurable {
 
     @Override
-    public Double evaluate(Object input) {
+    public Integer evaluate(Object input) {
         if (!(input instanceof boolean[] bitString)) {
             throw new IllegalArgumentException("Expected boolean[] in BitStringOneMax");
         }
@@ -19,7 +19,7 @@ public class BitStringOneMax implements Fitness, Configurable {
         for (boolean b : bitString) {
             if (b) count++;
         }
-        return (double) count;
+        return count;
     }
 
     @Override

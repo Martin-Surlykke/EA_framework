@@ -6,6 +6,7 @@ import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.VisualizeController;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Runners.Runner;
+import com.ea_framework.Views.VisualizeView.VisualizeView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -41,22 +42,20 @@ public class RunBatch {
             }
 
         }
-
-        var algorithmDescriptor = config.getAlgorithmDescriptor();
-        var configClass = algorithmDescriptor.getConfigClass();
-
-        AlgorithmConfig algoConfig = configClass.getDeclaredConstructor().newInstance();
-        algoConfig.populate(config.getRawOperatorConfigs(), problem);
-        config.setAlgorithmConfig(algoConfig);
-
-        Algorithm algorithm = algorithmDescriptor.create(algoConfig);
+        AlgorithmConfig algoConfig = config.getAlgorithmConfig();
+        Algorithm algorithm = config.getAlgorithmDescriptor().create(algoConfig);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
         Scene scene = new Scene(loader.load());
 
         VisualizeController controller = loader.getController();
+
+        VisualizeView visualizer = problem.getVisualizer();
+        visualizer.applyConfig(algoConfig);
+
+
         controller.initialize(
-                problem.getVisualizer(),
+                visualizer,
                 problem.getFitnessView(),
                 problem.getConfigView(),
                 problem.getStatView(),

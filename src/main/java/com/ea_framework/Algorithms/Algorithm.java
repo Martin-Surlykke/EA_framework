@@ -14,7 +14,7 @@ public interface Algorithm {
     int getBestIteration();
 
     // Optional runtime configuration
-    default Algorithm apply(AlgorithmConfig config) {
+    default void apply(AlgorithmConfig config) {
         throw new UnsupportedOperationException("apply(...) not implemented");
     }
 }

@@ -1,20 +1,19 @@
 package com.ea_framework.Configs;
 
 import com.ea_framework.Views.ConfigViews.ConfigView;
-import com.ea_framework.Configs.AlgorithmConfigUI;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class GenericConfigPage implements ConfigView {
+public class TSP2DGenericConfigPage implements ConfigView {
     private final Parent root;
     private final AlgorithmConfigUI controller;
 
-    public GenericConfigPage() {
+    public TSP2DGenericConfigPage() {
         try {
-            URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/genericAlgorithmConfig.fxml");
+            URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/TSP2DGenericConfig.fxml");
             if (fxmlURL == null) {
                 throw new IllegalStateException("FXML file not found at expected path");
             }

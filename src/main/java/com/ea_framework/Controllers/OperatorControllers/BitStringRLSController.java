@@ -1,16 +1,17 @@
 package com.ea_framework.Controllers.OperatorControllers;
 
-import com.ea_framework.Operators.MutationFunctions.TSP2DTwoOpt;
+import com.ea_framework.Operators.MutationFunctions.BitStringRLS;
 
-public class TwoOptTSPController implements OperatorConfigController {
+public class BitStringRLSController implements OperatorConfigController {
 
     @Override
     public Object getOperator() {
-        return new TSP2DTwoOpt();
+        return new BitStringRLS();
     }
 
     @Override
     public boolean isFilled() {
         return true;
     }
+
 }

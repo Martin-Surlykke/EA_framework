@@ -1,28 +1,28 @@
 package com.ea_framework.Views.InfoViews;
 
-import com.ea_framework.Views.InfoViews.boxes.StatBox;
+import com.ea_framework.Views.InfoViews.boxes.StandardStatBox;
 import javafx.scene.Node;
 
 public class StatView implements infoView<StatRecord>{
-    private final StatBox statBox;
+    private final StandardStatBox standardStatBox;
 
     public StatView() {
-        this.statBox = new StatBox();
+        this.standardStatBox = new StandardStatBox();
     }
     @Override
     public Node getView() {
-        return statBox.getView();
+        return standardStatBox.getView();
     }
 
     @Override
     public void update(StatRecord record) {
-        statBox.updateField("Iterations", String.valueOf(record.iteration()));
-        statBox.updateField("Evaluations", String.valueOf(record.evaluations()));
-        statBox.updateField("Fitness", String.valueOf(record.fitness()));
+        standardStatBox.updateField("Iterations", String.valueOf(record.iteration()));
+        standardStatBox.updateField("Evaluations", String.valueOf(record.evaluations()));
+        standardStatBox.updateField("Fitness", String.valueOf(record.fitness()));
 
-        statBox.updateField("Best iteration", String.valueOf(record.bestIteration()));
-        statBox.updateField("Best evaluation", String.valueOf(record.bestEvaluation()));
-        statBox.updateField("Best fitness", String.valueOf(record.bestFitness()));
+        standardStatBox.updateField("Best iteration", String.valueOf(record.bestIteration()));
+        standardStatBox.updateField("Best evaluation", String.valueOf(record.bestEvaluation()));
+        standardStatBox.updateField("Best fitness", String.valueOf(record.bestFitness()));
 
     }
 }

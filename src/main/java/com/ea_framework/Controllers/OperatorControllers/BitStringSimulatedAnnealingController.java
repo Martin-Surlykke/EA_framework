@@ -1,14 +1,10 @@
 package com.ea_framework.Controllers.OperatorControllers;
-
+import com.ea_framework.Operators.ChoiceFunctions.BitStringSimulatedAnnealing;
 import com.ea_framework.Operators.ChoiceFunctions.TSP2DSimulatedAnnealing;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-
-public class SimulatedAnnealingTSPController implements OperatorConfigController {
+public class BitStringSimulatedAnnealingController implements OperatorConfigController {
     @FXML
     private TextField alphaValue;
     @FXML private TextField temperatureValue;
@@ -16,7 +12,7 @@ public class SimulatedAnnealingTSPController implements OperatorConfigController
 
     @Override
     public Object getOperator() {
-        TSP2DSimulatedAnnealing sa = new TSP2DSimulatedAnnealing();
+        BitStringSimulatedAnnealing sa = new BitStringSimulatedAnnealing();
         sa.setAlpha(Double.parseDouble(alphaValue.getText()));
         sa.setT0(Double.parseDouble(temperatureValue.getText()));
         return sa;

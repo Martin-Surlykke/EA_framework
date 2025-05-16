@@ -1,24 +1,33 @@
 package com.ea_framework.Algorithms;
 
-import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Configs.AlgorithmConfig;
+import com.ea_framework.Configs.BitStringGenericAlgorithmConfig;
+import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
 public class BitStringAlgorithm implements Algorithm {
 
-    protected boolean[] currentSolution;
-    private final ChoiceFunction choiceFunction;
-    private final Fitness fitnessFunction;
-    private final MutationOperator mutationOperator;
+    private boolean[] currentSolution;
 
-    private int currentFitness;
+    private ChoiceFunction choiceFunction;
+    private Fitness fitnessFunction;
+    private MutationOperator mutationOperator;
 
-    public BitStringAlgorithm(Fitness fitness, MutationOperator mutation, ChoiceFunction choice) {
-        this.choiceFunction = choice;
-        this.fitnessFunction = fitness;
-        this.mutationOperator = mutation;
-        this.currentFitness = 0;
+    private int currentFitness = 0;
+    private int bestFitness = 0;
+    private int bestIteration = 0;
+
+    @Override
+    public void apply(AlgorithmConfig config) {
+        if (!(config instanceof BitStringGenericAlgorithmConfig bitConfig)) {
+            throw new IllegalArgumentException("Expected BitStringGenericAlgorithmConfig, got " + config.getClass().getSimpleName());
+        }
+
+        this.fitnessFunction = bitConfig.fitness();
+        this.mutationOperator = bitConfig.mutation();
+        this.choiceFunction = bitConfig.choice();
+
     }
 
     @Override
@@ -39,7 +48,11 @@ public class BitStringAlgorithm implements Algorithm {
         currentSolution = chosenBits;
         currentFitness = (int) evalFitness(currentSolution);
 
-        System.out.println("Fitness: " + currentFitness + " Iteration: " + iteration);
+        if (currentFitness > bestFitness) {
+            bestFitness = currentFitness;
+            bestIteration = iteration;
+        }
+
     }
 
     @Override
@@ -57,8 +70,18 @@ public class BitStringAlgorithm implements Algorithm {
     }
 
     @Override
-    public Algorithm apply(AlgorithmConfig config) {
-        return this; // Not used since you manually pass all operators in constructor
+    public Double getCurrentFitness() {
+        return (double) currentFitness;
+    }
+
+    @Override
+    public Double getBestFitness() {
+        return (double) bestFitness;
+    }
+
+    @Override
+    public int getBestIteration() {
+        return bestIteration;
     }
 
     private double evalFitness(boolean[] bitString) {
@@ -67,21 +90,6 @@ public class BitStringAlgorithm implements Algorithm {
             throw new IllegalStateException("Fitness function must return a number");
         }
         return n.doubleValue();
-    }
-
-    @Override
-    public Double getCurrentFitness() {
-        return (double) currentFitness;
-    }
-
-    @Override
-    public Double getBestFitness() {
-        return (double) currentFitness;
-    }
-
-    @Override
-    public int getBestIteration() {
-        return 100;
     }
 
     private static boolean[] deepCopy(boolean[] bitString) {

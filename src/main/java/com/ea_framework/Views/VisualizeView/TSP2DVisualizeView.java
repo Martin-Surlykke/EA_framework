@@ -1,5 +1,6 @@
 package com.ea_framework.Views.VisualizeView;
 
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Coordinate;
 import com.ea_framework.Problems.TSP2DProblem;
 import javafx.scene.Node;
@@ -12,7 +13,7 @@ import javafx.scene.text.Text;
 
 import java.util.List;
 
-public class TspVisualizeView implements VisualizeView {
+public class TSP2DVisualizeView implements VisualizeView {
 
     private final Pane graphPane = new Pane();
     private final Canvas historyCanvas = new Canvas(700, 700);
@@ -30,7 +31,7 @@ public class TspVisualizeView implements VisualizeView {
     private final double minX;
     private final double minY;
 
-    public TspVisualizeView(TSP2DProblem problem) {
+    public TSP2DVisualizeView(TSP2DProblem problem) {
         int n = problem.getNodeCount();
         this.coordinateList = problem.getCoordinates();
         this.drawnLines = new int[n][n];
@@ -146,5 +147,10 @@ public class TspVisualizeView implements VisualizeView {
 
             nodeLayer.getChildren().addAll(circle, label);
         }
+    }
+
+    @Override
+    public void applyConfig(AlgorithmConfig config) {
+
     }
 }

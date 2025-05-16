@@ -2,8 +2,11 @@ package com.ea_framework.Problems;
 
 import com.ea_framework.OperatorType;
 import com.ea_framework.Views.FitnessView.FitnessView;
+import com.ea_framework.Views.FitnessView.StandardFitnessCurve;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
 import com.ea_framework.Views.InfoViews.StatView;
+import com.ea_framework.Views.InfoViews.boxes.StandardConfigBox;
+import com.ea_framework.Views.VisualizeView.BitStringVisualizeView;
 import com.ea_framework.Views.VisualizeView.VisualizeView;
 
 import java.util.List;
@@ -32,22 +35,22 @@ public class BitStringProblem implements Problem {
 
     @Override
     public VisualizeView getVisualizer() {
-        return null;
+        return new BitStringVisualizeView(this);
     }
 
     @Override
     public FitnessView getFitnessView() {
-        return null;
+        return new StandardFitnessCurve(maxIterations);
     }
 
     @Override
     public ConfigurationView getConfigView() {
-        return null;
+        return new ConfigurationView();
     }
 
     @Override
     public StatView getStatView() {
-        return null;
+        return new StatView();
     }
 
     @Override

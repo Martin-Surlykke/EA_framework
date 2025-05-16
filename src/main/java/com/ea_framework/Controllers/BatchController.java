@@ -1,10 +1,12 @@
 package com.ea_framework.Controllers;
 
+import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
-import com.ea_framework.Controllers.AlgorithmControllers.GenericAlgorithmController;
+import com.ea_framework.Controllers.AlgorithmControllers.TSP2DAlgorithmController;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
+import com.ea_framework.Problems.Problem;
 import com.ea_framework.Registries.Registry;
 import com.ea_framework.ResourceLister;
 import com.ea_framework.RunBatch;
@@ -20,7 +22,6 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,7 @@ public class BatchController {
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private BatchConfig currentConfig = new BatchConfig();
     private AlgorithmConfigUI currentAlgoConfigUI;
-    private GenericAlgorithmController genericAlgorithmController;
+    private TSP2DAlgorithmController TSP2DAlgorithmController;
 
 
 
@@ -157,13 +158,11 @@ public class BatchController {
 
         controller.bindTo(null);
 
-        if (controller instanceof GenericAlgorithmController gac) {
-            gac.setOnOperatorsFilled(() -> {
-                System.out.println("All operators filled. Switching to batch tab.");
-                batchTab.setDisable(false);
-                tabPane.getSelectionModel().select(batchTab);
-            });
-        }
+        controller.setOnReady(() -> {
+            System.out.println("Config ready. Switching to batch tab.");
+            batchTab.setDisable(false);
+            tabPane.getSelectionModel().select(batchTab);
+        });
         currentAlgoConfigUI = controller;
 
         configTab.setContent(view.getRoot());
@@ -171,18 +170,9 @@ public class BatchController {
     }
 
     @FXML
-    private void onAddToSchedule() throws FileNotFoundException {
+    private void onAddToSchedule() throws IOException {
         disableTabsAfterAdd();
         if (currentAlgoConfigUI == null) return;
-
-        Map<String, Object> allOperators = new HashMap<>();
-        if (currentAlgoConfigUI instanceof GenericAlgorithmController gac) {
-            allOperators.putAll(gac.getOperatorInstances());
-        }
-
-        currentConfig.setRawOperatorConfigs(allOperators);
-
-        populateTerminationConfig();
 
         String problemName = currentConfig.getProblemName();
         String selectedFile = currentConfig.getStreamName();
@@ -192,8 +182,15 @@ public class BatchController {
             System.err.println("File not found at: " + file.getAbsolutePath());
         } else {
             currentConfig.setInputFile(file);
-            System.out.println(file.getAbsolutePath());
+            System.out.println("Input file set to: " + file.getAbsolutePath());
         }
+
+        Problem problem = currentConfig.resolveProblem();
+        AlgorithmConfig config = currentAlgoConfigUI.buildAlgorithmConfig(problem);
+        currentConfig.setAlgorithmConfig(config);
+
+        populateTerminationConfig();
+
         if (scheduleController != null) {
             scheduleController.addBatch(currentConfig);
             savedBatches.add(currentConfig);
@@ -339,7 +336,7 @@ public class BatchController {
 
         currentConfig = new BatchConfig();
         currentAlgoConfigUI = null;
-        genericAlgorithmController = null;
+        TSP2DAlgorithmController = null;
 
         searchSpaceDropDown.getSelectionModel().clearSelection();
         problemDropDown.getSelectionModel().clearSelection();

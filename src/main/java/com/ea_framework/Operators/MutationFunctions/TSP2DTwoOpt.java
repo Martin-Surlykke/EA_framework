@@ -1,11 +1,8 @@
 package com.ea_framework.Operators.MutationFunctions;
 
-import com.ea_framework.Configs.TSP2DConfig;
 import com.ea_framework.Configurable;
 import com.ea_framework.Problems.Problem;
-import com.ea_framework.Problems.TSP2DProblem;
 
-import java.util.Map;
 import java.util.Random;
 
 public class TSP2DTwoOpt implements MutationOperator, Configurable {

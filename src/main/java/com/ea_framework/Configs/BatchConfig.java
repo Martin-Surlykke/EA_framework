@@ -32,7 +32,7 @@ public class BatchConfig {
 
     private final Map<String, String> terminationConfigs = new HashMap<>();
     private final Map<String, String> metaConfigs = new HashMap<>();
-    private Map<String, Object> rawOperatorConfigs = new HashMap<>();
+
 
     private int repeats;
     private int termination;
@@ -129,14 +129,6 @@ public class BatchConfig {
 
     public Map<String, String> getMetaConfigs() {
         return metaConfigs;
-    }
-
-    public void setRawOperatorConfigs(Map<String, Object> configs) {
-        this.rawOperatorConfigs = configs;
-    }
-
-    public Map<String, Object> getRawOperatorConfigs() {
-        return rawOperatorConfigs;
     }
 
     public Problem resolveProblem() throws IOException {

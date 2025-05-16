@@ -14,33 +14,19 @@ public class AlgorithmDescriptor implements Descriptor {
     private final String name;
     private final String problemType;
     private final Supplier<ConfigView> configPageSupplier;
-    private final Class<? extends AlgorithmConfigUI> controllerClass;
-    private final Class<? extends AlgorithmConfig> configClass;
-    private final OperatorType fitnessOperatorType;
-    private final OperatorType mutationOperatorType;
-    private final OperatorType choiceOperatorType;
 
     public AlgorithmDescriptor(
             Class<? extends Algorithm> algorithmClass,
             String name,
             String problemType,
-            Supplier<ConfigView> configPageSupplier,
-            Class<? extends AlgorithmConfigUI> controllerClass,
-            Class<? extends AlgorithmConfig> configClass,
-            OperatorType fitness,
-            OperatorType mutation,
-            OperatorType choice
+            Supplier<ConfigView> configPageSupplier
     ) {
         this.algorithmClass = algorithmClass;
         this.name = name;
         this.problemType = problemType;
         this.configPageSupplier = configPageSupplier;
-        this.controllerClass = controllerClass;
-        this.configClass = configClass;
-        this.fitnessOperatorType = fitness;
-        this.mutationOperatorType = mutation;
-        this.choiceOperatorType = choice;
     }
+
 
     public Algorithm create(AlgorithmConfig config) {
         try {
@@ -56,18 +42,6 @@ public class AlgorithmDescriptor implements Descriptor {
         return configPageSupplier.get();
     }
 
-    public Class<? extends AlgorithmConfig> getConfigClass() {
-        return configClass;
-    }
-
-    public Class<? extends AlgorithmConfigUI> getControllerClass() {
-        return controllerClass;
-    }
-
-    public Class<? extends Algorithm> getAlgorithmClass() {
-        return algorithmClass;
-    }
-
     public String getName() {
         return name;
     }
@@ -75,17 +49,5 @@ public class AlgorithmDescriptor implements Descriptor {
     @Override
     public String getCompatibleKey() {
         return problemType;
-    }
-
-    public OperatorType getFitnessOperatorType() {
-        return fitnessOperatorType;
-    }
-
-    public OperatorType getMutationOperatorType() {
-        return mutationOperatorType;
-    }
-
-    public OperatorType getChoiceOperatorType() {
-        return choiceOperatorType;
     }
 }
