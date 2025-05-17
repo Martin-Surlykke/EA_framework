@@ -50,4 +50,10 @@ public class Registry {
     public static AlgorithmDescriptor getAlgorithmDescriptor(String name) {
         return getAlgorithm(name); // alias for clarity
     }
+
+    public static List<AlgorithmDescriptor> getAlgorithmDescriptorFromProblem(String selected) {
+        return AlgorithmRegistry.getAll().stream()
+                .filter(desc -> selected.equals(desc.getCompatibleKey()))
+                .toList();
+    }
 }

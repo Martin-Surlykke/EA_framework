@@ -9,7 +9,7 @@
 <HBox fx:id="genericAlgorithmConfigPane"
       xmlns="http://javafx.com/javafx/23.0.1"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.ea_framework.Controllers.AlgorithmControllers.TSP2DAlgorithmController"
+      fx:controller="com.ea_framework.Controllers.AlgorithmControllers.TSP2DGenericAlgorithmController"
       spacing="20" style="-fx-padding: 10;"
       prefHeight="400.0" prefWidth="900.0">
 

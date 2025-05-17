@@ -1,8 +1,13 @@
 package com.ea_framework.Registries;
 
-import com.ea_framework.Algorithms.BitStringAlgorithm;
-import com.ea_framework.Algorithms.TSP2DAlgorithm;
+import com.ea_framework.ACOTypes.MMASACOType;
+import com.ea_framework.ACOTypes.StandardACOType;
+import com.ea_framework.Algorithms.BitStringGenericAlgorithm;
+import com.ea_framework.Algorithms.TSP2DACO;
+import com.ea_framework.Algorithms.TSP2DGenericAlgorithm;
 import com.ea_framework.Configs.BitStringGenericConfigPage;
+import com.ea_framework.Configs.TSP2DACOConfig;
+import com.ea_framework.Configs.TSP2DACOConfigPage;
 import com.ea_framework.Controllers.OperatorControllers.OperatorConfigController;
 import com.ea_framework.Descriptors.OperatorDescriptor;
 import com.ea_framework.Filehandlers.BitStringFileHandler;
@@ -55,8 +60,8 @@ public class RegistryInitializer {
 
         // === Algorithm Descriptor ===
         AlgorithmDescriptor tspAlgorithmDescriptor = new AlgorithmDescriptor(
-                TSP2DAlgorithm.class,
-                "TSPAlgorithm",
+                TSP2DGenericAlgorithm.class,
+                "TSP2DGeneric",
                 "TSP2D",
                 TSP2DGenericConfigPage::new
         );
@@ -64,12 +69,26 @@ public class RegistryInitializer {
         AlgorithmRegistry.register(tspAlgorithmDescriptor);
 
         AlgorithmDescriptor bitStringAlgorithmDescriptor = new AlgorithmDescriptor(
-                BitStringAlgorithm.class,
-                "BitStringAlgorithm",
+                BitStringGenericAlgorithm.class,
+                "BitStringGeneric",
                 "BitString",
                 BitStringGenericConfigPage::new
         );
         AlgorithmRegistry.register(bitStringAlgorithmDescriptor);
+
+
+        AlgorithmDescriptor tsp2DACODescriptor = new AlgorithmDescriptor(
+                TSP2DACO.class,
+                "TSP2DACO",
+                "TSP2D",
+                TSP2DACOConfigPage::new
+        );
+        AlgorithmRegistry.register(tsp2DACODescriptor);
+
+
+        ACOTypeRegistry.register("Standard", new StandardACOType());
+
+        ACOTypeRegistry.register("MMAS", new MMASACOType());
 
         registerOperator(
                 "TSP2DEuclideanDistance",

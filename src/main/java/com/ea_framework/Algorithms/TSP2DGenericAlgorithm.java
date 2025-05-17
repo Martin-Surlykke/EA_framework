@@ -6,7 +6,7 @@ import com.ea_framework.Configs.TSP2DGenericAlgorithmConfig;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
-public class TSP2DAlgorithm implements Algorithm {
+public class TSP2DGenericAlgorithm implements Algorithm {
 
     private int[] currentSolution;
 

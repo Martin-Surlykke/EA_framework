@@ -3,7 +3,6 @@ package com.ea_framework.Controllers;
 import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
-import com.ea_framework.Controllers.AlgorithmControllers.TSP2DAlgorithmController;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Problems.Problem;
@@ -53,7 +52,6 @@ public class BatchController {
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private BatchConfig currentConfig = new BatchConfig();
     private AlgorithmConfigUI currentAlgoConfigUI;
-    private TSP2DAlgorithmController TSP2DAlgorithmController;
 
 
 
@@ -336,7 +334,6 @@ public class BatchController {
 
         currentConfig = new BatchConfig();
         currentAlgoConfigUI = null;
-        TSP2DAlgorithmController = null;
 
         searchSpaceDropDown.getSelectionModel().clearSelection();
         problemDropDown.getSelectionModel().clearSelection();

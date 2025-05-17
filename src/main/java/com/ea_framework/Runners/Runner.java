@@ -41,10 +41,14 @@ public class Runner {
                         algorithm.getBestIteration() * 2,
                         algorithm.getBestFitness()
                 ));
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (i % 10 == 0) {
+                    System.out.println("Iteration: " + i);
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class TSP2DAlgorithmController implements AlgorithmConfigUI {
+public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
     @FXML
     public Pane genericAlgorithmConfigPane;
 

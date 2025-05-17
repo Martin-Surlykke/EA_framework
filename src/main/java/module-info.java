@@ -24,6 +24,7 @@ module com.ea_framework {
     exports com.ea_framework.Operators.MutationFunctions;
     exports com.ea_framework.Filehandlers;
     exports com.ea_framework.Controllers.OperatorControllers;
+    exports com.ea_framework.ACOTypes;
     opens com.ea_framework.Loaders;
     opens com.ea_framework.Controllers to javafx.fxml;
     exports com.ea_framework.Registries;

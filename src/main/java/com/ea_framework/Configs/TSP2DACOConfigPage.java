@@ -7,13 +7,13 @@ import javafx.scene.Parent;
 import java.io.IOException;
 import java.net.URL;
 
-public class TSP2DGenericConfigPage implements ConfigView {
+public class TSP2DACOConfigPage implements ConfigView {
     private final Parent root;
     private final AlgorithmConfigUI controller;
 
-    public TSP2DGenericConfigPage() {
+    public TSP2DACOConfigPage() {
         try {
-            URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/TSP2DGenericConfig.fxml");
+            URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/TSP2DACOConfig.fxml");
             if (fxmlURL == null) {
                 throw new IllegalStateException("FXML file not found at expected path");
             }

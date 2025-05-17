@@ -6,7 +6,7 @@ import com.ea_framework.Operators.ChoiceFunctions.ChoiceFunction;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Operators.MutationFunctions.MutationOperator;
 
-public class BitStringAlgorithm implements Algorithm {
+public class BitStringGenericAlgorithm implements Algorithm {
 
     private boolean[] currentSolution;
 

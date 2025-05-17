@@ -23,7 +23,7 @@ public class TSP2DVisualizeView implements VisualizeView {
     private final List<Coordinate> coordinateList;
     private final int[][] drawnLines;
 
-    private static final double NODE_RADIUS = 10.0;
+    private static final double NODE_RADIUS = 3.0;
     private static final double PADDING = NODE_RADIUS * 2;
 
     private double xFactor;
@@ -45,12 +45,12 @@ public class TSP2DVisualizeView implements VisualizeView {
         graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
 
         graphPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            xFactor = (newWidth.doubleValue() - PADDING) / maxX;
+            xFactor = (newWidth.doubleValue() - PADDING) / (maxX - minX);
             redrawNodes();
         });
 
         graphPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
-            yFactor = (newHeight.doubleValue() - PADDING) / maxY;
+            yFactor = (newHeight.doubleValue() - PADDING) / (maxY - minY);
             redrawNodes();
         });
 
@@ -135,17 +135,8 @@ public class TSP2DVisualizeView implements VisualizeView {
             circle.setFill(Color.LIGHTBLUE);
             circle.setStroke(Color.BLUE);
 
-            Text label = new Text(String.valueOf(c.id()));
-            label.setX(xScaled);
-            label.setY(yScaled);
-            label.setStyle("-fx-font-size: 10px; -fx-font-weight: bold;");
 
-            label.layoutBoundsProperty().addListener((obs, old, bounds) -> {
-                label.setTranslateX(-bounds.getWidth() / 2.0);
-                label.setTranslateY(bounds.getHeight() / 4.0);
-            });
-
-            nodeLayer.getChildren().addAll(circle, label);
+            nodeLayer.getChildren().addAll(circle);
         }
     }
 

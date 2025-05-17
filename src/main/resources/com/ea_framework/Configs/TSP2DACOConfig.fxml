@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ea_framework.Controllers.AlgorithmControllers.TSP2DACOController">
+
+    <VBox spacing="10.0" layoutX="20.0" layoutY="20.0">
+
+        <Label text="Alpha (influence of pheromone):"/>
+        <TextField fx:id="alphaField" promptText="e.g. 1.5"/>
+
+        <Label text="Beta (influence of heuristic):"/>
+        <TextField fx:id="betaField" promptText="e.g. 2.5"/>
+
+        <Label text="ACO Variant:"/>
+        <ComboBox fx:id="type"/>
+
+    </VBox>
+</AnchorPane>
