@@ -67,5 +67,6 @@ public class RunBatch {
         stage.show();
 
         new Runner().run(problem, algorithm, controller, config.getTermination());
+
     }
 }
