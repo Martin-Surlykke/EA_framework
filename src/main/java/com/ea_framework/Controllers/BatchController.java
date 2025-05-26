@@ -48,6 +48,7 @@ public class BatchController {
     @FXML private TextField batchSize;
     @FXML private TextField terminationSize;
 
+    @FXML private CheckBox showVisual;
 
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private BatchConfig currentConfig = new BatchConfig();
@@ -186,6 +187,7 @@ public class BatchController {
         Problem problem = currentConfig.resolveProblem();
         AlgorithmConfig config = currentAlgoConfigUI.buildAlgorithmConfig(problem);
         currentConfig.setAlgorithmConfig(config);
+        currentConfig.setVisualSelected(showVisual.isSelected());
 
         populateTerminationConfig();
 

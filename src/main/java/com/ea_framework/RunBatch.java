@@ -62,11 +62,32 @@ public class RunBatch {
                 stage
         );
 
+
+
+        if (config.getVisualSelected()) {
+            Thread thread = new Thread(()  -> {
+                for (int i = 0; i < config.getTermination(); i++) {
+                    algorithm.run(i);
+                    controller.updateView(algorithm, i);
+                    try {
+                        Thread.sleep(100); // Adjust sleep time as needed
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });  
+
+        } else {
+            for (int i = 0; i < config.getTermination(); i++) {
+                algorithm.run(i);
+            }
+        }
+
         stage.setScene(scene);
         stage.setTitle("Visualizer");
         stage.show();
 
-        new Runner().run(problem, algorithm, controller, config.getTermination());
+        new Runner().run(problem, algorithm, controller, config.getTermination(), config.getVisualSelected());
 
     }
 }

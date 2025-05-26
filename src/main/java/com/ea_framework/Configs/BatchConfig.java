@@ -34,6 +34,8 @@ public class BatchConfig {
     private final Map<String, String> metaConfigs = new HashMap<>();
 
 
+    private boolean showVisualization = true;
+
     private int repeats;
     private int termination;
 
@@ -148,4 +150,13 @@ public class BatchConfig {
     public void setAlgorithmName(String algorithmName) {
         this.algorithmName = algorithmName;
     }
+
+    public boolean getVisualSelected() {
+        return showVisualization;
+    }
+    public void setVisualSelected(boolean showVisualization) {
+        this.showVisualization = showVisualization;
+    }
+
+
 }

@@ -14,7 +14,8 @@ public class Runner {
     public void run(Problem problem,
                     Algorithm algorithm,
                     VisualizeController controller,
-                    int termination) {
+                    int termination,
+                    boolean visualizeStatus) {
 
         Object initial = problem.getDefaultPermutation();
         algorithm.setCurrentSolution(initial);
