@@ -39,7 +39,6 @@ public class BatchConfig {
     private int repeats;
     private int termination;
 
-    // === Getters and Setters ===
 
     public String getStreamName() {
         return streamName;

@@ -1,81 +1,70 @@
 package com.ea_framework.Runners;
 
 import com.ea_framework.Algorithms.Algorithm;
-import com.ea_framework.Controllers.VisualizeController;
 import com.ea_framework.Problems.Problem;
+import com.ea_framework.StatTracker;
 import com.ea_framework.Views.InfoViews.StatRecord;
-import javafx.animation.AnimationTimer;
-
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
+import javafx.application.Platform;
 
 public class Runner {
+    private volatile int latestIteration = -1;
+    private volatile Object latestSolution = null;
+    private volatile double latestFitness = Double.NaN;
+    private volatile StatRecord latestStat = null;
 
-    public void run(Problem problem,
-                    Algorithm algorithm,
-                    VisualizeController controller,
-                    int termination,
-                    boolean visualizeStatus) {
-
+    public void run(Problem problem, Algorithm algorithm, int termination, StatTracker stats, Runnable onComplete) {
         Object initial = problem.getDefaultPermutation();
         algorithm.setCurrentSolution(initial);
 
-        AtomicInteger latestIteration = new AtomicInteger();
-        AtomicReference<Double> latestFitness = new AtomicReference<>();
-        AtomicReference<StatRecord> latestStat = new AtomicReference<>();
-
         Thread solver = new Thread(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ignored) {}
-
             for (int i = 0; i < termination; i++) {
                 algorithm.run(i);
 
-                latestIteration.set(i);
-                latestFitness.set(algorithm.getCurrentFitness());
-                latestStat.set(new StatRecord(
-                        i,
-                        i * 2,
-                        algorithm.getCurrentFitness(),
-                        algorithm.getBestIteration(),
-                        algorithm.getBestIteration() * 2,
-                        algorithm.getBestFitness()
-                ));
-                if (i % 10 == 0) {
-                    System.out.println("Iteration: " + i);
+                latestIteration = i;
+                latestSolution = algorithm.getCurrentSolution();
+                latestFitness = algorithm.getCurrentFitness();
+                latestStat = new StatRecord(i, i * 2, latestFitness,
+                        algorithm.getBestIteration(), algorithm.getBestIteration() * 2,
+                        algorithm.getBestFitness());
 
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+            }
+
+            if (onComplete != null) {
+                Platform.runLater(onComplete);
             }
         });
 
-        solver.setDaemon(true);
+        solver.setDaemon(false);
         solver.start();
 
-        new AnimationTimer() {
+
+        startUpdateTimer(stats, termination);
+    }
+
+    private void startUpdateTimer(StatTracker stats, int termination) {
+        javafx.animation.AnimationTimer timer = new javafx.animation.AnimationTimer() {
             private long lastUpdate = 0;
-            private final long interval = 20_000_000;
 
             @Override
             public void handle(long now) {
-                if (now - lastUpdate < interval) return;
+                long intervalNs = 15_000_000;
+                if (now - lastUpdate < intervalNs) return;
                 lastUpdate = now;
 
-                if (latestFitness.get() == null || latestStat.get() == null) return;
+                if (stats != null && latestIteration >= 0 && latestIteration < termination) {
+                    stats.onIteration(latestIteration, latestSolution, latestFitness, latestStat);
+                }
 
-                int i = latestIteration.get();
-                double fitness = latestFitness.get();
-                StatRecord stat = latestStat.get();
-
-                controller.updateAll(algorithm.getCurrentSolution(), i, fitness, stat);
-
-                if (i >= termination) stop();
+                if (latestIteration >= termination - 1) {
+                    stop();
+                }
             }
-        }.start();
+        };
+        timer.start();
     }
 }
