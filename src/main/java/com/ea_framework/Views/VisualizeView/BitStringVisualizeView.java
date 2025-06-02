@@ -1,40 +1,32 @@
 package com.ea_framework.Views.VisualizeView;
 
 import com.ea_framework.Configs.AlgorithmConfig;
-import com.ea_framework.Configs.BitStringGenericAlgorithmConfig;
 import com.ea_framework.Operators.FitnessFunctions.Fitness;
-import com.ea_framework.Problems.BitStringProblem;
-import com.ea_framework.Problems.Problem;
-import javafx.geometry.Point2D;
+import com.ea_framework.Problems.BitStringCompatible;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.CubicCurve;
 import javafx.scene.shape.Line;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class BitStringVisualizeView implements VisualizeView {
 
     private final StackPane root;
     private final Pane backgroundLayer;
     private final Pane pointLayer;
-    private Fitness fitnessFunction;
-    private final List<Point2D> history;
-    private final boolean[] defaultBitString;
     private final int n;
+    private final Fitness fitnessFunction;
 
-    public BitStringVisualizeView(BitStringProblem problem) {
+    public BitStringVisualizeView(BitStringCompatible problem) {
+        this.n = problem.getDefaultPermutation().length;
+        this.fitnessFunction = problem.getFitnessFunction();
+
         this.backgroundLayer = new Pane();
         this.pointLayer = new Pane();
         this.root = new StackPane(backgroundLayer, pointLayer);
-        this.history = new ArrayList<>();
-        this.defaultBitString = problem.getDefaultPermutation();
-        this.n = defaultBitString.length;
-
         root.setStyle("-fx-background-color: white;");
 
         backgroundLayer.prefWidthProperty().bind(root.widthProperty());
@@ -42,10 +34,10 @@ public class BitStringVisualizeView implements VisualizeView {
         pointLayer.prefWidthProperty().bind(root.widthProperty());
         pointLayer.prefHeightProperty().bind(root.heightProperty());
 
-        root.widthProperty().addListener((obs, oldVal, newVal) -> drawBackground());
-        root.heightProperty().addListener((obs, oldVal, newVal) -> drawBackground());
+        root.widthProperty().addListener((obs, oldVal, newVal) -> drawBounds());
+        root.heightProperty().addListener((obs, oldVal, newVal) -> drawBounds());
 
-        drawBackground();
+        drawBounds();
     }
 
     @Override
@@ -55,93 +47,90 @@ public class BitStringVisualizeView implements VisualizeView {
 
     @Override
     public void update(Object solution) {
-        if (!(solution instanceof boolean[] bitString) || fitnessFunction == null) return;
-        this.currentSolution = bitString;
-
-        Object raw = fitnessFunction.evaluate(currentSolution);
-        double fitness = ((Number) raw).doubleValue();
-
-        int spread = 0;
-        for (int i = 0; i < currentSolution.length; i++) {
-            if (currentSolution[i]) {
-                spread += i;
-            }
-        }
-
-        double min = ((fitness - 1.0) * fitness) / 2;
-        double max = ((n - 1.0) * n) / 2 - ((n - 1.0 - fitness) * (n - fitness)) / 2;
-        double range = max - min;
-
-        double x = 2 * spread - 2 * min - range;
+        if (!(solution instanceof boolean[] bits)) return;
 
         double width = root.getWidth();
         double height = root.getHeight();
-
-        double centerX = width / 2;
-        double y = 20 + (((height - 40) * (n - fitness)) / n);
-
-        double xOffset = (range == 0) ? 0 :
-                (x * Math.sin(Math.PI * (y / height))) * (width * 0.4 / 2.0) / range;
-
-        double xFitted = centerX + xOffset;
-
-        history.add(new Point2D(xFitted, y));
-        drawPoint(xFitted, y);
-    }
-
-    private void drawPoint(double x, double y) {
-        Circle dot = new Circle(x, y, 3, Color.DODGERBLUE);
-        pointLayer.getChildren().add(dot);
-    }
-
-    private void drawBackground() {
-        backgroundLayer.getChildren().clear();
-
-        double w = root.getWidth();
-        double h = root.getHeight();
-        if (w <= 0 || h <= 0) return;
-
         double padding = 20;
-        double centerX = w / 2;
+        double usableHeight = height - 2 * padding;
 
-        for (int fitness = 1; fitness <= n; fitness += Math.max(1, n / 40)) {
-            double min = (fitness - 1.0) * fitness / 2.0;
-            double max = ((n - 1.0) * n) / 2.0 - ((n - 1.0 - fitness) * (n - fitness)) / 2.0;
-            double range = max - min;
-            double xSpan = (range == 0) ? 0 : (w * 0.4);
+        int ones = countOnes(bits);
+        double spread = computeSpread(bits);
 
-            double y = padding + ((h - 2 * padding) * (n - fitness)) / n;
+        int[] minMax = minMaxSpread(ones);
+        double xRel = (minMax[1] - minMax[0]) == 0 ? 0.5 : (spread - minMax[0]) / (double)(minMax[1] - minMax[0]);
 
-            double leftX = centerX - xSpan / 2;
-            double rightX = centerX + xSpan / 2;
+        double yNorm = ones / (double) n;
+        double shapingFactor = Math.exp(-Math.pow((yNorm - 0.5) * 4, 2)); // e^(-(x^2)/8)
 
-            CubicCurve curve = new CubicCurve();
-            curve.setStartX(leftX);
-            curve.setStartY(y);
-            curve.setControlX1(leftX);
-            curve.setControlY1(y - 15);
-            curve.setControlX2(rightX);
-            curve.setControlY2(y - 15);
-            curve.setEndX(rightX);
-            curve.setEndY(y);
-            curve.setStroke(Color.LIGHTGRAY);
-            curve.setFill(Color.TRANSPARENT);
+        double x = width / 2 + (xRel - 0.5) * (width * 0.9) * shapingFactor;
+        double y = padding + (1 - yNorm) * usableHeight;
 
-            backgroundLayer.getChildren().add(curve);
+        drawPoint(x, y, Color.RED, 3);
+    }
+
+    @Override
+    public void applyConfig(AlgorithmConfig config) {
+        // No-op
+    }
+
+    private void drawBounds() {
+        backgroundLayer.getChildren().clear();
+        pointLayer.getChildren().clear();
+
+        double width = root.getWidth();
+        double height = root.getHeight();
+        double padding = 20;
+        double usableHeight = height - 2 * padding;
+
+        for (int ones = 0; ones <= n; ones++) {
+            int[] minMax = minMaxSpread(ones);
+
+            double yNorm = ones / (double) n;
+            double y = padding + (1 - yNorm) * usableHeight;
+            double shapingFactor = Math.exp(-Math.pow((yNorm - 0.5) * 4, 2));
+
+            double xLeft = width / 2 - 0.5 * (width * 0.9) * shapingFactor;
+            double xRight = width / 2 + 0.5 * (width * 0.9) * shapingFactor;
+
+            Line envelopeLine = new Line(xLeft, y, xRight, y);
+            envelopeLine.setStroke(Color.LIGHTGRAY);
+            backgroundLayer.getChildren().add(envelopeLine);
         }
 
-        Line centerLine = new Line(centerX, padding, centerX, h - padding);
+        double centerX = width / 2;
+        Line centerLine = new Line(centerX, padding, centerX, height - padding);
         centerLine.setStroke(Color.GRAY);
         centerLine.getStrokeDashArray().addAll(4.0, 4.0);
         backgroundLayer.getChildren().add(centerLine);
     }
 
-    private boolean[] currentSolution;
-
-    @Override
-    public void applyConfig(AlgorithmConfig config) {
-        if (config instanceof BitStringGenericAlgorithmConfig bitConfig) {
-            this.fitnessFunction = bitConfig.fitness();
+    private double computeSpread(boolean[] bits) {
+        double sum = 0;
+        for (int i = 0; i < bits.length; i++) {
+            if (bits[i]) sum += i;
         }
+        return sum;
+    }
+
+    private int countOnes(boolean[] bits) {
+        int count = 0;
+        for (boolean b : bits) if (b) count++;
+        return count;
+    }
+
+    private int[] minMaxSpread(int ones) {
+        int min = 0;
+        for (int i = 0; i < ones; i++) min += i;
+
+        int max = 0;
+        for (int i = n - ones; i < n; i++) max += i;
+
+        return new int[]{min, max};
+    }
+
+    private void drawPoint(double x, double y, Color color, double radius) {
+        Circle dot = new Circle(x, y, radius, color);
+        pointLayer.getChildren().add(dot);
     }
 }

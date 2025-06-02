@@ -52,7 +52,8 @@ public class ResourceLister {
     public static File resolveProblemFile(String problemName, String streamName) {
         String folder = switch (problemName.toLowerCase()) {
             case "tsp2d" -> "tspFiles";
-            case "bitstring" -> "bitStringFiles";
+            case "bitstringleadingones" -> "bitStringFiles";
+            case "bitstringonemax" -> "bitStringFiles";
             default -> throw new IllegalArgumentException("Unknown problem: " + problemName);
         };
 
@@ -62,7 +63,8 @@ public class ResourceLister {
     private static String getProblemFolder(String problemType) {
         return switch (problemType.toLowerCase()) {
             case "tsp2d" -> "tspFiles";
-            case "bitstring" -> "bitStringFiles";
+            case "bitstringleadingones" -> "bitStringFiles";
+            case "bitstringonemax" -> "bitStringFiles";
             default -> throw new IllegalArgumentException("Unknown problem type: " + problemType);
         };
     }

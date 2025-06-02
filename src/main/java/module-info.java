@@ -38,4 +38,6 @@ module com.ea_framework {
     exports com.ea_framework.Runners;
     opens com.ea_framework.Runners to javafx.fxml;
     exports com.ea_framework.Configs.OperatorConfigs;
+    exports com.ea_framework.Termination;
+    opens com.ea_framework.Termination to javafx.fxml;
 }

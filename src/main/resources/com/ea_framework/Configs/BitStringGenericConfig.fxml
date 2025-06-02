@@ -14,14 +14,6 @@
       prefHeight="400.0" prefWidth="900.0">
 
     <VBox spacing="10" prefWidth="280" HBox.hgrow="ALWAYS">
-        <Label text="Fitness Function:"/>
-        <ComboBox fx:id="fitnessDropDown" maxWidth="Infinity"/>
-        <ScrollPane fx:id="fitnessScroll" fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="300">
-            <VBox fx:id="fitnessConfigPane" spacing="10" minHeight="200"/>
-        </ScrollPane>
-    </VBox>
-
-    <VBox spacing="10" prefWidth="280" HBox.hgrow="ALWAYS">
         <Label text="Mutation Operator:"/>
         <ComboBox fx:id="mutationDropDown" maxWidth="Infinity"/>
         <ScrollPane fx:id="mutationScroll" fitToWidth="true" VBox.vgrow="ALWAYS" prefHeight="300">

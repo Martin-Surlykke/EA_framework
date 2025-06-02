@@ -13,33 +13,19 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controllers.VisualizeController">
    <children>
-      <Pane prefHeight="50.0" prefWidth="1200.0" style="-fx-background-color: DARKGRAY;">
+      <Pane prefHeight="50.0" prefWidth="1200.0">
          <children>
-            <Text layoutX="148.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualize Algorithm" wrappingWidth="249.13671875">
+            <Text layoutX="180.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Visualize Algorithm" wrappingWidth="249.13671875">
                <font>
                   <Font name="Segoe UI Bold" size="22.0" />
                </font>
             </Text>
-            <Rectangle fx:id="minimizeWindow" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="29.0" layoutX="1113.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: DARKGRAY;" width="30.0" />
-            <Text fx:id="underscoreText" layoutX="1117.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="_">
-               <font>
-                  <Font name="Segoe UI" size="55.0" />
-               </font>
-            </Text>
-            <Label alignment="CENTER" layoutX="14.0" layoutY="8.0" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: WhiteSmoke; -fx-border-width: 2; -fx-border-color: GRAY;" text="Main Menu">
+            <Label fx:id="backToMainMenu" alignment="CENTER" layoutX="14.0" layoutY="10.0" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: WhiteSmoke; -fx-border-width: 2; -fx-border-color: GRAY;" text="Main Menu">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Pane fx:id="closePane" layoutX="1154.0" layoutY="13.0" prefHeight="29.0" prefWidth="22.0">
-               <children>
-                  <Text fx:id="closeWindow" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" textAlignment="CENTER" wrappingWidth="22.13671875">
-                     <font>
-                        <Font name="Segoe UI Bold" size="35.0" />
-                     </font>
-                  </Text>
-               </children>
-            </Pane>
+            <Pane fx:id="closePane" layoutX="1154.0" layoutY="13.0" prefHeight="29.0" prefWidth="22.0" />
          </children>
       </Pane>
       <Pane prefHeight="850.0" prefWidth="1200.0" style="-fx-background-color: WHITESMOKE;">

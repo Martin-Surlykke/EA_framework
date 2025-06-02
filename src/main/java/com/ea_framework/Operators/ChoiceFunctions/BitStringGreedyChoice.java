@@ -1,11 +1,7 @@
 package com.ea_framework.Operators.ChoiceFunctions;
 
-import com.ea_framework.Configs.OperatorConfigs.BitStringChoiceConfig;
 import com.ea_framework.Configurable;
-import com.ea_framework.Problems.BitStringProblem;
 import com.ea_framework.Problems.Problem;
-
-import java.util.Map;
 
 public class BitStringGreedyChoice implements ChoiceFunction, Configurable {
 

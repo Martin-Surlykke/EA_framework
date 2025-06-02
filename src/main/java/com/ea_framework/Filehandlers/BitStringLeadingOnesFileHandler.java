@@ -1,7 +1,7 @@
 package com.ea_framework.Filehandlers;
 
 import com.ea_framework.Loaders.ProblemLoader;
-import com.ea_framework.Problems.BitStringProblem;
+import com.ea_framework.Problems.BitStringLeadingOnesProblem;
 import com.ea_framework.Problems.Problem;
 
 import java.io.BufferedReader;
@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class BitStringFileHandler implements ProblemLoader {
-        @Override
-        public Problem load(InputStream inputStream) throws IOException {
+public class BitStringLeadingOnesFileHandler implements ProblemLoader {
+    @Override
+    public Problem load(InputStream inputStream) throws IOException {
         String name = inputStream.toString();
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
         String bitString = br.readLine();
@@ -22,6 +22,6 @@ public class BitStringFileHandler implements ProblemLoader {
         }
 
         int length = bitString.length();
-        return new BitStringProblem(name, length, bitArray);
+        return new BitStringLeadingOnesProblem(name, length, bitArray);
     }
 }

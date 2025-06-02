@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="333.0" prefWidth="328.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.FrontPageController">
+   <children>
+      <Pane prefHeight="368.0" prefWidth="328.0">
+         <children>
+            <Label fx:id="createSchedule" alignment="CENTER" layoutX="26.0" layoutY="139.0" onMouseClicked="#handleCreateSchedule" prefHeight="45.0" prefWidth="276.0" style="-fx-background-color: lightgray; -fx-border-color: darkgray;" text="Create Schedule">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Label>
+            <Label layoutX="136.0" layoutY="87.0" />
+            <Label fx:id="changeLocation" alignment="CENTER" layoutX="26.0" layoutY="211.0" onMouseClicked="#handleChangeLocation" prefHeight="45.0" prefWidth="276.0" style="-fx-background-color: lightgray; -fx-border-color: darkgray;" text="Change csv save location">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+            <Text layoutX="69.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="EA Framework">
+               <font>
+                  <Font size="30.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

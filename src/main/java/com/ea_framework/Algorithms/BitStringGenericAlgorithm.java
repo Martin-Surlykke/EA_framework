@@ -23,10 +23,9 @@ public class BitStringGenericAlgorithm implements Algorithm {
         if (!(config instanceof BitStringGenericAlgorithmConfig bitConfig)) {
             throw new IllegalArgumentException("Expected BitStringGenericAlgorithmConfig, got " + config.getClass().getSimpleName());
         }
-
-        this.fitnessFunction = bitConfig.fitness();
         this.mutationOperator = bitConfig.mutation();
         this.choiceFunction = bitConfig.choice();
+        this.fitnessFunction = bitConfig.fitness();
 
     }
 

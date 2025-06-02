@@ -6,11 +6,11 @@ import com.ea_framework.Algorithms.BitStringGenericAlgorithm;
 import com.ea_framework.Algorithms.TSP2DACO;
 import com.ea_framework.Algorithms.TSP2DGenericAlgorithm;
 import com.ea_framework.Configs.BitStringGenericConfigPage;
-import com.ea_framework.Configs.TSP2DACOConfig;
 import com.ea_framework.Configs.TSP2DACOConfigPage;
 import com.ea_framework.Controllers.OperatorControllers.OperatorConfigController;
 import com.ea_framework.Descriptors.OperatorDescriptor;
-import com.ea_framework.Filehandlers.BitStringFileHandler;
+import com.ea_framework.Filehandlers.BitStringLeadingOnesFileHandler;
+import com.ea_framework.Filehandlers.BitStringOneMaxFileHandler;
 import com.ea_framework.Operators.ChoiceFunctions.BitStringGreedyChoice;
 import com.ea_framework.Operators.ChoiceFunctions.BitStringSimulatedAnnealing;
 import com.ea_framework.Operators.ChoiceFunctions.TSP2DGreedyChoice;
@@ -50,13 +50,19 @@ public class RegistryInitializer {
         );
         ProblemRegistry.register("TSP2D", tspProblemDescriptor);
 
-        ProblemDescriptor bitStringProblemDescriptor = new ProblemDescriptor(
+        ProblemDescriptor bitStringOneMaxProblemDescriptor = new ProblemDescriptor(
+                "BitStringOneMax",
                 "BitString",
-                "BitString",
-                new BitStringFileHandler()
+                new BitStringOneMaxFileHandler()
         );
-        ProblemRegistry.register("BitString", bitStringProblemDescriptor);
+        ProblemRegistry.register("BitStringOneMax", bitStringOneMaxProblemDescriptor);
 
+        ProblemDescriptor bitStringLeadingOnesProblemDescriptor = new ProblemDescriptor(
+                "BitStringLeadingOnes",
+                "BitString",
+                new BitStringLeadingOnesFileHandler()
+        );
+        ProblemRegistry.register("BitStringLeadingOnes", bitStringLeadingOnesProblemDescriptor);
 
         // === Algorithm Descriptor ===
         AlgorithmDescriptor tspAlgorithmDescriptor = new AlgorithmDescriptor(
@@ -68,13 +74,21 @@ public class RegistryInitializer {
 
         AlgorithmRegistry.register(tspAlgorithmDescriptor);
 
-        AlgorithmDescriptor bitStringAlgorithmDescriptor = new AlgorithmDescriptor(
+        AlgorithmDescriptor bitStringOneMaxAlgorithmDescriptor = new AlgorithmDescriptor(
                 BitStringGenericAlgorithm.class,
                 "BitStringGeneric",
-                "BitString",
+                "BitStringOneMax",
                 BitStringGenericConfigPage::new
         );
-        AlgorithmRegistry.register(bitStringAlgorithmDescriptor);
+        AlgorithmRegistry.register(bitStringOneMaxAlgorithmDescriptor);
+
+        AlgorithmDescriptor bitStringLeadingOnesAlgorithmDescriptor = new AlgorithmDescriptor(
+                BitStringGenericAlgorithm.class,
+                "BitStringLeadingOnesGeneric",
+                "BitStringLeadingOnes",
+                BitStringGenericConfigPage::new
+        );
+        AlgorithmRegistry.register(bitStringLeadingOnesAlgorithmDescriptor);
 
 
         AlgorithmDescriptor tsp2DACODescriptor = new AlgorithmDescriptor(

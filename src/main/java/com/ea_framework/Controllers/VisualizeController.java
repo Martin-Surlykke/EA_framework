@@ -24,8 +24,6 @@ public class VisualizeController {
     @FXML public Pane fitnessPane;
     @FXML public Pane statPane;
     @FXML public Pane configPane;
-    @FXML public Text closeWindow;
-    @FXML public Rectangle minimizeWindow;
 
     @FXML
     public void initialize(VisualizeView visualizeView,
@@ -56,8 +54,6 @@ public class VisualizeController {
         assert statView != null;
         fitToPane(statView.getView(), statPane);
 
-        closeWindow.setOnMouseClicked(event -> Platform.exit());
-        minimizeWindow.setOnMouseClicked(event -> stage.setIconified(true));
     }
 
 

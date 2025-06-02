@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <Pane prefHeight="568.0" prefWidth="913.0" style="-fx-background-color: Whitesmoke;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controllers.BatchController">
 
@@ -89,7 +90,7 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Button fx:id="addBatchButton" layoutX="14.0" layoutY="57.0" mnemonicParsing="false" onMouseClicked="#onAddToSchedule" text="Add batch to schedule" />
-                        <CheckBox fx:id="showVisual" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" text="Show batch in visualiser" selected="true" />
+                        <CheckBox fx:id="showVisual" layoutX="14.0" layoutY="22.0" mnemonicParsing="false" selected="true" text="Show batch in visualiser" />
                      </children>
                   </AnchorPane>
               </content>
@@ -100,5 +101,10 @@
         <AnchorPane fx:id="scheduleContainer" layoutX="606.0" layoutY="77.0" prefHeight="424.0" prefWidth="294.0" style="-fx-border-color: darkgray;" />
 
         <Label fx:id="runSchedule" alignment="CENTER" layoutX="776.0" layoutY="525.0" onMouseClicked="#handleRunSchedule" prefHeight="30.0" prefWidth="123.0" style="-fx-background-color: DarkGray;" text="Run current schedule" />
+      <Text layoutX="14.0" layoutY="53.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Schedule page">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Text>
     </children>
 </Pane>

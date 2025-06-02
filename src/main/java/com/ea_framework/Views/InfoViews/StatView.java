@@ -16,6 +16,10 @@ public class StatView implements infoView<StatRecord>{
 
     @Override
     public void update(StatRecord record) {
+        if (record == null) {
+            System.err.println("StatView: Tried to update with null record");
+            return;
+        }
         standardStatBox.updateField("Iterations", String.valueOf(record.iteration()));
         standardStatBox.updateField("Evaluations", String.valueOf(record.evaluations()));
         standardStatBox.updateField("Fitness", String.valueOf(record.fitness()));

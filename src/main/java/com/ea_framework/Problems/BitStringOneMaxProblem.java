@@ -1,18 +1,20 @@
 package com.ea_framework.Problems;
 
+import com.ea_framework.HasFitness;
 import com.ea_framework.OperatorType;
+import com.ea_framework.Operators.FitnessFunctions.BitStringOneMax;
+import com.ea_framework.Operators.FitnessFunctions.Fitness;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.FitnessView.StandardFitnessCurve;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
 import com.ea_framework.Views.InfoViews.StatView;
-import com.ea_framework.Views.InfoViews.boxes.StandardConfigBox;
 import com.ea_framework.Views.VisualizeView.BitStringVisualizeView;
 import com.ea_framework.Views.VisualizeView.VisualizeView;
 
 import java.util.List;
 import java.util.Map;
 
-public class BitStringProblem implements Problem {
+public class BitStringOneMaxProblem implements Problem, BitStringCompatible, HasFitness {
 
     private boolean[] defaultBitString;
     private final String name;
@@ -22,7 +24,9 @@ public class BitStringProblem implements Problem {
     public double saAlpha;
     public double saT0;
 
-    public BitStringProblem(String name, int length, boolean[] defaultBitString) {
+    public final Fitness fitnessFunction = new BitStringOneMax();
+
+    public BitStringOneMaxProblem(String name, int length, boolean[] defaultBitString) {
         this.name = name;
         this.length = length;
         this.defaultBitString = defaultBitString;
@@ -89,6 +93,11 @@ public class BitStringProblem implements Problem {
     @Override
     public List<Double> getSimulatedAnnealingParams() {
         return List.of(saAlpha, saT0);
+    }
+
+    @Override
+    public Fitness getFitnessFunction() {
+        return fitnessFunction;
     }
 
 }

@@ -74,12 +74,21 @@ public class RunBatch {
                 long runtimeMs = (endTime - startTime) / 1_000_000;
 
                 Platform.runLater(() -> {
-                    try {
-                        CSVStatWriter.writeFullStats(stats, new File(outputDir, "batch_" + batchIndex + "_full.csv"), runtimeMs);
-                        CSVStatWriter.writeBatchSummary(config, algorithm, new File(outputDir, "batch_" + batchIndex + "_summary.csv"), runtimeMs);
-                        CSVStatWriter.appendToScheduleSummary(scheduleSummaryFile, batchIndex, config, algorithm, runtimeMs);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    File dir = FrontPageController.getCsvSaveDirectory();
+                    if (dir != null) {
+                        try {
+                            File fullStats = new File(dir, "full-stats-batch-" + batchIndex + ".csv");
+                            File summary = new File(dir, "summary-batch-" + batchIndex + ".csv");
+                            File schedule = new File(dir, "schedule-summary.csv");
+
+                            CSVStatWriter.writeFullStats(stats, fullStats, runtimeMs);
+                            CSVStatWriter.writeBatchSummary(config, algorithm, summary, runtimeMs);
+                            CSVStatWriter.appendToScheduleSummary(schedule, batchIndex, config, algorithm, runtimeMs);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.err.println("CSV save directory not set.");
                     }
 
                     stage.setScene(returnScene);

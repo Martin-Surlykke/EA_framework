@@ -17,7 +17,7 @@ import java.util.Map;
 public class BatchConfig {
 
     private String streamName;
-    private File inputFile; // Changed from InputStream
+    private File inputFile;
 
     private String searchSpaceName;
     private SearchSpace searchSpace;

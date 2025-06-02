@@ -1,10 +1,11 @@
 package com.ea_framework.StartAlgorithms;
 
-import com.ea_framework.Problems.BitStringProblem;
+import com.ea_framework.Problems.BitStringCompatible;
 
-    public class BitStringDefaultStart implements StartAlgorithm <BitStringProblem, boolean[]> {
+    public class BitStringDefaultStart implements StartAlgorithm <BitStringCompatible, boolean[]> {
+
         @Override
-        public boolean[] generateFirstSolution(BitStringProblem problem) {
-            return problem.getDefaultPermutation().clone();
+        public boolean[] generateFirstSolution(BitStringCompatible problem) {
+            return problem.getDefaultPermutation();
         }
     }

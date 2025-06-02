@@ -3,8 +3,12 @@ package com.ea_framework.Runners;
 import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.StatTracker;
+import com.ea_framework.Termination.TerminationCondition;
 import com.ea_framework.Views.InfoViews.StatRecord;
 import javafx.application.Platform;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Runner {
     private volatile int latestIteration = -1;
@@ -12,12 +16,19 @@ public class Runner {
     private volatile double latestFitness = Double.NaN;
     private volatile StatRecord latestStat = null;
 
-    public void run(Problem problem, Algorithm algorithm, int termination, StatTracker stats, Runnable onComplete) {
+    private final List<TerminationCondition> terminationConditions = new ArrayList<>();
+
+    public void addTerminationCondition(TerminationCondition condition) {
+        terminationConditions.add(condition);
+    }
+
+    public void run(Problem problem, Algorithm algorithm, StatTracker stats, Runnable onComplete) {
         Object initial = problem.getDefaultPermutation();
         algorithm.setCurrentSolution(initial);
 
         Thread solver = new Thread(() -> {
-            for (int i = 0; i < termination; i++) {
+            int i = 0;
+            while (!isTerminated(i, algorithm)) {
                 algorithm.run(i);
 
                 latestIteration = i;
@@ -31,7 +42,9 @@ public class Runner {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    break;
                 }
+                i++;
             }
 
             if (onComplete != null) {
@@ -42,11 +55,19 @@ public class Runner {
         solver.setDaemon(false);
         solver.start();
 
-
-        startUpdateTimer(stats, termination);
+        startUpdateTimer(stats);
     }
 
-    private void startUpdateTimer(StatTracker stats, int termination) {
+    private boolean isTerminated(int iteration, Algorithm algorithm) {
+        for (TerminationCondition condition : terminationConditions) {
+            if (condition.shouldTerminate(iteration, algorithm)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void startUpdateTimer(StatTracker stats) {
         javafx.animation.AnimationTimer timer = new javafx.animation.AnimationTimer() {
             private long lastUpdate = 0;
 
@@ -56,12 +77,8 @@ public class Runner {
                 if (now - lastUpdate < intervalNs) return;
                 lastUpdate = now;
 
-                if (stats != null && latestIteration >= 0 && latestIteration < termination) {
+                if (stats != null && latestIteration >= 0) {
                     stats.onIteration(latestIteration, latestSolution, latestFitness, latestStat);
-                }
-
-                if (latestIteration >= termination - 1) {
-                    stop();
                 }
             }
         };

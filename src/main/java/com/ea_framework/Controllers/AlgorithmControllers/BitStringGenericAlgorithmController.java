@@ -24,13 +24,6 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
     public Pane genericAlgorithmConfigPane;
 
     @FXML
-    public ComboBox<String> fitnessDropDown;
-    @FXML
-    public ScrollPane fitnessScroll;
-    @FXML
-    public VBox fitnessConfigPane;
-
-    @FXML
     public ComboBox<String> mutationDropDown;
     @FXML
     public ScrollPane mutationScroll;
@@ -44,7 +37,6 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
     @FXML
     public VBox choiceConfigPane;
 
-    private GenericOperatorUI fitnessConfigUI;
     private GenericOperatorUI mutationConfigUI;
     private GenericOperatorUI choiceConfigUI;
 
@@ -64,10 +56,8 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
 
     private void checkAllOperatorsFilled() {
         boolean allFilled =
-                fitnessConfigUI != null &&
                         mutationConfigUI != null &&
                         choiceConfigUI != null &&
-                        fitnessConfigUI.getController().isFilled() &&
                         mutationConfigUI.getController().isFilled() &&
                         choiceConfigUI.getController().isFilled();
 
@@ -107,9 +97,6 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
     public Map<String, Object> getConfigs() {
         Map<String, Object> map = new HashMap<>();
 
-        if (fitnessConfigUI != null)
-            map.put("fitness", fitnessConfigUI.getController().getOperator());
-
         if (mutationConfigUI != null)
             map.put("mutation", mutationConfigUI.getController().getOperator());
 
@@ -133,19 +120,15 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
         mutationRegistry.putAll(OperatorRegistry.getRegistryByType(types[1]));
         choiceRegistry.putAll(OperatorRegistry.getRegistryByType(types[2]));
 
-        setupOperatorSelectionHandler(fitnessDropDown, fitnessConfigPane, fitnessRegistry, op -> fitnessConfigUI = op);
         setupOperatorSelectionHandler(mutationDropDown, mutationConfigPane, mutationRegistry, op -> mutationConfigUI = op);
         setupOperatorSelectionHandler(choiceDropDown, choiceConfigPane, choiceRegistry, op -> choiceConfigUI = op);
 
-        fitnessDropDown.getItems().setAll(fitnessRegistry.keySet());
         mutationDropDown.getItems().setAll(mutationRegistry.keySet());
         choiceDropDown.getItems().setAll(choiceRegistry.keySet());
 
-        fitnessDropDown.setDisable(false);
         mutationDropDown.setDisable(false);
         choiceDropDown.setDisable(false);
 
-        fitnessScroll.setDisable(false);
         mutationScroll.setDisable(false);
         choiceScroll.setDisable(false);
     }
@@ -160,10 +143,8 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
 
     @Override
     public boolean isReadyToProceed() {
-        return fitnessConfigUI != null &&
-                mutationConfigUI != null &&
+        return  mutationConfigUI != null &&
                 choiceConfigUI != null &&
-                fitnessConfigUI.getController().isFilled() &&
                 mutationConfigUI.getController().isFilled() &&
                 choiceConfigUI.getController().isFilled();
     }
