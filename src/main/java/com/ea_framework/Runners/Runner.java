@@ -22,13 +22,13 @@ public class Runner {
         terminationConditions.add(condition);
     }
 
-    public void run(Problem problem, Algorithm algorithm, StatTracker stats, Runnable onComplete) {
+    public void run(Problem problem, Algorithm algorithm, List<TerminationCondition> conditions, StatTracker stats, Runnable onComplete) {
         Object initial = problem.getDefaultPermutation();
         algorithm.setCurrentSolution(initial);
 
         Thread solver = new Thread(() -> {
             int i = 0;
-            while (!isTerminated(i, algorithm)) {
+            while (!terminationMet(conditions, algorithm, i)) {
                 algorithm.run(i);
 
                 latestIteration = i;
@@ -42,8 +42,8 @@ public class Runner {
                     Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                    break;
                 }
+
                 i++;
             }
 
@@ -54,8 +54,16 @@ public class Runner {
 
         solver.setDaemon(false);
         solver.start();
-
         startUpdateTimer(stats);
+    }
+
+    private boolean terminationMet(List<TerminationCondition> conditions, Algorithm algorithm, int iteration) {
+        for (TerminationCondition cond : conditions) {
+            if (cond.shouldTerminate(iteration, algorithm)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isTerminated(int iteration, Algorithm algorithm) {

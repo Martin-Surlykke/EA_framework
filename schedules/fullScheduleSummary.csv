@@ -1,0 +1,7 @@
+Schedule;Average Fitness;Average Best Iteration;Average Runtime (ms)
+schedule_summary.csv;200.000000;885;18133
+schedule_summary.csv;10.000000;27;1828
+schedule_summary.csv;10.000000;20;5
+schedule_summary.csv;1000.000000;6378;22
+schedule_summary.csv;794.000000;993;1911
+schedule_summary.csv;100.000000;529;5

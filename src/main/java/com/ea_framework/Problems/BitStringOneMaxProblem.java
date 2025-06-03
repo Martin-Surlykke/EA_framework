@@ -44,7 +44,7 @@ public class BitStringOneMaxProblem implements Problem, BitStringCompatible, Has
 
     @Override
     public FitnessView getFitnessView() {
-        return new StandardFitnessCurve(maxIterations);
+        return new StandardFitnessCurve();
     }
 
     @Override

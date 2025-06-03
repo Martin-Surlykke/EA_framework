@@ -7,4 +7,6 @@ import java.io.InputStream;
 
 public interface ProblemLoader {
     Problem load(InputStream inputStream) throws IOException;
+
+    Problem createFromSize(int size);
 }

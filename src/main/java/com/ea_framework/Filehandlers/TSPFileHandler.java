@@ -56,6 +56,39 @@ public class TSPFileHandler implements ProblemLoader {
         return new TSP2DProblem(name, comment, type, edgeType, coords, distMatrix, permutation, maxX, maxY, minX, minY);
     }
 
+    @Override
+    public Problem createFromSize(int size) {
+        Random rand = new Random();
+
+        List<Coordinate> coords = new ArrayList<>();
+        double maxX = Double.MIN_VALUE;
+        double maxY = Double.MIN_VALUE;
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+
+        for (int i = 0; i < size; i++) {
+            double x = rand.nextDouble() * 1000;
+            double y = rand.nextDouble() * 1000;
+
+            maxX = Math.max(maxX, x);
+            maxY = Math.max(maxY, y);
+            minX = Math.min(minX, x);
+            minY = Math.min(minY, y);
+
+            coords.add(new Coordinate(i, x, y));
+        }
+
+        double[][] coordsArray = getCoordArray(coords);
+        double[][] distMatrix = computeDistanceMatrix(coordsArray);
+        int[] permutation = getIndexList(coords);
+
+        String name = "Random TSP " + size;
+        return new TSP2DProblem(
+                name, "Random instance", "TSP2D", "EUC_2D",
+                coords, distMatrix, permutation, maxX, maxY, minX, minY
+        );
+    }
+
     private static String readValue(String line) {
         return line.substring(line.indexOf(":") + 1).trim();
     }

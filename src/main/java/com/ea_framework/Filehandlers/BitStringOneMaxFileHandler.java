@@ -1,6 +1,7 @@
 package com.ea_framework.Filehandlers;
 
 import com.ea_framework.Loaders.ProblemLoader;
+import com.ea_framework.Operators.FitnessFunctions.BitStringOneMax;
 import com.ea_framework.Problems.BitStringOneMaxProblem;
 import com.ea_framework.Problems.Problem;
 
@@ -23,5 +24,15 @@ public class BitStringOneMaxFileHandler implements ProblemLoader {
 
         int length = bitString.length();
         return new BitStringOneMaxProblem(name, length, bitArray);
+    }
+
+    @Override
+    public Problem createFromSize(int size) {
+        boolean[] bitArray = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            bitArray[i] = Math.random() < 0.5;
+        }
+
+        return new BitStringOneMaxProblem("Random OneMax " + size, size, bitArray);
     }
 }

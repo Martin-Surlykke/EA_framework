@@ -1,6 +1,7 @@
 package com.ea_framework.Descriptors;
 
 import com.ea_framework.Loaders.ProblemLoader;
+import com.ea_framework.Problems.Problem;
 
 public class ProblemDescriptor implements Descriptor {
 
@@ -28,5 +29,9 @@ public class ProblemDescriptor implements Descriptor {
     @Override
     public String getCompatibleKey() {
         return searchSpaceType;
+    }
+
+    public Problem createProblem(int size) {
+        return loader.createFromSize(size);
     }
 }

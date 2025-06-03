@@ -24,4 +24,14 @@ public class BitStringLeadingOnesFileHandler implements ProblemLoader {
         int length = bitString.length();
         return new BitStringLeadingOnesProblem(name, length, bitArray);
     }
+
+    @Override
+    public Problem createFromSize(int size) {
+        boolean[] bitArray = new boolean[size];
+        for (int i = 0; i < size; i++) {
+            bitArray[i] = Math.random() < 0.5;
+        }
+
+        return new BitStringLeadingOnesProblem("RandomLeadingOnes" + size, size, bitArray);
+    }
 }

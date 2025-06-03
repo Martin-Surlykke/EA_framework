@@ -13,6 +13,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <Pane prefHeight="568.0" prefWidth="913.0" style="-fx-background-color: Whitesmoke;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ea_framework.Controllers.BatchController">
 
     <children>
@@ -74,17 +79,38 @@
                      </children></AnchorPane>
                     </content>
                 </Tab>
-            <Tab fx:id="terminationTab" text="Termination">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <ComboBox fx:id="terminationDropDown" layoutX="150.0" layoutY="19.0" prefWidth="150.0" />
-                        <Label layoutX="14.0" layoutY="23.0" text="Teremination condition" />
-                        <TextField fx:id="terminationSize" layoutX="313.0" layoutY="19.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </Tab>
+                <Tab fx:id="terminationTab" text="Termination">
+                    <AnchorPane fx:id="terminationPane">
+                        <VBox spacing="10"
+                              AnchorPane.topAnchor="10.0"
+                              AnchorPane.leftAnchor="10.0"
+                              AnchorPane.rightAnchor="10.0"
+                              AnchorPane.bottomAnchor="10.0"
+                              style="-fx-padding: 10;">
+                            <HBox spacing="10">
+                                <Label text="Condition:"/>
+                                <ComboBox fx:id="terminationDropDown" promptText="Select condition"/>
+
+                                <Label text="Value:"/>
+                                <TextField fx:id="terminationValueField" promptText="Enter value"/>
+
+                                <Label text="Mode:"/>
+                                <ComboBox fx:id="terminationModeCombo" promptText="maximize/minimize" disable="true">
+                                    <items>
+                                        <FXCollections fx:factory="observableArrayList">
+                                            <String fx:value="maximize"/>
+                                            <String fx:value="minimize"/>
+                                        </FXCollections>
+                                    </items>
+                                </ComboBox>
+
+                                <Button text="Add Termination" onAction="#handleAddTermination"/>
+                            </HBox>
+
+                            <ListView fx:id="terminationListView"/>
+                        </VBox>
+                    </AnchorPane>
+                </Tab>
             <Tab fx:id="addTab" text="Add">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">

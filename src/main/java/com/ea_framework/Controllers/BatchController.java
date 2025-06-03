@@ -1,15 +1,15 @@
 package com.ea_framework.Controllers;
+import com.ea_framework.*;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
-import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Registries.Registry;
-import com.ea_framework.ResourceLister;
-import com.ea_framework.RunBatch;
 import com.ea_framework.SearchSpaces.SearchSpace;
+import com.ea_framework.Termination.TerminationCondition;
 import com.ea_framework.Views.ConfigViews.ConfigView;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -36,7 +36,7 @@ public class BatchController {
     @FXML private Tab batchTab;
     @FXML private Tab terminationTab;
     @FXML private Tab addTab;
-
+    @FXML private ComboBox<String> terminationModeCombo;
     @FXML private ComboBox<String> terminationDropDown;
     @FXML private ComboBox<String> searchSpaceDropDown;
     @FXML private ComboBox<String> problemDropDown;
@@ -44,7 +44,10 @@ public class BatchController {
     @FXML private ComboBox<String> algorithmDropDown;
     @FXML private TextField problemSize;
     @FXML private TextField batchSize;
-    @FXML private TextField terminationSize;
+    @FXML private TextField terminationValueField;
+    @FXML private ListView<String> terminationListView;
+    private final List<BatchStats> currentScheduleStats = new ArrayList<>();
+    private final List<TerminationCondition> activeTerminations = new ArrayList<>();
 
     @FXML private CheckBox showVisual;
 
@@ -54,11 +57,8 @@ public class BatchController {
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private AlgorithmConfigUI currentAlgoConfigUI;
 
-
-
     @FXML
     public void initialize() {
-
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/ScheduleView.fxml"));
             Node scheduleNode = loader.load();
@@ -82,9 +82,17 @@ public class BatchController {
 
         addBatchButton.setDisable(true);
 
-        terminationDropDown.getItems().addAll(
-                "Max iterations"
-        );
+        terminationDropDown.getItems().addAll(Registry.getAllTerminationConditions());
+
+        terminationDropDown.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null && newVal.toLowerCase().contains("threshold")) {
+                terminationModeCombo.setDisable(false);
+                terminationModeCombo.setPromptText("maximize/minimize");
+            } else {
+                terminationModeCombo.setDisable(true);
+                terminationModeCombo.setPromptText("N/A");
+            }
+        });
 
         searchSpaceDropDown.setPromptText("Select search space");
         problemDropDown.setPromptText("Select problem");
@@ -98,11 +106,6 @@ public class BatchController {
             if (!newFocus) checkBatchForSwitch();
         });
         batchSize.setOnAction(e -> checkBatchForSwitch());
-
-        terminationSize.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
-            if (!newFocus) checkBatchReady();
-        });
-        terminationSize.setOnAction(e -> checkTerminationForSwitch());
 
         tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
             if (oldTab == problemTab && newTab != problemTab) {
@@ -121,14 +124,25 @@ public class BatchController {
             }
         });
 
-        problemSize.textProperty().addListener((obs, oldVal, newVal) -> {
+        problemSize.setOnAction(e -> {
             if (problemInstanceSet() && algorithmTab.isDisable()) {
                 algorithmTab.setDisable(false);
                 tabPane.getSelectionModel().select(algorithmTab);
             }
         });
-    }
 
+        problemSize.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if (!newFocus && problemInstanceSet() && algorithmTab.isDisable()) {
+                algorithmTab.setDisable(false);
+                tabPane.getSelectionModel().select(algorithmTab);
+            }
+        });
+
+        terminationValueField.setOnAction(e -> handleAddTermination());
+        terminationValueField.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
+            if (!newFocus) handleAddTermination();
+        });
+    }
 
     public void onSearchSpaceSelected(String searchSpace) {
         problemTab.setDisable(false);
@@ -167,8 +181,21 @@ public class BatchController {
 
         config.setStreamName(fileDropDown.getValue());
 
-        File file = ResourceLister.resolveProblemFile(config.getProblemName(), config.getStreamName());
-        config.setInputFile(file);
+        String sizeText = problemSize.getText();
+        String stream = fileDropDown.getValue();
+
+        if (sizeText != null && !sizeText.isBlank()) {
+            // Use generated problem of specified size
+            int size = Integer.parseInt(sizeText);
+            config.setProblemSize(size); // You'll need to add this setter in BatchConfig
+            config.setInputFile(null);   // No input file
+            config.setStreamName(null);
+        } else if (stream != null && !stream.isBlank()) {
+            // Use predefined file
+            config.setStreamName(stream);
+            File file = ResourceLister.resolveProblemFile(config.getProblemName(), stream);
+            config.setInputFile(file);
+        }
 
         config.setAlgorithmName(algorithmDropDown.getValue());
         config.setAlgorithmDescriptor(Registry.getAlgorithmDescriptor(config.getAlgorithmName()));
@@ -176,7 +203,6 @@ public class BatchController {
         Problem problem = config.resolveProblem();
         config.setAlgorithmConfig(currentAlgoConfigUI.buildAlgorithmConfig(problem));
 
-        config.setTermination(Integer.parseInt(terminationSize.getText()));
         config.setRepeats(Integer.parseInt(batchSize.getText()));
         config.setVisualSelected(showVisual.isSelected());
 
@@ -226,8 +252,6 @@ public class BatchController {
             List<String> filteredAlgorithms = Registry.getAlgorithmsForProblem(selected);
             algorithmDropDown.getItems().setAll(filteredAlgorithms);
             algorithmDropDown.getSelectionModel().clearSelection();
-            ProblemDescriptor problemShell = Registry.getProblem(selected)
-                    .orElseThrow(() -> new IllegalArgumentException("Unknown problem: " + selected));
         }
     }
 
@@ -265,29 +289,21 @@ public class BatchController {
 
     private void checkBatchReady() {
         boolean batchReady = !batchSize.getText().isBlank();
-        boolean terminationReady = !terminationSize.getText().isBlank();
-        addBatchButton.setDisable(!(batchReady && terminationReady));
+        addBatchButton.setDisable(!batchReady);
     }
 
     private void checkBatchForSwitch() {
         String value = batchSize.getText();
         boolean isValid = value != null && !value.isBlank();
 
-        if (isValid) {
-            terminationTab.setDisable(false);
-            tabPane.getSelectionModel().select(terminationTab);
-            checkBatchReady();
-        }
-    }
-
-    private void checkTerminationForSwitch() {
-        String value = terminationSize.getText();
-        boolean isValid = value != null && !value.isBlank();
-
-        if (isValid) {
-            addTab.setDisable(false);
-            tabPane.getSelectionModel().select(addTab);
-            checkBatchReady();
+        if (isValid && terminationTab.isDisable()) {
+            try {
+                Integer.parseInt(value);
+                terminationTab.setDisable(false);
+                tabPane.getSelectionModel().select(terminationTab);
+                checkBatchReady();
+            } catch (NumberFormatException ignored) {
+            }
         }
     }
 
@@ -300,14 +316,9 @@ public class BatchController {
     }
 
     private void populateTerminationConfig(BatchConfig config) {
-        String terminationType = terminationDropDown.getValue();
-        String terminationParam = terminationSize.getText();
-        if (terminationType != null && !terminationParam.isBlank()) {
-            config.getTerminationConfigs().put("type", terminationType);
-            config.getTerminationConfigs().put("value", terminationParam);
-        }
+        config.getTerminationConditions().clear();
+        config.getTerminationConditions().addAll(activeTerminations);
     }
-
 
     private void populateMetaConfig(BatchConfig config) {
         String batchCount = batchSize.getText();
@@ -325,10 +336,7 @@ public class BatchController {
         }
     }
 
-
     private void resetBatchUI() {
-
-
         currentAlgoConfigUI = null;
 
         searchSpaceDropDown.getSelectionModel().clearSelection();
@@ -339,7 +347,9 @@ public class BatchController {
 
         problemSize.clear();
         batchSize.clear();
-        terminationSize.clear();
+        terminationValueField.clear();
+        terminationListView.getItems().clear();
+        activeTerminations.clear();
 
         configTab.setContent(null);
 
@@ -359,13 +369,13 @@ public class BatchController {
         List<BatchConfig> batches = scheduleController.getBatches();
         if (batches.isEmpty()) return;
 
+        currentScheduleStats.clear();
+
         String timestamp = java.time.LocalDateTime.now()
                 .toString().replace(":", "-");
 
         outputDir = new File("schedules/schedule_" + timestamp);
         outputDir.mkdirs();
-
-        scheduleSummary = new File(outputDir, "schedule_summary.csv");
 
         Platform.runLater(() -> {
             try {
@@ -376,10 +386,50 @@ public class BatchController {
         });
     }
 
+    @FXML
+    private void handleAddTermination() {
+        String key = terminationDropDown.getValue();
+        String param = terminationValueField.getText();
+        String mode = terminationModeCombo.getValue();
+
+        if (key == null || param.isBlank()) return;
+
+        try {
+            TerminationCondition condition = Registry.getTerminationCondition(key);
+
+            if (key.toLowerCase().contains("threshold")) {
+                if (mode == null || mode.isBlank()) {
+                    return;
+                }
+                condition.configure(Map.of("value", param, "mode", mode));
+                terminationListView.getItems().add(key + " = " + param + " (" + mode + ")");
+            } else {
+                condition.configure(Map.of("value", param));
+                terminationListView.getItems().add(key + " = " + param);
+            }
+
+            activeTerminations.add(condition);
+            terminationValueField.clear();
+            terminationModeCombo.getSelectionModel().clearSelection();
+
+            addTab.setDisable(false);
+            tabPane.getSelectionModel().select(addTab);
+            checkBatchReady();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     private void runSchedule(List<BatchConfig> batches, int index) throws Exception {
-        if (index >= batches.size()) return;
+        if (index >= batches.size()) {
+            return;
+        }
+
+        File dir = FrontPageController.getCsvSaveDirectory();
+
+        currentScheduleStats.clear();
 
         BatchConfig config = batches.get(index);
+
         if (config.getInputFile() == null) {
             try {
                 File file = ResourceLister.resolveProblemFile(config.getProblemName(), config.getStreamName());
@@ -394,13 +444,19 @@ public class BatchController {
         Stage stage = (Stage) tabPane.getScene().getWindow();
         runBatch(config, 0, stage, () -> {
             try {
+                String configKey = config.getProblemName() + "_" + config.getAlgorithmName();
+                File summaryFile = new File(dir, "schedule_summary_" + configKey + ".csv");
+                CSVStatWriter.writeScheduleSummary(currentScheduleStats, summaryFile);
+
+                File fullSummary = new File(dir, "fullScheduleSummary.csv");
+                CSVStatWriter.appendToFullScheduleSummary(fullSummary, summaryFile);
+
                 runSchedule(batches, index + 1);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
     }
-
 
     private void runBatch(BatchConfig config, int index, Stage stage, Runnable onDone) throws Exception {
         if (index >= config.getRepeats()) {
@@ -410,7 +466,7 @@ public class BatchController {
 
         Scene returnScene = stage.getScene();
 
-        RunBatch runBatch = new RunBatch(config, stage, returnScene, index, outputDir, scheduleSummary);
+        RunBatch runBatch = new RunBatch(config, stage, returnScene, index, currentScheduleStats);
         runBatch.runAsync(() -> {
             try {
                 runBatch(config, index + 1, stage, onDone);
@@ -418,5 +474,9 @@ public class BatchController {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public void handleAddTermination(ActionEvent actionEvent) {
+        handleAddTermination();
     }
 }

@@ -3,6 +3,7 @@ package com.ea_framework.Registries;
 import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.SearchSpaces.SearchSpace;
+import com.ea_framework.Termination.TerminationCondition;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +56,16 @@ public class Registry {
         return AlgorithmRegistry.getAll().stream()
                 .filter(desc -> selected.equals(desc.getCompatibleKey()))
                 .toList();
+    }
+
+
+    public static Set<String> getAllTerminationConditions() {
+        return TerminationRegistry.getRegisteredNames();
+    }
+
+    public static TerminationCondition getTerminationCondition(String key) {
+        return TerminationRegistry.get(key)
+                .orElseThrow(() -> new IllegalArgumentException("Termination condition not found: " + key))
+                .createInstance();
     }
 }

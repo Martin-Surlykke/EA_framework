@@ -5,13 +5,16 @@ import com.ea_framework.Descriptors.AlgorithmDescriptor;
 import com.ea_framework.Descriptors.ProblemDescriptor;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.SearchSpaces.SearchSpace;
+import com.ea_framework.Termination.TerminationCondition;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BatchConfig {
@@ -33,11 +36,13 @@ public class BatchConfig {
     private final Map<String, String> terminationConfigs = new HashMap<>();
     private final Map<String, String> metaConfigs = new HashMap<>();
 
+    private int problemSize;
 
     private boolean showVisualization = true;
 
     private int repeats;
-    private int termination;
+    private TerminationCondition termination;
+    private List<TerminationCondition> terminationConditions = new ArrayList<>();
 
 
     public String getStreamName() {
@@ -116,11 +121,11 @@ public class BatchConfig {
         this.repeats = repeats;
     }
 
-    public int getTermination() {
+    public TerminationCondition getTermination() {
         return termination;
     }
 
-    public void setTermination(int termination) {
+    public void setTermination(TerminationCondition termination) {
         this.termination = termination;
     }
 
@@ -133,6 +138,17 @@ public class BatchConfig {
     }
 
     public Problem resolveProblem() throws IOException {
+        if (problemDescriptor == null)
+            throw new IllegalStateException("Problem descriptor is not set.");
+
+        if (problemSize > 0) {
+            return problemDescriptor.createProblem(problemSize);
+        }
+
+        if (inputFile == null) {
+            throw new FileNotFoundException("No input file specified and no problem size given.");
+        }
+
         try (InputStream in = getInputStream()) {
             return problemDescriptor.getLoader().load(in);
         }
@@ -158,4 +174,15 @@ public class BatchConfig {
     }
 
 
+    public List<TerminationCondition> getTerminationConditions() {
+        return terminationConditions;
+    }
+
+    public void setProblemSize(int size) {
+        this.problemSize = size;
+    }
+
+    public int getProblemSize() {
+        return problemSize;
+    }
 }

@@ -2,6 +2,7 @@ package com.ea_framework.Registries;
 
 import com.ea_framework.ACOTypes.MMASACOType;
 import com.ea_framework.ACOTypes.StandardACOType;
+import com.ea_framework.Algorithms.BitStringACO;
 import com.ea_framework.Algorithms.BitStringGenericAlgorithm;
 import com.ea_framework.Algorithms.TSP2DACO;
 import com.ea_framework.Algorithms.TSP2DGenericAlgorithm;
@@ -9,6 +10,7 @@ import com.ea_framework.Configs.BitStringGenericConfigPage;
 import com.ea_framework.Configs.TSP2DACOConfigPage;
 import com.ea_framework.Controllers.OperatorControllers.OperatorConfigController;
 import com.ea_framework.Descriptors.OperatorDescriptor;
+import com.ea_framework.Descriptors.TerminationDescriptor;
 import com.ea_framework.Filehandlers.BitStringLeadingOnesFileHandler;
 import com.ea_framework.Filehandlers.BitStringOneMaxFileHandler;
 import com.ea_framework.Operators.ChoiceFunctions.BitStringGreedyChoice;
@@ -29,7 +31,16 @@ import com.ea_framework.SearchSpaces.BitStringSearchSpace;
 import com.ea_framework.SearchSpaces.Graph2DSearchSpace;
 import com.ea_framework.Operators.FitnessFunctions.TspEuclideanDistance;
 import com.ea_framework.Operators.MutationFunctions.TSP2DTwoOpt;
+import com.ea_framework.Termination.FitnessThresholdCondition;
+import com.ea_framework.Termination.MaxIterationsCondition;
+import com.ea_framework.Termination.TerminationCondition;
 import com.ea_framework.UIs.GenericOperatorUI;
+
+import com.ea_framework.ACOTypes.StandardBitStringACOType;
+import com.ea_framework.ACOTypes.MMASBitStringACOType;
+import com.ea_framework.Configs.BitStringACOConfigPage;
+
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -99,10 +110,30 @@ public class RegistryInitializer {
         );
         AlgorithmRegistry.register(tsp2DACODescriptor);
 
+        AlgorithmDescriptor bitStringOneMaxACODescriptor = new AlgorithmDescriptor(
+                BitStringACO.class,
+                "BitStringACO",
+                "BitStringOneMax",
+                BitStringACOConfigPage::new
+        );
+        AlgorithmRegistry.register(bitStringOneMaxACODescriptor);
+
+        AlgorithmDescriptor bitStringLeadingOnesACODescriptor = new AlgorithmDescriptor(
+                BitStringACO.class,
+                "BitStringLeadingOnesACO",
+                "BitStringLeadingOnes",
+                BitStringACOConfigPage::new
+        );
+        AlgorithmRegistry.register(bitStringLeadingOnesACODescriptor);
+
 
         ACOTypeRegistry.register("Standard", new StandardACOType());
 
         ACOTypeRegistry.register("MMAS", new MMASACOType());
+
+        BitStringACOTypeRegistry.register("Standard", new StandardBitStringACOType());
+
+        BitStringACOTypeRegistry.register("MMAS", new MMASBitStringACOType(0.1, 1.0, 0.01, 10.0));
 
         registerOperator(
                 "TSP2DEuclideanDistance",
@@ -172,6 +203,18 @@ public class RegistryInitializer {
                 "/com/ea_framework/operatorConfig/BitStringSimulatedAnnealing.fxml",
                 BitStringSimulatedAnnealing::new
         );
+
+        registerTermination(
+                "Max Iterations",
+                "/com/ea_framework/operatorConfig/MaxIterationTermination.fxml",
+                MaxIterationsCondition::new
+        );
+
+        registerTermination(
+                "Fitness Threshold",
+                "/com/ea_framework/operatorConfig/FitnessThresholdTermination.fxml",
+                FitnessThresholdCondition::new
+        );
     }
 
     private static void registerOperator(
@@ -198,6 +241,27 @@ public class RegistryInitializer {
                 operatorSupplier
         );
         OperatorRegistry.register(name, descriptor);
+    }
+
+    private static void registerTermination(String name, String fxmlPath, Supplier<TerminationCondition> instanceSupplier) {
+        TerminationDescriptor descriptor = new TerminationDescriptor(
+                name,
+                fxmlPath,
+                () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(RegistryInitializer.class.getResource(fxmlPath));
+                        Parent root = loader.load();
+                        OperatorConfigController controller = loader.getController();
+                        return new GenericOperatorUI(root, controller);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                },
+                instanceSupplier
+        );
+
+        TerminationRegistry.register(name, descriptor);
     }
 
 }

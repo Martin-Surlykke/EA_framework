@@ -9,14 +9,17 @@ public class StandardFitnessCurve implements FitnessView {
 
     private final LineChart<Number, Number> lineChart;
     private final XYChart.Series<Number, Number> fitnessSeries;
-    private int iteration = 0;
 
-    public StandardFitnessCurve(int MAX_ITERATIONS) {
-        NumberAxis xAxis = new NumberAxis(0, MAX_ITERATIONS, MAX_ITERATIONS / 10.0);
+    public StandardFitnessCurve() {
+        NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
 
         xAxis.setLabel("Iteration");
         yAxis.setLabel("Fitness");
+
+        // Enable auto-ranging
+        xAxis.setAutoRanging(true);
+        yAxis.setAutoRanging(true);
 
         lineChart = new LineChart<>(xAxis, yAxis);
         lineChart.setTitle("Fitness over Iterations");
@@ -26,18 +29,18 @@ public class StandardFitnessCurve implements FitnessView {
         fitnessSeries = new XYChart.Series<>();
         lineChart.getData().add(fitnessSeries);
     }
+
     @Override
     public Node getView() {
         return lineChart;
     }
 
     @Override
-    public void update(Number fitness, int iterations) {
-        fitnessSeries.getData().add(new XYChart.Data<>(iterations, fitness));
+    public void update(Number fitness, int iteration) {
+        fitnessSeries.getData().add(new XYChart.Data<>(iteration, fitness));
     }
 
     public void reset() {
         fitnessSeries.getData().clear();
-        iteration = 0;
     }
 }

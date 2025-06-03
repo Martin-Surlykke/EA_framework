@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+
+<VBox spacing="8" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ea_framework.Controllers.AlgorithmControllers.BitStringACOController">
+
+    <Label text="Number of Ants"/>
+    <TextField fx:id="numAntsField"/>
+
+    <Label text="Evaporation Rate"/>
+    <TextField fx:id="evaporationRateField"/>
+
+    <Label text="Initial Pheromone"/>
+    <TextField fx:id="initialPheromoneField"/>
+
+    <Label text="Reinforcement"/>
+    <TextField fx:id="reinforcementField"/>
+
+    <ComboBox fx:id="acoTypeDropdown" prefWidth="150.0" />
+
+</VBox>

@@ -78,7 +78,7 @@ public class TSP2DProblem implements Problem {
 
     @Override
     public FitnessView getFitnessView() {
-        return new StandardFitnessCurve(maxIterations);
+        return new StandardFitnessCurve();
     }
 
     @Override

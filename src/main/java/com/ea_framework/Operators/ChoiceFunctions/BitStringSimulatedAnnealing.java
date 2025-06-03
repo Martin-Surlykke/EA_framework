@@ -30,7 +30,6 @@ public class BitStringSimulatedAnnealing implements ChoiceFunction, Configurable
         double probability = rand.nextDouble();
         double acceptance = Math.exp((fCand - fCurr) / T_i);
 
-        System.out.println("Acceptance: " + acceptance + "Probability: " + probability);
         return probability < acceptance ? cand : curr;
 
     }

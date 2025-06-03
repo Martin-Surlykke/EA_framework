@@ -1,79 +1,69 @@
 package com.ea_framework;
 
-import com.ea_framework.Algorithms.Algorithm;
-import com.ea_framework.Configs.BatchConfig;
-import com.ea_framework.Views.InfoViews.StatRecord;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Locale;
+import java.io.*;
+import java.util.*;
 
 public class CSVStatWriter {
 
-    public static void writeFullStats(List<StatRecord> stats, File file, double time) throws IOException {
+    public static void writeScheduleSummary(List<BatchStats> stats, File file) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            writer.println("Iteration;Time;Fitness;Best Iteration;Best Fitness");
+            writer.println("Batch Index;Problem;Algorithm;Fitness;Best Iteration;Runtime (ms)");
 
-            for (StatRecord stat : stats) {
-                if (stat == null) continue; // skip null entries
-                writer.printf(Locale.US, "%d;%.6f;%.6f;%d;%.6f%n",
-                        stat.iteration(),
-                        time,
-                        stat.fitness(),
-                        stat.bestIteration(),
-                        stat.bestFitness());
+            double totalFitness = 0;
+            int totalIteration = 0;
+            long totalRuntime = 0;
+
+            for (int i = 0; i < stats.size(); i++) {
+                BatchStats s = stats.get(i);
+                writer.printf(Locale.US, "%d;%s;%s;%.6f;%d;%d%n",
+                        i,
+                        s.getProblem(),
+                        s.getAlgorithm(),
+                        s.getBestFitness(),
+                        s.getBestIteration(),
+                        s.getRuntimeMs());
+
+                totalFitness += s.getBestFitness();
+                totalIteration += s.getBestIteration();
+                totalRuntime += s.getRuntimeMs();
+            }
+
+            int count = stats.size();
+            writer.printf(Locale.US, "Average; ; ;%.6f;%d;%d%n",
+                    totalFitness / count,
+                    totalIteration / count,
+                    totalRuntime / count);
+        }
+    }
+
+    public static void appendToFullScheduleSummary(File fullFile, File scheduleSummaryFile) throws IOException {
+        List<String> lines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(scheduleSummaryFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
             }
         }
-    }
 
+        String averageLine = lines.get(lines.size() - 1);
+        String[] values = averageLine.split(";");
 
-    public static void writeBatchSummary(BatchConfig config, Algorithm algorithm, File file, long runtimeMs) throws IOException {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
-            writer.println("Problem;Algorithm;Fitness;Best Iteration;Runtime (ms);Solution");
-            writer.printf(Locale.US, "%s;%s;%.6f;%d;%d;%s%n",
-                    config.getProblemName(),
-                    config.getAlgorithmName(),
-                    algorithm.getBestFitness(),
-                    algorithm.getBestIteration(),
-                    runtimeMs,
-                    algorithm.getCurrentSolution().toString().replaceAll(",", "-"));
-        }
-    }
+        double avgFitness = Double.parseDouble(values[3].trim());
+        int avgIteration = Integer.parseInt(values[4].trim());
+        long avgRuntime = Long.parseLong(values[5].trim());
 
-    public static void writeBatchSummary(BatchConfig config, Algorithm algorithm, String filename, long runtimeMs) throws IOException {
-        writeBatchSummary(config, algorithm, getOutputFile(filename), runtimeMs);
-    }
-
-    public static void appendToScheduleSummary(File scheduleSummaryFile, int batchIndex, BatchConfig config, Algorithm algorithm, long runtimeMs) throws IOException {
-        boolean newFile = !scheduleSummaryFile.exists();
-
-        try (PrintWriter writer = new PrintWriter(new FileWriter(scheduleSummaryFile, true))) {
+        boolean newFile = !fullFile.exists();
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fullFile, true))) {
             if (newFile) {
-                writer.println("Batch Index;Problem;Algorithm;Fitness;Best Iteration;Runtime (ms)");
+                writer.println("Schedule Summary File;Average Fitness;Average Best Iteration;Average Runtime (ms)");
             }
 
-            writer.printf(Locale.US, "%d;%s;%s;%.6f;%d;%d%n",
-                    batchIndex,
-                    config.getProblemName(),
-                    config.getAlgorithmName(),
-                    algorithm.getBestFitness(),
-                    algorithm.getBestIteration(),
-                    runtimeMs);
+            writer.printf(Locale.US, "%s;%.6f;%d;%d%n",
+                    scheduleSummaryFile.getName(),
+                    avgFitness,
+                    avgIteration,
+                    avgRuntime);
         }
-    }
-
-    public static void appendToScheduleSummary(String filename, int batchIndex, BatchConfig config, Algorithm algorithm, long runtimeMs) throws IOException {
-        appendToScheduleSummary(getOutputFile(filename), batchIndex, config, algorithm, runtimeMs);
-    }
-
-    private static File getOutputFile(String baseName) {
-        File dir = FrontPageController.getCsvSaveDirectory();
-        if (dir == null) {
-            throw new IllegalStateException("CSV save directory not selected. Please set a directory from the front page.");
-        }
-        return new File(dir, baseName);
     }
 }

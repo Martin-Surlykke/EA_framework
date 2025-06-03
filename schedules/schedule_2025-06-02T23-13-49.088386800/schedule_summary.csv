@@ -1,0 +1,5 @@
+Batch Index;Problem;Algorithm;Fitness;Best Iteration;Runtime (ms)
+0;BitStringOneMax;BitStringGeneric;200.000000;748;18302
+1;BitStringOneMax;BitStringGeneric;200.000000;1152;17971
+2;BitStringOneMax;BitStringGeneric;200.000000;755;18127
+Average; ; ;200.000000;885;18133

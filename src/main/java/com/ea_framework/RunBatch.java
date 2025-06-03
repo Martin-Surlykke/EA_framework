@@ -6,13 +6,14 @@ import com.ea_framework.Configs.BatchConfig;
 import com.ea_framework.Controllers.VisualizeController;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Runners.Runner;
+import com.ea_framework.Termination.TerminationCondition;
 import com.ea_framework.Views.InfoViews.StatRecord;
+import com.ea_framework.Views.ProgressDialog;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,98 +25,123 @@ public class RunBatch {
     private final Stage stage;
     private final Scene returnScene;
     private final int batchIndex;
-    private final File outputDir;
-    private final File scheduleSummaryFile;
+    private final List<BatchStats> statsCollector;
 
-    public RunBatch(BatchConfig config, Stage stage, Scene returnScene, int batchIndex, File outputDir, File scheduleSummaryFile) {
+    public RunBatch(BatchConfig config, Stage stage, Scene returnScene, int batchIndex, List<BatchStats> statsCollector) {
         this.config = config;
         this.stage = stage;
         this.returnScene = returnScene;
         this.batchIndex = batchIndex;
-        this.outputDir = outputDir;
-        this.scheduleSummaryFile = scheduleSummaryFile;
+        this.statsCollector = statsCollector;
     }
 
-    public void runAsync(Runnable onComplete) throws Exception {
-        Problem problem = config.resolveProblem();
-        problem.setMaxIterations(config.getTermination());
+    public void runAsync(Runnable onComplete) {
+        new Thread(() -> {
+            Problem problem;
+            try {
+                problem = config.resolveProblem();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
 
-        AlgorithmConfig algoConfig = config.getAlgorithmConfig();
-        Algorithm algorithm = config.getAlgorithmDescriptor().create(algoConfig);
+            AlgorithmConfig algoConfig = config.getAlgorithmConfig();
+            Algorithm algorithm = config.getAlgorithmDescriptor().create(algoConfig);
+            List<TerminationCondition> terminationConditions = config.getTerminationConditions();
 
-        if (config.getVisualSelected()) {
-            List<StatRecord> stats = Collections.synchronizedList(new ArrayList<>());
+            if (config.getVisualSelected()) {
+                runWithVisualization(problem, algorithm, terminationConditions, onComplete);
+            } else {
+                runHeadless(problem, algorithm, terminationConditions, onComplete);
+            }
+        }).start();
+    }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
-            Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
-            stage.setTitle("Visualizer");
+    private void runWithVisualization(Problem problem, Algorithm algorithm, List<TerminationCondition> terminationConditions, Runnable onComplete) {
+        List<StatRecord> stats = Collections.synchronizedList(new ArrayList<>());
 
-            VisualizeController controller = loader.getController();
-            controller.initialize(
-                    problem.getVisualizer(),
-                    problem.getFitnessView(),
-                    problem.getConfigView(),
-                    problem.getStatView(),
-                    stage
-            );
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/Visualizer.fxml"));
+                Scene scene = new Scene(loader.load());
+                stage.setScene(scene);
+                stage.setTitle("Visualizer");
 
-            StatTracker statTracker = (i, solution, fitness, stat) -> {
-                stats.add(stat);
-                Platform.runLater(() -> controller.updateAll(solution, i, fitness, stat));
-            };
+                VisualizeController controller = loader.getController();
+                controller.initialize(
+                        problem.getVisualizer(),
+                        problem.getFitnessView(),
+                        problem.getConfigView(),
+                        problem.getStatView(),
+                        stage
+                );
 
-            stage.show();
+                StatTracker statTracker = (i, solution, fitness, stat) -> {
+                    stats.add(stat);
+                    Platform.runLater(() -> controller.updateAll(solution, i, fitness, stat));
+                };
+
+                stage.show();
+
+                long startTime = System.nanoTime();
+
+                new Runner().run(problem, algorithm, terminationConditions, statTracker, () -> {
+                    long endTime = System.nanoTime();
+                    long runtimeMs = (endTime - startTime) / 1_000_000;
+
+                    Platform.runLater(() -> {
+                        statsCollector.add(BatchStats.from(config, algorithm, runtimeMs));
+                        stage.setScene(returnScene);
+                        stage.setTitle("EA Framework");
+                        if (onComplete != null) onComplete.run();
+                    });
+                });
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void runHeadless(Problem problem, Algorithm algorithm, List<TerminationCondition> terminationConditions, Runnable onComplete) {
+        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+
+        Platform.runLater(() -> {
+            progressDialog[0] = new ProgressDialog("Running batch " + batchIndex + "...");
+            progressDialog[0].show(stage);
+        });
+
+        new Thread(() -> {
+            Object initial = problem.getDefaultPermutation();
+            algorithm.setCurrentSolution(initial);
 
             long startTime = System.nanoTime();
+            int iteration = 0;
 
-            new Runner().run(problem, algorithm, config.getTermination(), statTracker, () -> {
-                long endTime = System.nanoTime();
-                long runtimeMs = (endTime - startTime) / 1_000_000;
+            while (!terminationMet(terminationConditions, algorithm, iteration)) {
+                algorithm.run(iteration);
+                iteration++;
+            }
 
-                Platform.runLater(() -> {
-                    File dir = FrontPageController.getCsvSaveDirectory();
-                    if (dir != null) {
-                        try {
-                            File fullStats = new File(dir, "full-stats-batch-" + batchIndex + ".csv");
-                            File summary = new File(dir, "summary-batch-" + batchIndex + ".csv");
-                            File schedule = new File(dir, "schedule-summary.csv");
+            long endTime = System.nanoTime();
+            long runtimeMs = (endTime - startTime) / 1_000_000;
 
-                            CSVStatWriter.writeFullStats(stats, fullStats, runtimeMs);
-                            CSVStatWriter.writeBatchSummary(config, algorithm, summary, runtimeMs);
-                            CSVStatWriter.appendToScheduleSummary(schedule, batchIndex, config, algorithm, runtimeMs);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        System.err.println("CSV save directory not set.");
-                    }
+            BatchStats batchStats = BatchStats.from(config, algorithm, runtimeMs);
+            statsCollector.add(batchStats);
 
-                    stage.setScene(returnScene);
-                    stage.setTitle("EA Framework");
-                    if (onComplete != null) onComplete.run();
-                });
+            Platform.runLater(() -> {
+                progressDialog[0].close();
+                if (onComplete != null) onComplete.run();
             });
+        }).start();
+    }
 
-        } else {
-            new Thread(() -> {
-                long startTime = System.nanoTime();
-                algorithm.setCurrentSolution(problem.getDefaultPermutation());
-                for (int i = 0; i < config.getTermination(); i++) {
-                    algorithm.run(i);
-                }
-                long endTime = System.nanoTime();
-                long runtimeMs = (endTime - startTime) / 1_000_000;
-
-                try {
-                    CSVStatWriter.writeBatchSummary(config, algorithm, new File(outputDir, "batch_" + batchIndex + "_summary.csv"), runtimeMs);
-                    CSVStatWriter.appendToScheduleSummary(scheduleSummaryFile, batchIndex, config, algorithm, runtimeMs);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                Platform.runLater(onComplete);
-            }).start();
+    private boolean terminationMet(List<TerminationCondition> conditions, Algorithm algorithm, int iteration) {
+        for (TerminationCondition cond : conditions) {
+            if (cond.shouldTerminate(iteration, algorithm)) {
+                return true;
+            }
         }
+        return false;
     }
 }

@@ -1,0 +1,4 @@
+Batch Index;Problem;Algorithm;Fitness;Best Iteration;Runtime (ms)
+0;TSP2D;TSP2DGeneric;736.152746;13363;474
+1;TSP2D;TSP2DGeneric;745.056729;9192;421
+2;TSP2D;TSP2DGeneric;737.831553;16243;395

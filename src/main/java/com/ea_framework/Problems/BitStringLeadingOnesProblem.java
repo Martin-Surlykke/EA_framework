@@ -44,7 +44,7 @@ public class BitStringLeadingOnesProblem implements Problem, BitStringCompatible
 
     @Override
     public FitnessView getFitnessView() {
-        return new StandardFitnessCurve(maxIterations);
+        return new StandardFitnessCurve();
     }
 
     @Override
