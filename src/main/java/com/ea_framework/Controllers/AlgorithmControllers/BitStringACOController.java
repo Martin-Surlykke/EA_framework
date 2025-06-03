@@ -40,7 +40,7 @@ public class BitStringACOController implements AlgorithmConfigUI {
         initialPheromoneField.focusedProperty().addListener((obs, old, focused) -> { if (!focused) checkReady(); });
         reinforcementField.focusedProperty().addListener((obs, old, focused) -> { if (!focused) checkReady(); });
     }
-    
+
     private void checkReady() {
         if (isReadyToProceed() && readyCallback != null) {
             readyCallback.run();
@@ -96,13 +96,5 @@ public class BitStringACOController implements AlgorithmConfigUI {
     @Override
     public void setOnReady(Runnable r) {
         this.readyCallback = r;
-    }
-
-    private double parseOrDefault(String text, double fallback) {
-        try {
-            return Double.parseDouble(text);
-        } catch (NumberFormatException e) {
-            return fallback;
-        }
     }
 }

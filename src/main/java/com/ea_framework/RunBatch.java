@@ -90,7 +90,7 @@ public class RunBatch {
                     long runtimeMs = (endTime - startTime) / 1_000_000;
 
                     Platform.runLater(() -> {
-                        statsCollector.add(BatchStats.from(config, algorithm, runtimeMs));
+                        statsCollector.add(BatchStats.from(config, problem, algorithm, runtimeMs));
                         stage.setScene(returnScene);
                         stage.setTitle("EA Framework");
                         if (onComplete != null) onComplete.run();
@@ -126,7 +126,7 @@ public class RunBatch {
             long endTime = System.nanoTime();
             long runtimeMs = (endTime - startTime) / 1_000_000;
 
-            BatchStats batchStats = BatchStats.from(config, algorithm, runtimeMs);
+            BatchStats batchStats = BatchStats.from(config, problem, algorithm, runtimeMs);
             statsCollector.add(batchStats);
 
             Platform.runLater(() -> {

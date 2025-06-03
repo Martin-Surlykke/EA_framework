@@ -96,6 +96,16 @@ public class BitStringOneMaxProblem implements Problem, BitStringCompatible, Has
     }
 
     @Override
+    public Problem getInstance() {
+        return new BitStringOneMaxProblem(name, length, defaultBitString);
+    }
+
+    @Override
+    public int getSize() {
+        return length;
+    }
+
+    @Override
     public Fitness getFitnessFunction() {
         return fitnessFunction;
     }

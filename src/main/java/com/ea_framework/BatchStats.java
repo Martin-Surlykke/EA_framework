@@ -2,36 +2,40 @@ package com.ea_framework;
 
 import com.ea_framework.Algorithms.Algorithm;
 import com.ea_framework.Configs.BatchConfig;
+import com.ea_framework.Problems.Problem;
 
 public class BatchStats {
     private final String problem;
     private final String algorithm;
+    private final int problemSize;
     private final double bestFitness;
     private final int bestIteration;
     private final long bestEvaluation;
     private final long runtimeMs;
 
-    private final int problemSize;
+    private final Problem problemInstance;
 
-    public BatchStats(String problem, String algorithm, double bestFitness, int bestIteration, long bestEvaluation, long runtimeMs, int problemSize) {
+    public BatchStats(String problem, String algorithm, Problem problemInstance,
+                      double bestFitness, int bestIteration, long bestEvaluation, long runtimeMs) {
         this.problem = problem;
         this.algorithm = algorithm;
+        this.problemSize = problemInstance.getSize();
         this.bestFitness = bestFitness;
         this.bestIteration = bestIteration;
         this.bestEvaluation = bestEvaluation;
         this.runtimeMs = runtimeMs;
-        this.problemSize = problemSize;
+        this.problemInstance = problemInstance;
     }
 
-    public static BatchStats from(BatchConfig config, Algorithm algo, long runtimeMs) {
+    public static BatchStats from(BatchConfig config, Problem problem, Algorithm algo, long runtimeMs) {
         return new BatchStats(
                 config.getProblemName(),
                 config.getAlgorithmName(),
+                problem.getInstance(),
                 algo.getBestFitness(),
                 algo.getBestIteration(),
-                algo.getBestIteration()*2,
-                runtimeMs,
-                config.getProblemSize()
+                algo.getBestIteration() * 2,  // NOTE: change this if evals != 2*iters
+                runtimeMs
         );
     }
 
@@ -60,6 +64,6 @@ public class BatchStats {
     }
 
     public int getProblemSize() {
-        return problemSize;
+        return problemSize;  // assumes `Problem` has a getSize() method
     }
 }

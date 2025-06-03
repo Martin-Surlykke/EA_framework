@@ -28,4 +28,8 @@ public interface Problem {
     void setSimulatedAnnealingParams(double alpha, double t0);
 
     List<Double> getSimulatedAnnealingParams();
+
+    Problem getInstance();
+
+    int getSize();
 }

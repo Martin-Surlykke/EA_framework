@@ -22,14 +22,12 @@ import java.util.function.Consumer;
 public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
     @FXML
     public Pane genericAlgorithmConfigPane;
-
     @FXML
     public ComboBox<String> mutationDropDown;
     @FXML
     public ScrollPane mutationScroll;
     @FXML
     public VBox mutationConfigPane;
-
     @FXML
     public ComboBox<String> choiceDropDown;
     @FXML

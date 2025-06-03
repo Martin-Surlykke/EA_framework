@@ -445,7 +445,7 @@ public class BatchController {
         runBatch(config, 0, stage, () -> {
             try {
                 String configKey = config.getProblemName() + "_" + config.getAlgorithmName();
-                File summaryFile = new File(dir, "schedule_summary_" + configKey + ".csv");
+                File summaryFile = new File(dir, String.format("schedule_summary_%02d_%s.csv", index, configKey));
                 CSVStatWriter.writeScheduleSummary(currentScheduleStats, summaryFile);
 
                 File fullSummary = new File(dir, "fullScheduleSummary.csv");

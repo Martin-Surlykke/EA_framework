@@ -96,6 +96,16 @@ public class BitStringLeadingOnesProblem implements Problem, BitStringCompatible
     }
 
     @Override
+    public Problem getInstance() {
+        return new BitStringLeadingOnesProblem(name, length, defaultBitString);
+    }
+
+    @Override
+    public int getSize() {
+        return length;
+    }
+
+    @Override
     public Fitness getFitnessFunction() {
         return fitnessFunction;
     }

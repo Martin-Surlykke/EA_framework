@@ -166,4 +166,18 @@ public class TSP2DProblem implements Problem {
         return List.of(saAlpha, saT0);
     }
 
+    @Override
+    public Problem getInstance() {
+        return new TSP2DProblem(
+                name, comment, type, edgeWeightType,
+                coordinates, distanceMatrix, defaultPermutation,
+                maxX, maxY, minX, minY
+        );
+    }
+
+    @Override
+    public int getSize() {
+        return nodeCount;
+    }
+
 }
