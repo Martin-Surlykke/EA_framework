@@ -1,4 +1,4 @@
-package com.ea_framework;
+package com.ea_framework.Controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -18,9 +17,6 @@ public class FrontPageController {
     public Label changeLocation;
     @FXML
     Pane minimize;
-
-    @FXML
-    Label close;
 
     private static File csvSaveDirectory = null;
 

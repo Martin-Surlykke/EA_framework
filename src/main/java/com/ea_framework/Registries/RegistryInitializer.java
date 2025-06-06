@@ -27,6 +27,7 @@ import com.ea_framework.Operators.FitnessFunctions.BitStringLeadingOnes;
 import com.ea_framework.Operators.FitnessFunctions.BitStringOneMax;
 import com.ea_framework.Operators.MutationFunctions.BitStringOneOneEA;
 import com.ea_framework.Operators.MutationFunctions.BitStringRLS;
+import com.ea_framework.Operators.MutationFunctions.TSP2D_One_One_EA;
 import com.ea_framework.SearchSpaces.BitStringSearchSpace;
 import com.ea_framework.SearchSpaces.Graph2DSearchSpace;
 import com.ea_framework.Operators.FitnessFunctions.TspEuclideanDistance;
@@ -204,6 +205,12 @@ public class RegistryInitializer {
                 BitStringSimulatedAnnealing::new
         );
 
+        registerOperator("TSP2D (1+1) EA",
+                OperatorType.MUTATION_TSP,
+                "/com/ea_framework/operatorConfig/TSP2DOneOneEA.fxml",
+                TSP2D_One_One_EA::new
+        );
+
         registerTermination(
                 "Max Iterations",
                 "/com/ea_framework/operatorConfig/MaxIterationTermination.fxml",
@@ -215,6 +222,7 @@ public class RegistryInitializer {
                 "/com/ea_framework/operatorConfig/FitnessThresholdTermination.fxml",
                 FitnessThresholdCondition::new
         );
+
     }
 
     private static void registerOperator(

@@ -54,9 +54,9 @@ public class CSVStatWriter {
         String averageLine = lines.get(lines.size() - 1);
         String[] values = averageLine.split(";");
 
-        double avgFitness = Double.parseDouble(values[3].trim());
-        int avgIteration = (int) Double.parseDouble(values[4].trim());
-        long avgRuntime = Long.parseLong(values[5].trim());
+        double avgFitness = Double.parseDouble(values[4].trim());
+        int avgIteration = (int) Double.parseDouble(values[5].trim());
+        long avgRuntime = Long.parseLong(values[6].trim());
 
         boolean newFile = !fullFile.exists();
         try (PrintWriter writer = new PrintWriter(new FileWriter(fullFile, true))) {

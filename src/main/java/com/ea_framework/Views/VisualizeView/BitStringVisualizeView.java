@@ -18,11 +18,9 @@ public class BitStringVisualizeView implements VisualizeView {
     private final Pane backgroundLayer;
     private final Pane pointLayer;
     private final int n;
-    private final Fitness fitnessFunction;
 
     public BitStringVisualizeView(BitStringCompatible problem) {
         this.n = problem.getDefaultPermutation().length;
-        this.fitnessFunction = problem.getFitnessFunction();
 
         this.backgroundLayer = new Pane();
         this.pointLayer = new Pane();
@@ -61,7 +59,7 @@ public class BitStringVisualizeView implements VisualizeView {
         double xRel = (minMax[1] - minMax[0]) == 0 ? 0.5 : (spread - minMax[0]) / (double)(minMax[1] - minMax[0]);
 
         double yNorm = ones / (double) n;
-        double shapingFactor = Math.exp(-Math.pow((yNorm - 0.5) * 4, 2)); // e^(-(x^2)/8)
+        double shapingFactor = Math.exp(-Math.pow((yNorm - 0.5) * 4, 2));
 
         double x = width / 2 + (xRel - 0.5) * (width * 0.9) * shapingFactor;
         double y = padding + (1 - yNorm) * usableHeight;
@@ -71,7 +69,6 @@ public class BitStringVisualizeView implements VisualizeView {
 
     @Override
     public void applyConfig(AlgorithmConfig config) {
-        // No-op
     }
 
     private void drawBounds() {
@@ -84,7 +81,6 @@ public class BitStringVisualizeView implements VisualizeView {
         double usableHeight = height - 2 * padding;
 
         for (int ones = 0; ones <= n; ones++) {
-            int[] minMax = minMaxSpread(ones);
 
             double yNorm = ones / (double) n;
             double y = padding + (1 - yNorm) * usableHeight;
