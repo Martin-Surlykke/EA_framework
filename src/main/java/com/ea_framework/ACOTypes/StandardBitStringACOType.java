@@ -1,9 +1,11 @@
 package com.ea_framework.ACOTypes;
 
+import java.util.Map;
+
 public class StandardBitStringACOType implements BitStringACOType {
 
     // Parameters for the ACO algorithm
-    private final double rho = 0.1;
+    private double rho = 0.1;
     private final double Q = 1.0;
 
     // Constructor
@@ -26,4 +28,15 @@ public class StandardBitStringACOType implements BitStringACOType {
             pheromones[i][solution[i] ? 1 : 0] += Q / fitness;
         }
     }
+
+    @Override
+    public void setEvaporationRate(double rho) {
+        this.rho = rho;
+    }
+
+    @Override
+    public void populate(Map<String, Object> raw) {
+
+    }
+
 }

@@ -23,15 +23,14 @@ public class BitStringACOConfig implements AlgorithmConfig {
     // Constructor to initialize the ACO configuration with default values
     @Override
     public void populate(Map<String, Object> raw, Problem problem) {
-        this.numAnts = (int) raw.get("numAnts");
-        this.evaporationRate = (double) raw.get("evaporationRate");
-        this.initialPheromone = (double) raw.get("initialPheromone");
-        this.reinforcement = (double) raw.get("reinforcement");
+        this.numAnts = raw.get("numAnts") == null ? 50 : (int) raw.get("numAnts");
+        this.evaporationRate = raw.get("evaporationRate") == null ? 0.1 : (double) raw.get("evaporationRate");
+        this.initialPheromone = raw.get("initialPheromone") == null ? 0.5 : (double) raw.get("initialPheromone");
+        this.reinforcement = raw.get("reinforcement") == null ? 1.0 : (double) raw.get("reinforcement");
         this.acoType = (BitStringACOType) raw.get("type");
-
-        // Due to the structure of bitstring problems, fitness is drawn directly from the problem
-
+        this.acoType.populate(raw);
         this.fitness = ((BitStringCompatible) problem).getFitnessFunction();
+
     }
 
     // Getters for the ACO parameters

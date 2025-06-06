@@ -15,6 +15,7 @@ public class TSP2DACOConfig implements AlgorithmConfig {
     private ACOType type;
     private double[][] distanceMatrix;
     private int[] initialTour;
+    private double rho;  // Assuming this field exists for pheromone evaporation rate
 
 
     // Populates the config with the necessary parameters, gathgered from the config
@@ -25,6 +26,7 @@ public class TSP2DACOConfig implements AlgorithmConfig {
         this.type = (ACOType) raw.get("type");
         this.distanceMatrix = (double[][]) raw.get("distanceMatrix");
         this.initialTour = (int[]) raw.get("initialTour");
+        this.rho = (Double) raw.get("rho");
     }
 
 
@@ -44,5 +46,9 @@ public class TSP2DACOConfig implements AlgorithmConfig {
 
     public double getBeta() {
         return beta;
+    }
+
+    public double getRho() {
+        return this.rho;
     }
 }

@@ -13,6 +13,9 @@
         <Label text="Beta (influence of heuristic):"/>
         <TextField fx:id="betaField" promptText="e.g. 2.5"/>
 
+        <Label text="Evaporation Rate:"/>
+        <TextField fx:id="evaporationRateField" promptText="e.g. 0.5"/>
+
         <Label text="ACO Variant:"/>
         <ComboBox fx:id="type"/>
 

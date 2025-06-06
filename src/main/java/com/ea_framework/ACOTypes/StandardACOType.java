@@ -3,7 +3,7 @@ package com.ea_framework.ACOTypes;
 public class StandardACOType implements ACOType {
 
     // Parameters for pheromone update
-    private final double rho = 0.1;
+    private double rho = 0.1;
     private final double Q = 100.0;
 
 
@@ -40,5 +40,10 @@ public class StandardACOType implements ACOType {
         int last = tour[n - 1], first = tour[0];
         tau[last][first] += Q / fitness;
         tau[first][last] = tau[last][first];
+    }
+
+    @Override
+    public void setEvaporationRate(double rho) {
+        this.rho = rho;
     }
 }

@@ -7,4 +7,6 @@ public interface ACOType {
         // Initializes pheromone levels for the ACO algorithm
         void updatePheromones(double[][] tau, int[] tour, double fitness, boolean[][] edgesUsed);
         // Updates pheromone levels based on the constructed tour and its fitness
+
+        public void setEvaporationRate(double rho);
 }

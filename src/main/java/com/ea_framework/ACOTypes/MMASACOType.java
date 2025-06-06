@@ -3,7 +3,7 @@ package com.ea_framework.ACOTypes;
 public class MMASACOType implements ACOType {
 
     // MMAS stands for Max-Min Ant System, a variant of Ant Colony Optimization
-    private final double rho = 0.1;
+    private double rho = 0.1; // rho is the pheromone evaporation rate, typically set to a small value
     private double tauMax;
     // tauMin is the minimum pheromone level, which is set to a small value
     private double tauMin;
@@ -46,4 +46,11 @@ public class MMASACOType implements ACOType {
             }
         }
     }
+
+    @Override
+    public void setEvaporationRate(double rho) {
+        this.rho = rho;
+    }
+
+
 }

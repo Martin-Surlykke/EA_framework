@@ -17,6 +17,7 @@ import javafx.fxml.FXML;
 import java.util.HashMap;
 
 public class TSP2DACOController implements AlgorithmConfigUI {
+    public TextField evaporationRateField;
 
     // Controller class for the TSP ACO config page
 
@@ -54,8 +55,10 @@ public class TSP2DACOController implements AlgorithmConfigUI {
     @Override
     public Map<String, Object> getConfigs() {
         Map<String, Object> map = new HashMap<>();
+
         double alpha = parseOrDefault(alphaField.getText(), 1.5);
         double beta = parseOrDefault(betaField.getText(), 2.5);
+        double rho = parseOrDefault(evaporationRateField.getText(), 0.1);
 
         String selectedName = type.getValue();
         ACOType strategy = ACOTypeRegistry.get(selectedName);
@@ -66,10 +69,12 @@ public class TSP2DACOController implements AlgorithmConfigUI {
 
         map.put("alpha", alpha);
         map.put("beta", beta);
+        map.put("rho", rho); // ADD THIS LINE
         map.put("type", strategy);
         map.put("typeName", selectedName);
         return map;
     }
+
 
     @Override
     public AlgorithmConfig buildAlgorithmConfig(Problem problem) {
@@ -84,6 +89,7 @@ public class TSP2DACOController implements AlgorithmConfigUI {
         Map<String, Object> raw = getConfigs();
         raw.put("distanceMatrix", matrix);
         raw.put("initialTour", initialTour);
+
 
         config.populate(raw, problem);
         return config;

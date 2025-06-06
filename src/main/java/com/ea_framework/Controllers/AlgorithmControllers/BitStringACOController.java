@@ -1,9 +1,11 @@
 package com.ea_framework.Controllers.AlgorithmControllers;
 
 import com.ea_framework.ACOTypes.BitStringACOType;
+import com.ea_framework.ACOTypes.MMASBitStringACOType;
 import com.ea_framework.Configs.AlgorithmConfig;
 import com.ea_framework.Configs.AlgorithmConfigUI;
 import com.ea_framework.Configs.BitStringACOConfig;
+import com.ea_framework.Problems.BitStringCompatible;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Registries.BitStringACOTypeRegistry;
 import javafx.fxml.FXML;
@@ -53,8 +55,32 @@ public class BitStringACOController implements AlgorithmConfigUI {
     // Populates the config with the chosen parameters and operators
     @Override
     public AlgorithmConfig buildAlgorithmConfig(Problem problem) {
-        Map<String, Object> raw = getConfigs();
+        if (!(problem instanceof BitStringCompatible bitStringProblem)) {
+            throw new IllegalArgumentException("BitStringACOController can only be used with BitStringProblem");
+        }
+
+        Map<String, Object> raw = getConfigs(); // Collect all values from text fields
+
+        String selected = acoTypeDropdown.getValue();
+        BitStringACOType type;
+
+        // Dynamically construct and populate MMAS type
+        if (selected.equals("MMAS")) {
+            type = new MMASBitStringACOType(); // No arguments
+            ((MMASBitStringACOType) type).populate(raw); // Fill parameters from UI
+        } else {
+            // Fallback for other registered types (if any)
+            type = BitStringACOTypeRegistry.get(selected);
+            if (type == null) {
+                throw new IllegalStateException("ACO type not registered: " + selected);
+            }
+        }
+
         BitStringACOConfig config = new BitStringACOConfig();
+        raw.put("problemSize", bitStringProblem.getLength());
+        raw.put("type", type);
+        raw.put("typeName", selected);
+
         config.populate(raw, problem);
         return config;
     }

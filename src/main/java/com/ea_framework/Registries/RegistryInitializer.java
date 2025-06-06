@@ -134,7 +134,7 @@ public class RegistryInitializer {
 
         BitStringACOTypeRegistry.register("Standard", new StandardBitStringACOType());
 
-        BitStringACOTypeRegistry.register("MMAS", new MMASBitStringACOType(0.1, 1.0, 0.01, 10.0));
+        BitStringACOTypeRegistry.register("MMAS", new MMASBitStringACOType());
 
         registerOperator(
                 "TSP2DEuclideanDistance",

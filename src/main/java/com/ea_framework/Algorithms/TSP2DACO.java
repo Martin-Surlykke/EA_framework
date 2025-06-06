@@ -46,6 +46,9 @@ public class TSP2DACO implements Algorithm {
         this.alpha = acoConfig.getAlpha();
         this.beta = acoConfig.getBeta();
 
+        this.type = acoConfig.type();
+        this.type.setEvaporationRate(acoConfig.getRho());
+
         int n = nodes.length;
         this.tau = new double[n][n];
         this.eta = new double[n][n];
