@@ -15,7 +15,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ public class BatchController {
 
     public Button addBatchButton;
     public ScheduleController scheduleController;
+    public Button browseFileButton;
     @FXML private AnchorPane scheduleContainer;
     @FXML private Label runSchedule;
     @FXML private TabPane tabPane;
@@ -53,6 +57,7 @@ public class BatchController {
 
     private File outputDir;
     private File scheduleSummary;
+    private File userSelectedFile = null;
 
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private AlgorithmConfigUI currentAlgoConfigUI;
@@ -142,6 +147,37 @@ public class BatchController {
         terminationValueField.focusedProperty().addListener((obs, oldFocus, newFocus) -> {
             if (!newFocus) handleAddTermination();
         });
+
+
+        terminationListView.setCellFactory(listView -> new ListCell<>() {
+            private final HBox content = new HBox(10);
+            private final Label label = new Label();
+            private final Button deleteButton = new Button("✕");
+
+            {
+                deleteButton.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+                deleteButton.setOnAction(e -> {
+                    String item = getItem();
+                    if (item != null) {
+                        int index = getIndex();
+                        terminationListView.getItems().remove(index);
+                        activeTerminations.remove(index);  // Keep them in sync
+                    }
+                });
+                content.getChildren().addAll(label, deleteButton);
+            }
+
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    label.setText(item);
+                    setGraphic(content);
+                }
+            }
+        });
     }
 
     public void onSearchSpaceSelected(String searchSpace) {
@@ -179,19 +215,24 @@ public class BatchController {
         config.setProblemName(problemDropDown.getValue());
         config.setProblemDescriptor(Registry.getProblem(config.getProblemName()).orElseThrow());
 
-        config.setStreamName(fileDropDown.getValue());
-
         String sizeText = problemSize.getText();
         String stream = fileDropDown.getValue();
 
+        // Case 1: User entered size manually → generate problem of that size
         if (sizeText != null && !sizeText.isBlank()) {
-            // Use generated problem of specified size
             int size = Integer.parseInt(sizeText);
-            config.setProblemSize(size); // You'll need to add this setter in BatchConfig
-            config.setInputFile(null);   // No input file
+            config.setProblemSize(size);
+            config.setInputFile(null);
             config.setStreamName(null);
+
+            // Case 2: User selected a custom file
+        } else if (userSelectedFile != null && stream != null && stream.startsWith("Custom: ")) {
+            config.setProblemSize(-1); // optional: mark as file-based
+            config.setInputFile(userSelectedFile);
+            config.setStreamName(null); // don't use stream name
+
+            // Case 3: Regular dropdown file selected
         } else if (stream != null && !stream.isBlank()) {
-            // Use predefined file
             config.setStreamName(stream);
             File file = ResourceLister.resolveProblemFile(config.getProblemName(), stream);
             config.setInputFile(file);
@@ -225,6 +266,25 @@ public class BatchController {
             resetBatchUI();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleBrowseForFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Problem File");
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Problem files", "*.txt", "*.tsp")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(tabPane.getScene().getWindow());
+
+        if (selectedFile != null) {
+            userSelectedFile = selectedFile;
+
+            fileDropDown.getItems().add("Custom: " + selectedFile.getName());
+            fileDropDown.getSelectionModel().select("Custom: " + selectedFile.getName());
         }
     }
 
@@ -461,6 +521,13 @@ public class BatchController {
     private void runBatch(BatchConfig config, int index, Stage stage, Runnable onDone) throws Exception {
         if (index >= config.getRepeats()) {
             onDone.run();
+
+
+            Platform.runLater(() -> {
+                scheduleController.clearBatches();
+                updateRunScheduleButton();
+            });
+
             return;
         }
 
@@ -476,7 +543,33 @@ public class BatchController {
         });
     }
 
+
     public void handleAddTermination(ActionEvent actionEvent) {
         handleAddTermination();
+    }
+
+    @FXML
+    private void handleMainMenu() {
+        // Clear all batch-related state
+        savedBatches.clear();
+        currentScheduleStats.clear();
+        activeTerminations.clear();
+
+        if (scheduleController != null) {
+            scheduleController.clearBatches();  // Also clears UI
+        }
+
+        // Reset form inputs
+        resetBatchUI();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/FrontPage.fxml"));
+            Scene mainMenuScene = new Scene(loader.load());
+            Stage stage = (Stage) tabPane.getScene().getWindow();
+            stage.setScene(mainMenuScene);
+            stage.setTitle("EA Framework - Main Menu");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
+<HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.ea_framework.Controllers.BatchCardController"
-      spacing="5"
+      spacing="10"
+      alignment="CENTER_LEFT"
       style="-fx-padding: 8; -fx-border-color: gray; -fx-border-radius: 4; -fx-background-color: white;">
 
-    <Label fx:id="titleLabel"
-           style="-fx-font-weight: bold; -fx-font-size: 14px;"
-           wrapText="true"
-           maxWidth="Infinity" />
+    <VBox spacing="5" HBox.hgrow="ALWAYS">
+        <Label fx:id="titleLabel"
+               style="-fx-font-weight: bold; -fx-font-size: 14px;"
+               wrapText="true"
+               maxWidth="Infinity"/>
+        <Label fx:id="summaryLabel"
+               wrapText="true"
+               maxWidth="Infinity"/>
+    </VBox>
 
-    <Label fx:id="summaryLabel"
-           wrapText="true"
-           maxWidth="Infinity" />
-</VBox>
+    <Button text="Delete"
+            onAction="#onDelete"
+            style="-fx-background-color: red; -fx-text-fill: white; -fx-font-size: 11px;"
+            minWidth="60"
+            maxHeight="Infinity"
+            alignment="CENTER"/>
+</HBox>

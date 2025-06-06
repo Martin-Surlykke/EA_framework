@@ -52,12 +52,12 @@ public class RegistryInitializer {
 
     public static void initialize() {
 
-        SearchSpaceRegistry.register("Graph2D", Graph2DSearchSpace::new);
+        SearchSpaceRegistry.register("Permutation", Graph2DSearchSpace::new);
         SearchSpaceRegistry.register("BitString", BitStringSearchSpace::new);
 
         ProblemDescriptor tspProblemDescriptor = new ProblemDescriptor(
                 "TSP2D",
-                "Graph2D",
+                "Permutation",
                 new TSPFileHandler()
         );
         ProblemRegistry.register("TSP2D", tspProblemDescriptor);

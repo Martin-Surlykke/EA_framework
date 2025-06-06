@@ -20,7 +20,7 @@
                   <Font name="Segoe UI Bold" size="22.0" />
                </font>
             </Text>
-            <Label fx:id="backToMainMenu" alignment="CENTER" layoutX="14.0" layoutY="10.0" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: WhiteSmoke; -fx-border-width: 2; -fx-border-color: GRAY;" text="Main Menu">
+            <Label fx:id="backToMainMenu" onMouseClicked="#handleBackToMainMenu" alignment="CENTER" layoutX="14.0" layoutY="10.0" prefHeight="35.0" prefWidth="115.0" style="-fx-background-color: WhiteSmoke; -fx-border-width: 2; -fx-border-color: GRAY;" text="Main Menu">
                <font>
                   <Font size="18.0" />
                </font>
@@ -30,41 +30,33 @@
       </Pane>
       <Pane prefHeight="850.0" prefWidth="1200.0" style="-fx-background-color: WHITESMOKE;">
          <children>
-            <Pane fx:id="configPane" layoutX="25.0" layoutY="14.0" prefHeight="260.0" prefWidth="220.0" style="-fx-background-color: WHITE;" />
-            <Pane fx:id="statPane" layoutX="255.0" layoutY="14.0" prefHeight="530.0" prefWidth="220.0" style="-fx-background-color: WHITE;" />
-            <Pane fx:id="visualizePane" layoutX="490.0" layoutY="10.0" prefHeight="620.0" prefWidth="700.0" style="-fx-background-color: WHITE; -fx-border-color: GRAY;" />
-            <Pane fx:id="fitnessPane" layoutX="490.0" layoutY="630.0" prefHeight="210.0" prefWidth="700.0" style="-fx-background-color: WHITE; -fx-border-color: GRAY;">
+            <Pane fx:id="statPane" layoutX="14.0" layoutY="14.0" prefHeight="376.0" prefWidth="302.0" style="-fx-background-color: WHITE;" />
+            <Pane fx:id="visualizePane" layoutX="329.0" layoutY="14.0" prefHeight="635.0" prefWidth="861.0" style="-fx-background-color: WHITE; -fx-border-color: GRAY;" />
+            <Pane fx:id="fitnessPane" layoutX="329.0" layoutY="655.0" prefHeight="185.0" prefWidth="861.0" style="-fx-background-color: WHITE; -fx-border-color: GRAY;">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Pane>
-            <Pane fx:id="batchPane" layoutX="25.0" layoutY="284.0" prefHeight="260.0" prefWidth="220.0" style="-fx-background-color: WHITE;" />
             <Pane fx:id="controlPane" layoutX="14.0" layoutY="566.0" prefHeight="265.0" prefWidth="461.0">
                <children>
-                  <Pane fx:id="startButton" layoutX="260.0" layoutY="10.0" prefHeight="30.0" prefWidth="30.0">
+                  <Pane fx:id="startButton" layoutX="201.0" layoutY="207.0" onMouseClicked="#handleStart" prefHeight="30.0" prefWidth="30.0">
                      <children>
-                        <Polygon fx:id="startButton" fill="DODGERBLUE" layoutX="15.0" layoutY="25.0" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.3" scaleY="0.3" scaleZ="0.3" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" style="-fx-fill: WHITE;" />
+                        <Polygon fx:id="startShape" layoutX="15.0" layoutY="25.0" points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.3" scaleY="0.3" scaleZ="0.3" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" style="-fx-fill: DARKGRAY;" />
                      </children>
                   </Pane>
-                  <Pane fx:id="pauseButton" layoutX="310.0" layoutY="10.0" prefHeight="30.0" prefWidth="25.0">
+                  <Pane fx:id="pauseButton" layoutX="154.0" layoutY="207.0" onMouseClicked="#handlePause" prefHeight="30.0" prefWidth="25.0">
                      <children>
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: WHITE;" width="10.0" />
-                        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="15.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: WHITE;" width="10.0" />
+                        <Rectangle fx:id="pauseBar1" arcHeight="5.0" arcWidth="5.0" height="30.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: WHITE;" width="10.0" />
+                        <Rectangle fx:id="pauseBar2" arcHeight="5.0" arcWidth="5.0" height="30.0" layoutX="15.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: WHITE;" width="10.0" />
                      </children>
                   </Pane>
-                  <Rectangle fx:id="stopButton" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" layoutX="350.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: white;" width="30.0" />
-                  <Slider fx:id="speedSlider" layoutX="425.0" layoutY="77.0" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="111.0" prefWidth="10.0" scaleX="1.5" scaleY="1.5" />
-                  <Text layoutX="418.0" layoutY="36.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fast">
+                  <Slider fx:id="speedSlider" layoutX="277.0" layoutY="147.0" max="200" min="1" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="85.0" prefWidth="10.0" scaleX="1.5" scaleY="1.5" value="150" />
+                  <Text layoutX="268.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Fast">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Text>
-                  <Text layoutX="414.0" layoutY="238.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Slow">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Text>
-                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="212.0" style="-fx-background-color: white; -fx-border-color: gray;">
+                  <HBox alignment="CENTER_LEFT" layoutX="34.0" layoutY="126.0" prefHeight="35.0" prefWidth="212.0" style="-fx-background-color: white; -fx-border-color: gray;">
                      <children>
                         <Label alignment="CENTER" prefHeight="35.0" prefWidth="100.0" style="-fx-border-color: gray;" text="Status:" textAlignment="CENTER">
                            <font>
@@ -78,23 +70,19 @@
                         </Label>
                      </children>
                   </HBox>
-                  <Label fx:id="rerunButton" alignment="CENTER" layoutX="10.0" layoutY="60.0" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-width: 2; -fx-border-color: gray;" text="Rerun" textAlignment="CENTER">
+                  <Label fx:id="nextRun" alignment="CENTER" layoutX="34.0" layoutY="204.0" onMouseClicked="#handleNextRun" prefHeight="35.0" prefWidth="95.0" style="-fx-background-color: white; -fx-border-width: 2; -fx-border-color: gray;" text="Next run" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="newRunButton" alignment="CENTER" layoutX="10.0" layoutY="130.0" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-width: 2; -fx-border-color: gray;" text="New run" textAlignment="CENTER">
+                  <Text layoutX="265.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Slow">
                      <font>
-                        <Font size="18.0" />
+                        <Font size="15.0" />
                      </font>
-                  </Label>
-                  <Label fx:id="saveToCSVButton" alignment="CENTER" layoutX="10.0" layoutY="200.0" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: white; -fx-border-width: 2; -fx-border-color: gray;" text="Save to CSV">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
+                  </Text>
                </children>
             </Pane>
+            <Pane fx:id="configPane" layoutX="14.0" layoutY="397.0" prefHeight="233.0" prefWidth="302.0" style="-fx-background-color: WHITE;" />
          </children>
       </Pane>
    </children>

@@ -8,4 +8,6 @@ public interface TerminationCondition {
     boolean shouldTerminate(int iteration, Algorithm algorithm);
 
     void configure(Map<String, String> value);
+
+
 }

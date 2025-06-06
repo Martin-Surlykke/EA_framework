@@ -32,7 +32,6 @@ public class BatchCardController {
         summaryLabel.setText("SearchSpace: " + batchConfig.getSearchSpaceName() + ", Repeats: " + batchConfig.getRepeats() + ", Termination: " + batchConfig.getTermination());
     }
 
-
     public void setOnEdit(Consumer<BatchConfig> callback) {
         this.onEdit = callback;
     }

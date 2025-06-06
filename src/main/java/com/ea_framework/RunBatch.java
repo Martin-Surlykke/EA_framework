@@ -83,25 +83,35 @@ public class RunBatch {
 
                 stage.show();
 
-                long startTime = System.nanoTime();
+                new Thread(() -> {
+                    long startTime = System.nanoTime();
 
-                new Runner().run(problem, algorithm, terminationConditions, statTracker, () -> {
+                    Runner runner = new Runner();
+                    controller.setRunner(runner);
+                    runner.run(problem, algorithm, terminationConditions, statTracker, controller::getSleepDelay, () -> {
+
                     long endTime = System.nanoTime();
-                    long runtimeMs = (endTime - startTime) / 1_000_000;
+                        long runtimeMs = (endTime - startTime) / 1_000_000;
 
-                    Platform.runLater(() -> {
-                        statsCollector.add(BatchStats.from(config, problem, algorithm, runtimeMs));
-                        stage.setScene(returnScene);
-                        stage.setTitle("EA Framework");
-                        if (onComplete != null) onComplete.run();
+                        Platform.runLater(() -> {
+                            statsCollector.add(BatchStats.from(config, problem, algorithm, runtimeMs));
+
+                            controller.enableNextRun();
+                            controller.setOnNextRun(() -> {
+                                stage.setScene(returnScene);
+                                stage.setTitle("EA Framework");
+                                if (onComplete != null) onComplete.run();
+                            });
+                        });
                     });
-                });
+                }).start();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
     }
+
 
     private void runHeadless(Problem problem, Algorithm algorithm, List<TerminationCondition> terminationConditions, Runnable onComplete) {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];

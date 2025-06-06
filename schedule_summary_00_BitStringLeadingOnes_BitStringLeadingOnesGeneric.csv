@@ -1,0 +1,3 @@
+Batch Index;Problem;Algorithm;Problem Size;Fitness;Best Iteration;Runtime (ms)
+0;BitStringLeadingOnes;BitStringLeadingOnesGeneric;1000;0.000000;0;250
+Average; ; ;1000;0.000000;0;250

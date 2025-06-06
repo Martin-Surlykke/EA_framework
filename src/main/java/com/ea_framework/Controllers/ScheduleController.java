@@ -39,6 +39,11 @@ public class ScheduleController {
         }
     }
 
+    public void clearBatches() {
+        savedBatches.clear();                 // Clear data
+        scheduleVBox.getChildren().clear();   // Clear UI
+    }
+
     private void handleEdit(BatchConfig batchConfig) {
         if (onEditRequested != null) {
             onEditRequested.accept(batchConfig);
@@ -57,6 +62,7 @@ public class ScheduleController {
             scheduleVBox.getChildren().remove(index);
         }
     }
+
 
     public void setOnEditRequested(Consumer<BatchConfig> callback) {
         this.onEditRequested = callback;

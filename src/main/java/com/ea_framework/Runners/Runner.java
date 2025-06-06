@@ -22,7 +22,19 @@ public class Runner {
         terminationConditions.add(condition);
     }
 
-    public void run(Problem problem, Algorithm algorithm, List<TerminationCondition> conditions, StatTracker stats, Runnable onComplete) {
+    private volatile boolean paused = false;
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    @FunctionalInterface
+    public interface DelayProvider {
+        int getDelay();
+    }
+
+
+    public void run(Problem problem, Algorithm algorithm, List<TerminationCondition> conditions, StatTracker stats, DelayProvider delayProvider,  Runnable onComplete) {
         Object initial = problem.getDefaultPermutation();
         algorithm.setCurrentSolution(initial);
 
@@ -38,8 +50,16 @@ public class Runner {
                         algorithm.getBestIteration(), algorithm.getBestIteration() * 2,
                         algorithm.getBestFitness());
 
+                while(paused) {
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 try {
-                    Thread.sleep(1);
+                    Thread.sleep(delayProvider.getDelay());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

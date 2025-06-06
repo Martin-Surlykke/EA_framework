@@ -1,5 +1,6 @@
 package com.ea_framework.Controllers;
 
+import com.ea_framework.Runners.Runner;
 import com.ea_framework.Views.InfoViews.StatRecord;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
@@ -7,12 +8,19 @@ import com.ea_framework.Views.InfoViews.StatView;
 import com.ea_framework.Views.VisualizeView.VisualizeView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.control.Slider;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class VisualizeController {
 
@@ -24,6 +32,71 @@ public class VisualizeController {
     @FXML public Pane fitnessPane;
     @FXML public Pane statPane;
     @FXML public Pane configPane;
+    @FXML public Label nextRun;
+    private Runnable onNextRun;
+
+    @FXML public Slider speedSlider;
+    @FXML private Polygon startShape;
+    @FXML private Rectangle pauseBar1;
+    @FXML private Rectangle pauseBar2;
+    @FXML private Label statusLabel;
+    @FXML private Label backToMainMenu;
+    private boolean paused = false;
+
+    private Runner runner;
+
+    public void setRunner(Runner runner) {
+        this.runner = runner;
+    }
+
+    @FXML
+    private void handleBackToMainMenu() {
+        if (runner != null) {
+            runner.setPaused(true);
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/FrontPage.fxml"));
+            Scene mainMenuScene = new Scene(loader.load());
+            Stage stage = (Stage) backToMainMenu.getScene().getWindow();
+            stage.setScene(mainMenuScene);
+            stage.setTitle("EA Framework - Main Menu");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handlePause() {
+        pauseBar1.setFill(Color.GREY);
+        pauseBar2.setFill(Color.GREY);
+        startShape.setFill(Color.WHITE);
+        statusLabel.setText("Paused");
+        paused = true;
+        if (runner != null) {
+            runner.setPaused(paused);
+        }
+    }
+
+    @FXML
+    private void handleStart() {
+        pauseBar1.setFill(Color.WHITE);
+        pauseBar2.setFill(Color.WHITE);
+        startShape.setFill(Color.GREY);
+        statusLabel.setText("Running");
+        paused = false;
+        if (runner != null) {
+            runner.setPaused(paused);
+        }
+    }
+
+    public int getSleepDelay() {
+        return 201 - (int) speedSlider.getValue();
+    }
+
+    public void enableNextRun() {
+        Platform.runLater(() -> nextRun.setDisable(false));
+    }
 
     @FXML
     public void initialize(VisualizeView visualizeView,
@@ -69,4 +142,19 @@ public class VisualizeController {
         region.prefHeightProperty().bind(pane.heightProperty());
         pane.getChildren().add(region);
     }
+
+    public void setOnNextRun(Runnable callback) {
+        this.onNextRun = callback;
+    }
+
+    @FXML
+    private void handleNextRun() {
+        nextRun.setDisable(true);
+        if (onNextRun != null) {
+            onNextRun.run();
+        }
+    }
+
+
+
 }

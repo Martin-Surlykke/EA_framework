@@ -16,8 +16,8 @@ import java.util.List;
 public class TSP2DVisualizeView implements VisualizeView {
 
     private final Pane graphPane = new Pane();
-    private final Canvas historyCanvas = new Canvas(700, 700);
-    private final Canvas edgeCanvas = new Canvas(700, 700);
+    private final Canvas historyCanvas = new Canvas(861, 635);
+    private final Canvas edgeCanvas = new Canvas(861, 635);
     private final Pane nodeLayer = new Pane();
 
     private final List<Coordinate> coordinateList;
@@ -41,7 +41,7 @@ public class TSP2DVisualizeView implements VisualizeView {
         this.minX = problem.getMinX();
         this.minY = problem.getMinY();
 
-        graphPane.setPrefSize(600, 600);
+        graphPane.setPrefSize(800, 600);
         graphPane.getChildren().setAll(historyCanvas, edgeCanvas, nodeLayer);
 
         graphPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
