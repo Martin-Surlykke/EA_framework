@@ -18,6 +18,9 @@ import java.util.HashMap;
 
 public class TSP2DACOController implements AlgorithmConfigUI {
 
+    // Controller class for the TSP ACO config page
+
+    // Alpha, Beta and ACO type as inputs
     private AlgorithmConfig config;
     @FXML private TextField alphaField;
     @FXML private TextField betaField;
@@ -25,6 +28,8 @@ public class TSP2DACOController implements AlgorithmConfigUI {
 
     private Runnable readyCallback;
 
+
+    // Adds MMAS and Standard as options in a type dropdown. Sets standard as standard value
     @FXML
     public void initialize() {
         type.getItems().addAll("Standard", "MMAS");
@@ -43,6 +48,8 @@ public class TSP2DACOController implements AlgorithmConfigUI {
     public void setOnReady(Runnable r) {
         this.readyCallback = r;
     }
+
+
 
     @Override
     public Map<String, Object> getConfigs() {

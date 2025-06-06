@@ -11,6 +11,8 @@ public class TSP2DGenericConfigPage implements ConfigView {
     private final Parent root;
     private final AlgorithmConfigUI controller;
 
+
+    // Generic config page, connect the associated FXML file to the config class
     public TSP2DGenericConfigPage() {
         try {
             URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/TSP2DGenericConfig.fxml");

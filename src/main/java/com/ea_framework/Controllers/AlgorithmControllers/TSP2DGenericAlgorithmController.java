@@ -20,9 +20,12 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
+
+    // Controller class for the generic TSP algorithm config page
     @FXML
     public Pane genericAlgorithmConfigPane;
 
+    // Boxes textfields etc. for inputting data chosen parameters and operators
     @FXML
     public ComboBox<String> fitnessDropDown;
     @FXML
@@ -56,6 +59,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
 
     private Runnable onOperatorsFilled;
 
+
+    // Operator type is defined to tell the framework which operator types are allowed for this algorithm
     private static final OperatorType[] OPERATOR_TYPES = {
             OperatorType.FITNESS_TSP,
             OperatorType.MUTATION_TSP,
@@ -66,6 +71,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
         this.onOperatorsFilled = action;
     }
 
+
+    // Checks if all data is filled in as necessary
     private void checkAllOperatorsFilled() {
         boolean allFilled =
                 fitnessConfigUI != null &&
@@ -80,6 +87,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
         }
     }
 
+
+    // Handles changes in the configuration
     private void onConfigChanged(GenericOperatorUI ui, VBox configPane, Consumer<GenericOperatorUI> setUI) {
         configPane.getChildren().setAll(ui.getRoot());
         setUI.accept(ui);
@@ -87,6 +96,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
         checkAllOperatorsFilled();
     }
 
+
+    // generalized method for handling displaying the possible operators to the user
     private void setupOperatorSelectionHandler(
             ComboBox<String> dropDown,
             VBox configPane,
@@ -107,6 +118,7 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
         });
     }
 
+    // Returns a hashmap with an identifying string, and the operator object
     @Override
     public Map<String, Object> getConfigs() {
         Map<String, Object> map = new HashMap<>();
@@ -122,6 +134,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
 
         return map;
     }
+
+
 
     @Override
     public void bindTo(Object config) {
@@ -154,6 +168,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
         choiceScroll.setDisable(false);
     }
 
+
+    // Builds the algorithm config based on the given inputs
     @Override
     public AlgorithmConfig buildAlgorithmConfig(Problem problem) {
         Map<String, Object> operatorInstances = getConfigs();
@@ -162,6 +178,8 @@ public class TSP2DGenericAlgorithmController implements AlgorithmConfigUI {
         return config;
     }
 
+
+    // checks if things are filled out and the operators have been collecetd
     @Override
     public boolean isReadyToProceed() {
         return fitnessConfigUI != null &&

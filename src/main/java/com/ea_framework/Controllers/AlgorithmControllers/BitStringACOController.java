@@ -14,6 +14,7 @@ import java.util.Map;
 
 public class BitStringACOController implements AlgorithmConfigUI {
 
+    // Controller class for the BitString ACO config page, handles user inputs
     @FXML private TextField numAntsField;
     @FXML private TextField evaporationRateField;
     @FXML private TextField initialPheromoneField;
@@ -22,6 +23,7 @@ public class BitStringACOController implements AlgorithmConfigUI {
 
     private Runnable readyCallback = () -> {};
 
+    // Initializes dropdowns and fields, allowing them to be handled by the user
     @FXML
     public void initialize() {
         // Populate ACO types
@@ -41,12 +43,14 @@ public class BitStringACOController implements AlgorithmConfigUI {
         reinforcementField.focusedProperty().addListener((obs, old, focused) -> { if (!focused) checkReady(); });
     }
 
+    // Check if parameters are set in properly to allow going to the next tab
     private void checkReady() {
         if (isReadyToProceed() && readyCallback != null) {
             readyCallback.run();
         }
     }
 
+    // Populates the config with the chosen parameters and operators
     @Override
     public AlgorithmConfig buildAlgorithmConfig(Problem problem) {
         Map<String, Object> raw = getConfigs();
@@ -54,6 +58,7 @@ public class BitStringACOController implements AlgorithmConfigUI {
         config.populate(raw, problem);
         return config;
     }
+
 
     @Override
     public Map<String, Object> getConfigs() {

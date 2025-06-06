@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
+     // Controller for the Generic Bitstring config page
+    // Handles necessary dropdown, textfield etc. to allow the user to input chosen parameters and operators
     @FXML
     public Pane genericAlgorithmConfigPane;
     @FXML
@@ -46,12 +48,15 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
 
     private Runnable onOperatorsFilled;
 
+    // Operator types are defined to let the framework know which types of operators work for this algorithm
     private static final OperatorType[] OPERATOR_TYPES = {
             OperatorType.FITNESS_BITSTRING,
             OperatorType.MUTATION_BITSTRING,
             OperatorType.CHOICE_BITSTRING
     };
 
+
+    // Checks if everything is filled out before allowing the user to move to the next tab
     private void checkAllOperatorsFilled() {
         boolean allFilled =
                         mutationConfigUI != null &&
@@ -64,12 +69,15 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
         }
     }
 
+
+    // Handles changing config settings
     private void onConfigChanged(GenericOperatorUI ui, VBox configPane, Consumer<GenericOperatorUI> setUI) {
         configPane.getChildren().setAll(ui.getRoot());
         setUI.accept(ui);
         ui.getController().setChangeListener(this::checkAllOperatorsFilled);
         checkAllOperatorsFilled();
     }
+
 
     private void setupOperatorSelectionHandler(
             ComboBox<String> dropDown,
@@ -104,6 +112,8 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
         return map;
     }
 
+
+
     @Override
     public void bindTo(Object config) {
         this.config = (AlgorithmConfigUI) config;
@@ -131,6 +141,7 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
         choiceScroll.setDisable(false);
     }
 
+    // builds the config based on user-input
     @Override
     public AlgorithmConfig buildAlgorithmConfig(Problem problem) {
         Map<String, Object> operatorInstances = getConfigs();
@@ -139,6 +150,8 @@ public class BitStringGenericAlgorithmController implements AlgorithmConfigUI {
         return config;
     }
 
+
+    // checks if the ui is filled out as necessary
     @Override
     public boolean isReadyToProceed() {
         return  mutationConfigUI != null &&

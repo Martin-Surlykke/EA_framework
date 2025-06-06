@@ -15,7 +15,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
@@ -26,6 +25,13 @@ import java.util.List;
 import java.util.Map;
 
 public class BatchController {
+    // Batch controller
+    // The main class for setting up batches in the schedule
+    // Handles the config page with the associated TabPane containing
+    // Configuration of Search space, Problem, Algorithm, Operators, Batches, Termination condition, and setVisual
+
+    // Consists of a lot of handler classes designed to ensure invalid inputs are ignored, and a steady
+    // Flow throught the program interface is achieved
 
     public Button addBatchButton;
     public ScheduleController scheduleController;
@@ -50,6 +56,8 @@ public class BatchController {
     @FXML private TextField batchSize;
     @FXML private TextField terminationValueField;
     @FXML private ListView<String> terminationListView;
+
+    // All FXML fields are defined
     private final List<TerminationCondition> activeTerminations = new ArrayList<>();
 
     @FXML private CheckBox showVisual;
@@ -60,6 +68,10 @@ public class BatchController {
     private final List<BatchConfig> savedBatches = new ArrayList<>();
     private AlgorithmConfigUI currentAlgoConfigUI;
 
+
+    // The initialize function handles setting up the different components
+
+    // It loads the scheduleView which is used to hold batch cards, showing the added batches in the schedule
     @FXML
     public void initialize() {
         try {
@@ -85,6 +97,8 @@ public class BatchController {
 
         addBatchButton.setDisable(true);
 
+        // All tabs except searchspace are set disabled to ensure a user doesn't access an invalid combination of
+        // search spaces, problems and algorithms
         terminationDropDown.getItems().addAll(Registry.getAllTerminationConditions());
 
         terminationDropDown.valueProperty().addListener((obs, oldVal, newVal) -> {
@@ -146,7 +160,12 @@ public class BatchController {
             if (!newFocus) handleAddTermination();
         });
 
+        // Listeners are added to fields to enable the program to "unlock" tabs when necessary information has
+        // been filled in
 
+
+        // A setCellFactory is used to list terminationCOnditions. This is done to ensure it is possible to delete
+        // terminationconditions after adding them
         terminationListView.setCellFactory(listView -> new ListCell<>() {
             private final HBox content = new HBox(10);
             private final Label label = new Label();
@@ -165,6 +184,8 @@ public class BatchController {
                 content.getChildren().addAll(label, deleteButton);
             }
 
+
+            // generic class for updating items
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -178,11 +199,16 @@ public class BatchController {
         });
     }
 
+    // handles the tab logic for after a search space has been chosen.
+    // The valid problems are shown, and the tab is unlocked.
     public void onSearchSpaceSelected(String searchSpace) {
         problemTab.setDisable(false);
         tabPane.getSelectionModel().select(problemTab);
     }
 
+
+    // onAlgorithmSelected handles the setup of the algorithm, a descriptor is created to
+    // handle the setup with operaters / parameters etc.
     @FXML
     public void onAlgorithmSelected(String algorithmName) {
         configTab.setDisable(false);
@@ -204,6 +230,9 @@ public class BatchController {
         tabPane.getSelectionModel().select(configTab);
     }
 
+
+    // Class used for storing the configurations made in a batch.
+    // All configurations are stored in a BatchConfig class to be retrieved when needed for execution of the batch.
     private BatchConfig buildBatchConfigFromUI() throws IOException {
         BatchConfig config = new BatchConfig();
 
@@ -251,6 +280,9 @@ public class BatchController {
         return config;
     }
 
+
+    // Handles adding a batch to the schedule. The batch config is created, and resetBatchUI is
+    // called to reset the config page for a new batch to be set up.
     @FXML
     private void onAddToSchedule() {
         disableTabsAfterAdd();
@@ -267,6 +299,8 @@ public class BatchController {
         }
     }
 
+
+    // Function which uses built in javaFX filechooser to allow the user to add tsp files namely.
     @FXML
     private void handleBrowseForFile() {
         FileChooser fileChooser = new FileChooser();
@@ -286,6 +320,7 @@ public class BatchController {
         }
     }
 
+    // handles selection of the search space
     @FXML
     private void handleSearchSpaceSelect() {
         String selected = searchSpaceDropDown.getValue();
@@ -302,6 +337,7 @@ public class BatchController {
         }
     }
 
+    // handles the selection of a problem. Algorithm dropdown is updated with valid algorithms.
     @FXML
     private void handleProblemSelect() {
         String selected = problemDropDown.getValue();
@@ -319,6 +355,7 @@ public class BatchController {
         return (file != null && !file.isBlank()) || (size != null && !size.isBlank());
     }
 
+    // Handles an algorithm being chosen
     @FXML
     private void handleAlgorithmSelect() {
         String selected = algorithmDropDown.getValue();
@@ -327,6 +364,8 @@ public class BatchController {
         }
     }
 
+
+    // Handles the choosing one of the pre-added files from the framework.
     private void handleFileSelect(String problemType) {
         fileDropDown.getItems().clear();
         try {
@@ -345,11 +384,14 @@ public class BatchController {
         }
     }
 
+    // checks if everything is filled out, before allowing the batch to be added to schedule
     private void checkBatchReady() {
         boolean batchReady = !batchSize.getText().isBlank();
         addBatchButton.setDisable(!batchReady);
     }
 
+
+    // Opens the termination tab after batch has been filled in
     private void checkBatchForSwitch() {
         String value = batchSize.getText();
         boolean isValid = value != null && !value.isBlank();
@@ -365,6 +407,8 @@ public class BatchController {
         }
     }
 
+
+    // disables all tabs except search space when a batch is added to the schedule
     private void disableTabsAfterAdd() {
         problemTab.setDisable(true);
         algorithmTab.setDisable(true);
@@ -394,6 +438,7 @@ public class BatchController {
         }
     }
 
+    // handles resetting all logic to factory setting, allowing the user to input a completely new batch
     private void resetBatchUI() {
         currentAlgoConfigUI = null;
 
@@ -422,6 +467,9 @@ public class BatchController {
         runSchedule.setDisable(savedBatches.isEmpty());
     }
 
+
+    // Runs the schedule. Takes each entry in the batches list and uses a Platform.runlater to run the schedule.
+    // Terminates afetr the list is empty.
     @FXML
     private void handleRunSchedule() {
         List<BatchConfig> batches = scheduleController.getBatches();
@@ -442,6 +490,8 @@ public class BatchController {
         });
     }
 
+
+    // Handles adding a termination, as more terminations can be applied. The terminations are stored as a list.
     @FXML
     private void handleAddTermination() {
         String key = terminationDropDown.getValue();
@@ -475,6 +525,9 @@ public class BatchController {
             e.printStackTrace();
         }
     }
+
+    // Class for running schedule, an iterative call of runBatch.
+    // Also handles the logic of writing CSV stat / summary files for each batch
     private void runSchedule(List<BatchConfig> batches, int index) throws Exception {
         if (index >= batches.size()) {
             scheduleController.clearBatches();
@@ -515,6 +568,8 @@ public class BatchController {
         });
     }
 
+
+    // function for running a batch. Calls the class runBatch which then handles the actual run-logic
     private void runBatch(BatchConfig config, int index, Stage stage, List<BatchStats> stats, Runnable onDone) throws Exception {
         if (index >= config.getRepeats()) {
             onDone.run();
@@ -523,7 +578,7 @@ public class BatchController {
         }
 
         Scene returnScene = stage.getScene();
-        RunBatch runBatch = new RunBatch(config, stage, returnScene, index, stats); // ⬅️ use local stats
+        RunBatch runBatch = new RunBatch(config, stage, returnScene, index, stats);
         runBatch.runAsync(() -> {
             try {
                 runBatch(config, index + 1, stage, stats, onDone);
@@ -538,6 +593,8 @@ public class BatchController {
         handleAddTermination();
     }
 
+    // Functionality for leaving the batch config and returning to the main menu, when done,
+    // the saved batches and terminations are cleared.
     @FXML
     private void handleMainMenu() {
         // Clear all batch-related state
@@ -551,6 +608,7 @@ public class BatchController {
         // Reset form inputs
         resetBatchUI();
 
+        // The stage is set to load the FrontPage (mainmenu) scene.
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/ea_framework/FrontPage.fxml"));
             Scene mainMenuScene = new Scene(loader.load());

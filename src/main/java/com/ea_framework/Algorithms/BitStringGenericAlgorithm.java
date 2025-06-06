@@ -18,6 +18,8 @@ public class BitStringGenericAlgorithm implements Algorithm {
     private int bestFitness = 0;
     private int bestIteration = 0;
 
+
+    // Constructor to initialize with a default solution, and chosen operators
     @Override
     public void apply(AlgorithmConfig config) {
         if (!(config instanceof BitStringGenericAlgorithmConfig bitConfig)) {
@@ -29,24 +31,32 @@ public class BitStringGenericAlgorithm implements Algorithm {
 
     }
 
+
+    // Run the algorithm for a given iteration
     @Override
     public void run(int iteration) {
+        // Ensure currentSolution is initialized
         Object mutatedObj = mutationOperator.mutate(deepCopy(currentSolution));
         if (!(mutatedObj instanceof boolean[] mutated)) {
             throw new IllegalStateException("Mutation operator must return boolean[]");
         }
 
+        // Evaluate fitness of current and mutated solutions
         double fitnessCurrent = evalFitness(currentSolution);
         double fitnessCandidate = evalFitness(mutated);
 
+
+        // Use the choice function to decide which solution to keep
         Object chosen = choiceFunction.choose(currentSolution, mutated, fitnessCurrent, fitnessCandidate, iteration);
         if (!(chosen instanceof boolean[] chosenBits)) {
             throw new IllegalStateException("Choice function must return boolean[]");
         }
 
+        // Update current solution and fitness
         currentSolution = chosenBits;
         currentFitness = (int) evalFitness(currentSolution);
 
+        // Update best fitness and iteration if current is better
         if (currentFitness > bestFitness) {
             bestFitness = currentFitness;
             bestIteration = iteration;
@@ -54,6 +64,8 @@ public class BitStringGenericAlgorithm implements Algorithm {
 
     }
 
+
+    // Getters and setters for current solution and fitness values
     @Override
     public Object getCurrentSolution() {
         return currentSolution;

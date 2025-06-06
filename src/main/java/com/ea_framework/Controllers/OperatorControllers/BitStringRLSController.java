@@ -4,6 +4,7 @@ import com.ea_framework.Operators.MutationFunctions.BitStringRLS;
 
 public class BitStringRLSController implements OperatorConfigController {
 
+    // RLS have no parameters so always returns true
     @Override
     public Object getOperator() {
         return new BitStringRLS();

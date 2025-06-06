@@ -22,3 +22,8 @@ schedule_summary_01_TSP2D_TSP2DGeneric.csv;535987785.997227;119;270
 schedule_summary_00_BitStringOneMax_BitStringGeneric.csv;466.500000;31;1705
 schedule_summary_01_TSP2D_TSP2DGeneric.csv;18284.597648;114;1176
 schedule_summary_00_BitStringOneMax_BitStringGeneric.csv;507.333333;121;2586
+schedule_summary_00_BitStringOneMax_BitStringGeneric.csv;500.000000;3152;1
+schedule_summary_01_BitStringOneMax_BitStringGeneric.csv;1000.000000;6826;5
+schedule_summary_02_BitStringOneMax_BitStringGeneric.csv;2000.000000;14988;21
+schedule_summary_03_BitStringOneMax_BitStringGeneric.csv;4000.000000;32960;91
+schedule_summary_04_BitStringOneMax_BitStringGeneric.csv;10000.000000;89146;637

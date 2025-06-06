@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 
 public class BatchCardController {
 
+    // Controller for "Batch cards" the display item used to show what has been added to a current schedule
+
     @FXML
     private Label titleLabel;
 
@@ -24,7 +26,6 @@ public class BatchCardController {
         assert titleLabel != null : "titleLabel was not injected!";
         assert summaryLabel != null : "summaryLabel was not injected!";
     }
-
 
     public void setBatch(BatchConfig batchConfig) {
                              this.batchConfig = batchConfig;

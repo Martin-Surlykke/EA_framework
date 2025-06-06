@@ -34,6 +34,9 @@ public class FrontPageController {
         ((Stage) minimize.getScene().getWindow()).setIconified(true);
     }
 
+    // FrontPage with 2 functionalities.
+
+    // Handle change location lets the user add a location where csv files are saved.
     @FXML
     private void handleChangeLocation() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -46,6 +49,8 @@ public class FrontPageController {
         }
     }
 
+
+    // HandleCreateSchedule opens the batch fxml file which is controlled by the batch controller.
     @FXML
     private void handleCreateSchedule() {
         try {

@@ -7,12 +7,17 @@ import java.util.Map;
 
 public class TSP2DACOConfig implements AlgorithmConfig {
 
+    // Config page for ACO on TSP problems
+
+    // Necessary parameters
     private double alpha;
     private double beta;
     private ACOType type;
     private double[][] distanceMatrix;
     private int[] initialTour;
 
+
+    // Populates the config with the necessary parameters, gathgered from the config
     @Override
     public void populate(Map<String, Object> raw, Problem problem) {
         this.alpha = (Double) raw.get("alpha");
@@ -22,6 +27,8 @@ public class TSP2DACOConfig implements AlgorithmConfig {
         this.initialTour = (int[]) raw.get("initialTour");
     }
 
+
+    // Various getters and setters for the defined parameters
     public ACOType getType() { return type; }
     public double[][] getDistanceMatrix() { return distanceMatrix; }
     public int[] getInitialTour() { return initialTour; }

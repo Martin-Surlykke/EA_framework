@@ -11,6 +11,9 @@ public class BitStringGenericConfigPage implements ConfigView {
     private final Parent root;
     private final AlgorithmConfigUI controller;
 
+
+    // Generic config page for bistring algorithsm
+    // Connects the associated FXML file to the Config
     public BitStringGenericConfigPage() {
         try {
             URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/BitStringGenericConfig.fxml");

@@ -6,6 +6,9 @@ import javafx.scene.control.TextField;
 
 public class TSP2D_ONE_One_EA implements OperatorConfigController {
 
+    // config controller for the (1+1)EA mutation operator for tsp problems
+    // A lambda field is introduced to change number of mutations through a poisson distribution
+
     @FXML private TextField lambdaField;
 
     private Runnable onChange = () -> {};
@@ -26,6 +29,7 @@ public class TSP2D_ONE_One_EA implements OperatorConfigController {
         lambdaField.textProperty().addListener((obs, oldVal, newVal) -> onChange.run());
     }
 
+    // Returns the operator with necessary values filled out
     @Override
     public Object getOperator() {
         double lambda = Double.parseDouble(lambdaField.getText());

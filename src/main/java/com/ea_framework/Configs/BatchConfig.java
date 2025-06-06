@@ -19,35 +19,69 @@ import java.util.Map;
 
 public class BatchConfig {
 
+    // Config class used to store all necessary configurations for running a batch of algorithms on a problem.
+
+    // streamName is used to identify the input stream for the problem.
     private String streamName;
+
+    // inputFile is the file from which the problem will be loaded.
     private File inputFile;
 
+
+    // searchSpaceName is the name of the search space to be used.
     private String searchSpaceName;
+
+    // searchSpace is the actual search space object that will be used in the algorithm.
     private SearchSpace searchSpace;
 
+    // problemName is the name of the problem to be solved.
     private String problemName;
+
+    // problemDescriptor is the descriptor that provides metadata and loading capabilities for the problem.
     private ProblemDescriptor problemDescriptor;
 
+    // algorithmName is the name of the algorithm to be used.
     private String algorithmName;
+
+    // algorithmDescriptor is the descriptor that provides metadata and creation capabilities for the algorithm.
     private AlgorithmDescriptor algorithmDescriptor;
 
+
+    // algorithmConfig holds the configuration parameters for the algorithm.
     private AlgorithmConfig algorithmConfig;
 
+
+    // terminationConfigs holds a list of configurations for termination conditions.
     private final Map<String, String> terminationConfigs = new HashMap<>();
+
+    // metaConfigs holds additional metadata configurations that might be used during the run.
     private final Map<String, String> metaConfigs = new HashMap<>();
 
+
+    // problemSize is the size of the problem to be solved, if applicable.
     private int problemSize;
 
+
+    // showVisualization indicates whether the visualization should be shown during the run.
     private boolean showVisualization = true;
 
+
+    // repeats indicates how many times the algorithm should be run on the problem.
     private int repeats;
+
+
     private TerminationCondition termination;
+
+    // terminationConditions is a list of termination conditions that will be checked during the algorithm run.
     private List<TerminationCondition> terminationConditions = new ArrayList<>();
 
 
+    // Various getters and setters for the configurations associated with the batch run.
     public String getStreamName() {
         return streamName;
     }
+
+
 
     public void setStreamName(String streamName) {
         this.streamName = streamName;
@@ -137,6 +171,9 @@ public class BatchConfig {
         return metaConfigs;
     }
 
+
+    // Resolve problem creates a problem based on the provided input file or problem size.
+    // Given a problem size is added, a random problem of that size will be created.
     public Problem resolveProblem() throws IOException {
         if (problemDescriptor == null)
             throw new IllegalStateException("Problem descriptor is not set.");

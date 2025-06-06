@@ -11,6 +11,8 @@ public class TSP2DACOConfigPage implements ConfigView {
     private final Parent root;
     private final AlgorithmConfigUI controller;
 
+    // Config page for the ACO config for TSP problems
+    // Connect the associated FXML file to the config page
     public TSP2DACOConfigPage() {
         try {
             URL fxmlURL = getClass().getResource("/com/ea_framework/Configs/TSP2DACOConfig.fxml");

@@ -10,12 +10,17 @@ import java.util.Map;
 
 public class TSP2DGenericAlgorithmConfig implements AlgorithmConfig {
 
+    // Generic algorithm config page for TSP problems
+
+    // Defines the 3 operators
     private Fitness fitness;
     private MutationOperator mutation;
     private ChoiceFunction choice;
 
     public TSP2DGenericAlgorithmConfig() {}
 
+
+    // Populates the config with the user-chosen operators
     @Override
     public void populate(Map<String, Object> raw, Problem problem) {
         this.fitness = (Fitness) raw.get("fitness");

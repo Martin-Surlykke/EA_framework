@@ -5,6 +5,8 @@ import javafx.scene.control.TextField;
 
 public class BitStringOneOneEAController implements OperatorConfigController {
 
+    // Controller class for (1+1)EA for bitstrings, a variable x is introduced.
+    // P = x/n
     @FXML
     private TextField xField;
 

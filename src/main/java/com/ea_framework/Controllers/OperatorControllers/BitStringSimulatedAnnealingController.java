@@ -5,11 +5,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 public class BitStringSimulatedAnnealingController implements OperatorConfigController {
+
+    // Controller class for bitstring simulated annealing. An alpha value as well as initial temp
+    // are made available to the user
     @FXML
     private TextField alphaValue;
     @FXML private TextField temperatureValue;
     private Runnable onChange;
 
+
+    // returns the operator as an object with the necessary values filled out
     @Override
     public Object getOperator() {
         BitStringSimulatedAnnealing sa = new BitStringSimulatedAnnealing();
@@ -23,6 +28,8 @@ public class BitStringSimulatedAnnealingController implements OperatorConfigCont
         return !alphaValue.getText().isBlank() && !temperatureValue.getText().isBlank();
     }
 
+
+    // Change listener to handle changing values
     @Override
     public void setChangeListener(Runnable onChange) {
         this.onChange = onChange;

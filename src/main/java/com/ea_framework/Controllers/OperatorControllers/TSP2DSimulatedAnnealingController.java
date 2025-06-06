@@ -5,11 +5,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
 public class TSP2DSimulatedAnnealingController implements OperatorConfigController {
+
+    // Config controller for simulated annealing for TSP problems
+    // Handles the addition of alpha, and start temperature
     @FXML
     private TextField alphaValue;
     @FXML private TextField temperatureValue;
     private Runnable onChange;
 
+    // the object is returned with necessary parameters defined
     @Override
     public Object getOperator() {
         TSP2DSimulatedAnnealing sa = new TSP2DSimulatedAnnealing();
