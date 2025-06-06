@@ -7,6 +7,12 @@ import java.util.Random;
 
 public class BitStringOneOneEA implements MutationOperator, Configurable {
 
+    private int x = 1;  // default value
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
     @Override
     public Object mutate(Object currentSolution) {
         if (!(currentSolution instanceof boolean[] bits)) {
@@ -14,7 +20,7 @@ public class BitStringOneOneEA implements MutationOperator, Configurable {
         }
 
         int n = bits.length;
-        double probability = 1.0 / n;
+        double probability = (double) x / n;
         Random rand = new Random();
 
         boolean[] mutated = bits.clone();
@@ -30,6 +36,7 @@ public class BitStringOneOneEA implements MutationOperator, Configurable {
 
     @Override
     public void configure(Problem problem) {
-
+        // No-op for now
     }
 }
+

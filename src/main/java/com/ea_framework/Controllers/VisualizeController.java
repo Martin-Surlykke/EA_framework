@@ -1,6 +1,7 @@
 package com.ea_framework.Controllers;
 
 import com.ea_framework.Runners.Runner;
+import com.ea_framework.Views.InfoViews.ConfigRecord;
 import com.ea_framework.Views.InfoViews.StatRecord;
 import com.ea_framework.Views.FitnessView.FitnessView;
 import com.ea_framework.Views.InfoViews.ConfigurationView;
@@ -27,23 +28,23 @@ public class VisualizeController {
     private VisualizeView visualizeView;
     private FitnessView fitnessView;
     private StatView statView;
+    private ConfigurationView configView;
 
     @FXML public Pane visualizePane;
     @FXML public Pane fitnessPane;
     @FXML public Pane statPane;
     @FXML public Pane configPane;
     @FXML public Label nextRun;
-    private Runnable onNextRun;
-
     @FXML public Slider speedSlider;
     @FXML private Polygon startShape;
     @FXML private Rectangle pauseBar1;
     @FXML private Rectangle pauseBar2;
     @FXML private Label statusLabel;
     @FXML private Label backToMainMenu;
-    private boolean paused = false;
 
+    private boolean paused = false;
     private Runner runner;
+    private Runnable onNextRun;
 
     public void setRunner(Runner runner) {
         this.runner = runner;
@@ -74,7 +75,7 @@ public class VisualizeController {
         statusLabel.setText("Paused");
         paused = true;
         if (runner != null) {
-            runner.setPaused(paused);
+            runner.setPaused(true);
         }
     }
 
@@ -86,7 +87,7 @@ public class VisualizeController {
         statusLabel.setText("Running");
         paused = false;
         if (runner != null) {
-            runner.setPaused(paused);
+            runner.setPaused(false);
         }
     }
 
@@ -107,6 +108,7 @@ public class VisualizeController {
 
         this.visualizeView = visualizeView;
         this.fitnessView = fitnessView;
+        this.configView = configView;
         this.statView = statView;
 
         if (visualizeView == null || visualizeView.getView() == null)
@@ -126,14 +128,18 @@ public class VisualizeController {
         fitToPane(configView.getView(), configPane);
         assert statView != null;
         fitToPane(statView.getView(), statPane);
-
     }
-
 
     public void updateAll(Object solution, int iteration, double fitness, StatRecord stat) {
         visualizeView.update(solution);
         fitnessView.update(fitness, iteration);
         statView.update(stat);
+    }
+
+    public void updateConfigView(ConfigRecord record) {
+        if (configView != null) {
+            configView.update(record);
+        }
     }
 
     private void fitToPane(Node node, Pane pane) {
@@ -154,7 +160,4 @@ public class VisualizeController {
             onNextRun.run();
         }
     }
-
-
-
 }

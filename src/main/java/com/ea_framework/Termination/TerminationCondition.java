@@ -9,5 +9,7 @@ public interface TerminationCondition {
 
     void configure(Map<String, String> value);
 
+    String getName();
+
 
 }

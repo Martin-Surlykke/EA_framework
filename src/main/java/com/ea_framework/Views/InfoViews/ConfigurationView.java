@@ -18,12 +18,10 @@ public class ConfigurationView implements infoView<ConfigRecord> {
 
     @Override
     public void update(ConfigRecord record) {
+        standardConfigBox.updateField("Search space", record.searchSpace());
         standardConfigBox.updateField("Problem", record.problem());
         standardConfigBox.updateField("File", record.file());
         standardConfigBox.updateField("Algorithm", record.algorithm());
-        standardConfigBox.updateField("Choice Function", record.choiceFunction());
-        standardConfigBox.updateField("Mutation Operator", record.mutationOperator());
-        standardConfigBox.updateField("Fitness Function", record.fitnessFunction());
-        standardConfigBox.updateField("Start route", record.startRoute());
+        standardConfigBox.updateField("Termination Condition", record.terminationCondition());
     }
 }

@@ -50,13 +50,11 @@ public class BatchController {
     @FXML private TextField batchSize;
     @FXML private TextField terminationValueField;
     @FXML private ListView<String> terminationListView;
-    private final List<BatchStats> currentScheduleStats = new ArrayList<>();
     private final List<TerminationCondition> activeTerminations = new ArrayList<>();
 
     @FXML private CheckBox showVisual;
 
     private File outputDir;
-    private File scheduleSummary;
     private File userSelectedFile = null;
 
     private final List<BatchConfig> savedBatches = new ArrayList<>();
@@ -429,8 +427,6 @@ public class BatchController {
         List<BatchConfig> batches = scheduleController.getBatches();
         if (batches.isEmpty()) return;
 
-        currentScheduleStats.clear();
-
         String timestamp = java.time.LocalDateTime.now()
                 .toString().replace(":", "-");
 
@@ -481,12 +477,11 @@ public class BatchController {
     }
     private void runSchedule(List<BatchConfig> batches, int index) throws Exception {
         if (index >= batches.size()) {
+            scheduleController.clearBatches();
             return;
         }
 
         File dir = FrontPageController.getCsvSaveDirectory();
-
-        currentScheduleStats.clear();
 
         BatchConfig config = batches.get(index);
 
@@ -501,12 +496,14 @@ public class BatchController {
             }
         }
 
+        List<BatchStats> batchStats = new ArrayList<>();
+
         Stage stage = (Stage) tabPane.getScene().getWindow();
-        runBatch(config, 0, stage, () -> {
+        runBatch(config, 0, stage, batchStats, () -> {
             try {
                 String configKey = config.getProblemName() + "_" + config.getAlgorithmName();
                 File summaryFile = new File(dir, String.format("schedule_summary_%02d_%s.csv", index, configKey));
-                CSVStatWriter.writeScheduleSummary(currentScheduleStats, summaryFile);
+                CSVStatWriter.writeScheduleSummary(batchStats, summaryFile);
 
                 File fullSummary = new File(dir, "fullScheduleSummary.csv");
                 CSVStatWriter.appendToFullScheduleSummary(fullSummary, summaryFile);
@@ -518,25 +515,18 @@ public class BatchController {
         });
     }
 
-    private void runBatch(BatchConfig config, int index, Stage stage, Runnable onDone) throws Exception {
+    private void runBatch(BatchConfig config, int index, Stage stage, List<BatchStats> stats, Runnable onDone) throws Exception {
         if (index >= config.getRepeats()) {
             onDone.run();
-
-
-            Platform.runLater(() -> {
-                scheduleController.clearBatches();
-                updateRunScheduleButton();
-            });
 
             return;
         }
 
         Scene returnScene = stage.getScene();
-
-        RunBatch runBatch = new RunBatch(config, stage, returnScene, index, currentScheduleStats);
+        RunBatch runBatch = new RunBatch(config, stage, returnScene, index, stats); // ⬅️ use local stats
         runBatch.runAsync(() -> {
             try {
-                runBatch(config, index + 1, stage, onDone);
+                runBatch(config, index + 1, stage, stats, onDone);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -552,7 +542,6 @@ public class BatchController {
     private void handleMainMenu() {
         // Clear all batch-related state
         savedBatches.clear();
-        currentScheduleStats.clear();
         activeTerminations.clear();
 
         if (scheduleController != null) {

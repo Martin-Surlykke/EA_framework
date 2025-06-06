@@ -1,45 +1,65 @@
 package com.ea_framework.Views.InfoViews.boxes;
 
-import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-
+import javafx.scene.layout.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StandardConfigBox {
 
-    private final VBox box = new VBox(5);
-    private final Map<String, Label> fields = new HashMap<>();
+    private final VBox root;
+    private final GridPane grid;
+    private final Map<String, Label> valueLabels;
 
     public StandardConfigBox() {
+        root = new VBox();
+        grid = new GridPane();
+        valueLabels = new HashMap<>();
+
+        // Configure column layout: fixed width for keys, flexible for values
+        ColumnConstraints keyCol = new ColumnConstraints();
+        keyCol.setMinWidth(150);
+        keyCol.setMaxWidth(250);
+        keyCol.setPrefWidth(220);
+
+        ColumnConstraints valueCol = new ColumnConstraints();
+        valueCol.setHgrow(Priority.ALWAYS); // Let value column grow with window
+
+        grid.getColumnConstraints().addAll(keyCol, valueCol);
+
+        // Add fields in the correct order with proper spelling
+        addField("Search space");
         addField("Problem");
         addField("File");
         addField("Algorithm");
-        addField("Choice Function");
-        addField("Mutation Operator");
-        addField("Fitness Function");
-        addField("Start route");
+        addField("Termination Condition");
+
+        root.getChildren().add(grid);
     }
 
-    public void addField(String title) {
-        Label titleLabel = new Label(title + ": ");
+    private void addField(String label) {
+        int row = grid.getRowCount();
+        Label keyLabel = new Label(label + ":");
+
         Label valueLabel = new Label("N/A");
-        HBox hbox = new HBox(10, titleLabel, valueLabel);
-        box.getChildren().add(hbox);
-        fields.put(title, valueLabel);
+        valueLabel.setWrapText(true);
+        valueLabel.setMaxWidth(Double.MAX_VALUE);
+        valueLabel.setPrefWidth(400);
+
+        GridPane.setHgrow(valueLabel, Priority.ALWAYS);
+
+        grid.addRow(row, keyLabel, valueLabel);
+        valueLabels.put(label, valueLabel);
     }
 
-    public void updateField(String title, String value) {
-        Label valueLabel = fields.get(title);
+    public void updateField(String label, String value) {
+        Label valueLabel = valueLabels.get(label);
         if (valueLabel != null) {
             valueLabel.setText(value);
         }
     }
 
-    public Node getView() {
-        return box;
+    public VBox getView() {
+        return root;
     }
-
 }

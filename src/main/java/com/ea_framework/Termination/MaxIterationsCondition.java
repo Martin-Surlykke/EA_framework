@@ -32,6 +32,11 @@ public class MaxIterationsCondition implements TerminationCondition, Configurabl
     }
 
     @Override
+    public String getName() {
+        return "Max Iterations Condition";
+    }
+
+    @Override
     public void configure(Problem problem) {
 
     }

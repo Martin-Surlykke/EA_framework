@@ -7,6 +7,7 @@ import com.ea_framework.Controllers.VisualizeController;
 import com.ea_framework.Problems.Problem;
 import com.ea_framework.Runners.Runner;
 import com.ea_framework.Termination.TerminationCondition;
+import com.ea_framework.Views.InfoViews.ConfigRecord;
 import com.ea_framework.Views.InfoViews.StatRecord;
 import com.ea_framework.Views.ProgressDialog;
 import javafx.application.Platform;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class RunBatch {
 
@@ -68,6 +70,13 @@ public class RunBatch {
                 stage.setTitle("Visualizer");
 
                 VisualizeController controller = loader.getController();
+
+                String termination = config.getTerminationConditions().stream()
+                        .map(TerminationCondition::getName)  // or appropriate method
+                        .reduce((a, b) -> a + ", " + b)
+                        .orElse("N/A");
+
+                
                 controller.initialize(
                         problem.getVisualizer(),
                         problem.getFitnessView(),
@@ -75,6 +84,14 @@ public class RunBatch {
                         problem.getStatView(),
                         stage
                 );
+
+                controller.updateConfigView(new ConfigRecord(
+                        config.getSearchSpaceName(),
+                        config.getProblemName(),
+                        config.getStreamName() != null ? config.getStreamName() : "Generated",
+                        config.getAlgorithmName(),
+                        termination
+                ));
 
                 StatTracker statTracker = (i, solution, fitness, stat) -> {
                     stats.add(stat);

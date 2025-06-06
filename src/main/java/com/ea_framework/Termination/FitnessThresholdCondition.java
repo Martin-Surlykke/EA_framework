@@ -48,4 +48,9 @@ public class FitnessThresholdCondition implements TerminationCondition, Configur
     public void configure(Problem problem) {
         // Optional: auto-detect mode from the problem class
     }
+
+    @Override
+    public String getName() {
+        return "Fitness Threshold Condition";
+    }
 }
